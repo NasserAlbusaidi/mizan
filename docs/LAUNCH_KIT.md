@@ -1,0 +1,109 @@
+# Mizan Launch Kit
+
+Use this when you want to put Mizan in front of real Claude Code users without
+overstating what is ready.
+
+## 60-second demo
+
+Record a terminal plus browser demo in this order:
+
+```bash
+mizan --setup
+mizan --demo
+mizan --report --demo --window 7
+```
+
+Show these beats:
+
+1. `mizan --setup` finds transcript folders or gives the next setup command.
+2. `mizan --demo` opens the local dashboard without reading real transcripts.
+3. The action queue shows the few things worth checking first.
+4. Leak detection explains wrong-account usage in plain language.
+5. Copy report turns the dashboard into a redacted weekly note.
+
+Keep the recording tight. The promise is not "analytics platform"; it is
+"private Claude Code spend and leak visibility in one local command."
+
+## Install copy
+
+Current install path before npm publish:
+
+```bash
+npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.0/nasseralbusaidi-mizan-0.1.0.tgz
+mizan --setup
+mizan
+```
+
+The npm package is prepared but not published yet. Do not claim `npx
+@nasseralbusaidi/mizan` works until `npm view @nasseralbusaidi/mizan version`
+returns `0.1.0`.
+
+## Short post
+
+I built Mizan: a local Claude Code spend dashboard that reads the JSONL
+transcripts already on your machine.
+
+It shows daily spend, burn rate, model mix, cache efficiency, top projects, and
+the expensive mistake I actually needed to catch: work quota spent on personal
+projects, or personal quota spent on work.
+
+No account. No upload. Local-only dashboard.
+
+Release: https://github.com/NasserAlbusaidi/mizan/releases/tag/v0.1.0
+
+## Longer post
+
+I kept losing track of Claude Code spend across personal and work configs, so I
+built Mizan.
+
+It is a local-first CLI/dashboard for Claude Code usage:
+
+- Reads local JSONL transcripts
+- Estimates spend with visible pricing assumptions
+- Separates personal vs work usage
+- Flags wrong-account leaks
+- Produces redacted weekly Markdown reports
+- Runs without runtime dependencies or uploads
+
+The first version is a GitHub release while npm publish waits on auth:
+https://github.com/NasserAlbusaidi/mizan/releases/tag/v0.1.0
+
+If you run separate Claude configs or need a weekly usage note, try it and open
+an issue with the redacted support bundle.
+
+## Show HN draft
+
+Title:
+
+```text
+Show HN: Mizan - local Claude Code spend and account-leak dashboard
+```
+
+Body:
+
+```text
+I built Mizan after realizing I had no quick local answer to "what did Claude
+Code cost this week?" across personal and work configs.
+
+It reads Claude Code JSONL transcripts already on your machine and shows spend,
+burn rate, model mix, top projects, cache efficiency, and wrong-account leaks
+such as work quota spent on personal projects.
+
+It is intentionally local: no account, no upload, no hosted dashboard. The report
+output redacts home paths for weekly notes or reimbursement logs.
+
+The first release is on GitHub while npm publishing waits on auth:
+https://github.com/NasserAlbusaidi/mizan/releases/tag/v0.1.0
+```
+
+Do not post to Show HN until the README, screenshot, release asset, and install
+command have been rechecked that day.
+
+## What not to claim
+
+- Do not claim npm install or `npx` works before npm publish.
+- Do not claim provider-billing accuracy; say estimates and link the pricing
+  assumptions.
+- Do not imply transcript upload, team sync, or cloud history exists.
+- Do not show raw transcript lines, private project names, client names, or full
+  home paths in launch media.

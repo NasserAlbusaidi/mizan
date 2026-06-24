@@ -93,6 +93,24 @@ test("release checklist lists every packaged public surface", () => {
   assert.match(release, /npm publish --dry-run --access public/);
 });
 
+test("launch kit gives a practical public launch script", () => {
+  const kit = fs.readFileSync("docs/LAUNCH_KIT.md", "utf8");
+  const readme = fs.readFileSync("README.md", "utf8");
+
+  assert.match(readme, /\[Launch Kit\]\(docs\/LAUNCH_KIT\.md\)/);
+  assert.match(kit, /60-second demo/);
+  assert.match(kit, /mizan --setup/);
+  assert.match(kit, /mizan --demo/);
+  assert.match(kit, /Copy report/);
+  assert.match(
+    kit,
+    /npm install -g https:\/\/github\.com\/NasserAlbusaidi\/mizan\/releases\/download\/v0\.1\.0\/nasseralbusaidi-mizan-0\.1\.0\.tgz/,
+  );
+  assert.match(kit, /Show HN/);
+  assert.match(kit, /npm package is prepared but not published yet/i);
+  assert.match(kit, /Do not claim.*npm/i);
+});
+
 test("git ignore protects local launch artifacts and private notes", () => {
   const ignore = fs.readFileSync(".gitignore", "utf8");
 

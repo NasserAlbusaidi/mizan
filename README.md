@@ -196,7 +196,8 @@ Add `--output path/to/report.md` to save one-shot output from `--report`,
 automatically.
 
 For recurring reviews, automation examples, and reimbursement note templates,
-see the [Setup Kit](docs/SETUP_KIT.md).
+see the [Setup Kit](docs/SETUP_KIT.md). For demo flow and public post copy, see
+the [Launch Kit](docs/LAUNCH_KIT.md).
 
 ## What it shows
 
