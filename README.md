@@ -33,19 +33,19 @@ client, employer, or reimbursement log.
 Try a terminal demo without installing anything globally:
 
 ```bash
-npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.12 -- mizan --try
+npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.13 -- mizan --try
 ```
 
 Install the current GitHub release from its tag:
 
 ```bash
-npm install -g github:NasserAlbusaidi/mizan#v0.1.12
+npm install -g github:NasserAlbusaidi/mizan#v0.1.13
 ```
 
 If your npm client cannot install from GitHub tags, use the release tarball:
 
 ```bash
-npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.12/nasseralbusaidi-mizan-0.1.12.tgz
+npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.13/nasseralbusaidi-mizan-0.1.13.tgz
 ```
 
 Preview the dashboard without reading local transcripts:
@@ -244,8 +244,8 @@ the [Launch Kit](docs/LAUNCH_KIT.md).
   queue for redacted recurring notes.
 - **Copy report** — one-click redacted Markdown from the dashboard for notes,
   status updates, or reimbursements.
-- **Headline KPIs** — spend in window, today, 7-day burn rate, projected monthly
-  spend, request count.
+- **Headline KPIs** — spend in window, previous-window trend, today, 7-day burn
+  rate, projected monthly spend, request count.
 - **Account split** — personal vs work, the thing that moves the bill.
 - **Daily spend** — stacked area by account.
 - **Leak detection** — sessions billed to one account whose project belongs to the

@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.13
+
+- Shows previous-window spend and request changes directly in the dashboard KPI
+  row, making weekly trend checks visible without opening a report.
+
 ## 0.1.12
 
 - Adds previous-window spend and request comparison to terminal summaries and

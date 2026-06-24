@@ -13,6 +13,13 @@
     if (a >= 100) return "$" + n.toFixed(0);
     return "$" + n.toFixed(2);
   };
+  const signedMoney = (n) => (n > 0 ? "+" + money(n) : n < 0 ? "-" + money(Math.abs(n)) : "$0.00");
+  const signedNumber = (n) => (n > 0 ? "+" + n : String(n));
+  const signedPct = (n) => {
+    if (n == null) return "new";
+    const value = (Math.abs(n) * 100).toFixed(1) + "%";
+    return n > 0 ? "+" + value : n < 0 ? "-" + value : "0.0%";
+  };
   const tok = (n) => {
     if (n >= 1e9) return (n / 1e9).toFixed(2) + "B";
     if (n >= 1e6) return (n / 1e6).toFixed(1) + "M";
@@ -318,8 +325,15 @@
     const winLabel = d.window.days ? `last ${d.window.days}d` : "all-time";
     const dailyBudget = d.config?.budgets?.daily;
     const monthlyBudget = d.config?.budgets?.monthly;
+    const spendComparison = formatSpendComparison(d.comparison);
+    const requestComparison = formatRequestComparison(d.comparison);
     const cards = [
-      { label: `Spend · ${winLabel}`, value: money(d.totals.cost), hero: true, sub: tok(d.totals.output) + " output tokens" },
+      {
+        label: `Spend · ${winLabel}`,
+        value: money(d.totals.cost),
+        hero: true,
+        sub: spendComparison || tok(d.totals.output) + " output tokens",
+      },
       {
         label: "Today",
         value: money(d.burn.today),
@@ -331,7 +345,7 @@
         value: money(d.burn.projected30d),
         sub: monthlyBudget ? `${pct(Math.min(1, d.burn.projected30d / monthlyBudget))} of ${money(monthlyBudget)}` : "at current rate",
       },
-      { label: "Requests", value: tok(d.totals.reqs), sub: `${d.models.length} models` },
+      { label: "Requests", value: tok(d.totals.reqs), sub: requestComparison || `${d.models.length} models` },
     ];
     document.getElementById("kpis").innerHTML = cards
       .map(
@@ -341,6 +355,16 @@
           `<div class="sub">${esc(c.sub)}</div></div>`,
       )
       .join("");
+  }
+
+  function formatSpendComparison(comparison) {
+    if (!comparison || !comparison.windowDays) return "";
+    return `${signedMoney(comparison.delta?.cost || 0)} (${signedPct(comparison.delta?.costPct ?? null)}) vs previous ${comparison.windowDays}d`;
+  }
+
+  function formatRequestComparison(comparison) {
+    if (!comparison || !comparison.windowDays) return "";
+    return `${signedNumber(comparison.delta?.reqs || 0)} reqs vs previous ${comparison.windowDays}d`;
   }
 
   function renderLeaks(d) {
