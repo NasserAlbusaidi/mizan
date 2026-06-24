@@ -42,9 +42,10 @@ try {
   assertIncludes(help, "mizan --setup-kit", "--help should document setup kit output");
   assertIncludes(help, "mizan --support-bundle", "--help should document support bundles");
   assertIncludes(help, "mizan --feedback", "--help should document feedback guidance");
+  assertIncludes(help, "mizan --share", "--help should document public sharing copy");
 
   const version = run(bin, ["--version"]).stdout.trim();
-  if (version !== "@nasseralbusaidi/mizan 0.1.19") {
+  if (version !== "@nasseralbusaidi/mizan 0.1.20") {
     throw new Error(`installed --version printed ${JSON.stringify(version)}`);
   }
 
@@ -69,6 +70,11 @@ try {
   assertIncludes(setupKitOutput, `Wrote setup kit to ${setupKitPath}`, "--setup-kit --output should print the saved path");
   const savedSetupKit = fs.readFileSync(setupKitPath, "utf8");
   assertIncludes(savedSetupKit, "# Mizan Setup Kit", "--setup-kit --output should write Markdown");
+
+  const shareGuide = run(bin, ["--share"]).stdout;
+  assertIncludes(shareGuide, "# Share Mizan", "--share should print Markdown");
+  assertIncludes(shareGuide, "github:NasserAlbusaidi/mizan#v0.1.20", "--share should include the tagged install path");
+  assertIncludes(shareGuide, "No account. No upload.", "--share should include the privacy claim");
 
   const pricing = JSON.parse(run(bin, ["--pricing", "--json"]).stdout);
   if (!pricing.rows.some((row) => row.family === "mythos")) {

@@ -24,6 +24,7 @@ node bin/mizan.js --help
 node bin/mizan.js --version
 node bin/mizan.js --doctor
 node bin/mizan.js --try
+node bin/mizan.js --share
 node bin/mizan.js --pricing
 node bin/mizan.js --summary --demo --window 7
 node bin/mizan.js --report --demo --window 7
@@ -42,6 +43,7 @@ Expected:
 - `--version` should print the package name and version.
 - `--try` should print a demo summary and next setup commands without opening a
   browser.
+- `--share` should print safe public launch copy and current install commands.
 - `--summary --demo` should print a compact report without opening a browser.
 - `--report --demo` should print Markdown with redacted local paths.
 - `--report --check --demo` should print Markdown and exit with code `2`.

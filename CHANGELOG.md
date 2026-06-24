@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.20
+
+- Adds `mizan --share`, a safe public launch guide with versioned demo and
+  install commands that can be copied without scanning local transcripts.
+
 ## 0.1.19
 
 - Refreshes the packaged dashboard screenshot so the README and launch materials

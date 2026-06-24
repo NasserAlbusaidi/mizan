@@ -17,6 +17,7 @@ export function parseCliArgs(argv, defaults = {}) {
     setTranscripts: null,
     supportBundle: false,
     feedback: false,
+    share: false,
     summary: false,
     report: false,
     check: false,
@@ -142,6 +143,11 @@ export function parseCliArgs(argv, defaults = {}) {
       options.open = false;
       continue;
     }
+    if (arg === "--share") {
+      options.share = true;
+      options.open = false;
+      continue;
+    }
     if (arg === "--summary") {
       options.summary = true;
       options.open = false;
@@ -202,13 +208,14 @@ function validateOptions(options) {
     options.pricing ||
     options.supportBundle ||
     options.feedback ||
+    options.share ||
     options.report ||
     options.summary ||
     options.check ||
     options.json;
   if (!writesOneShotOutput) {
     throw new Error(
-      "--output requires a one-shot output mode: --report, --summary, --today, --json, --try, --setup, --doctor, --setup-kit, --pricing, --support-bundle, or --feedback.",
+      "--output requires a one-shot output mode: --report, --summary, --today, --json, --try, --setup, --doctor, --setup-kit, --pricing, --support-bundle, --feedback, or --share.",
     );
   }
 }
@@ -346,6 +353,7 @@ Usage:
   mizan --set-transcripts personal=~/.claude/projects work=~/.claude-work/projects
   mizan --support-bundle        Print a redacted Markdown support bundle
   mizan --feedback              Print safe feedback and issue-reporting steps
+  mizan --share                 Print safe public launch copy
   mizan --pricing               Print pricing assumptions and exit
   mizan --summary               Print a compact spend/leak summary and exit
   mizan --report                Print a redacted Markdown spend report and exit
@@ -369,11 +377,12 @@ Options:
                                 Save persistent transcript project directories
   --support-bundle              Print redacted setup diagnostics for issues
   --feedback                    Print safe feedback steps and GitHub issue link
+  --share                       Print safe public launch copy and install commands
   --pricing                     Print model pricing assumptions and exit
   --summary                     Print compact summary and exit
   --report                      Print redacted Markdown report; combine with --json for structured output
   --check                       Exit 2 on leaks/budgets, or unusable setup with --doctor
-  --output <file>               Save one-shot output from report/summary/json/try/setup/doctor/setup-kit/pricing/support/feedback
+  --output <file>               Save one-shot output from report/summary/json/try/setup/doctor/setup-kit/pricing/support/feedback/share
   --version                     Print package version and exit
   --no-warm                     Skip the startup cache warm-up
   --no-open                     Do not open the browser automatically

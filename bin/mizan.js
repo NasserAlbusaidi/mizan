@@ -24,6 +24,7 @@ import { buildReport, formatMarkdownReport } from "../src/report.js";
 import { buildSupportBundle, formatSupportBundle } from "../src/support-bundle.js";
 import { formatSetupKit } from "../src/setup-kit.js";
 import { formatFeedbackGuide } from "../src/feedback.js";
+import { formatShareGuide } from "../src/share.js";
 
 const require = createRequire(import.meta.url);
 const packageJson = require("../package.json");
@@ -149,6 +150,11 @@ if (options.supportBundle) {
 
 if (options.feedback) {
   emitOutput(formatFeedbackGuide(), options.output, "feedback guide");
+  process.exit(0);
+}
+
+if (options.share) {
+  emitOutput(formatShareGuide({ packageVersion: packageJson.version }), options.output, "share guide");
   process.exit(0);
 }
 

@@ -33,19 +33,19 @@ client, employer, or reimbursement log.
 Try a terminal demo without installing anything globally:
 
 ```bash
-npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.19 -- mizan --try
+npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.20 -- mizan --try
 ```
 
 Install the current GitHub release from its tag:
 
 ```bash
-npm install -g github:NasserAlbusaidi/mizan#v0.1.19
+npm install -g github:NasserAlbusaidi/mizan#v0.1.20
 ```
 
 If your npm client cannot install from GitHub tags, use the release tarball:
 
 ```bash
-npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.19/nasseralbusaidi-mizan-0.1.19.tgz
+npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.20/nasseralbusaidi-mizan-0.1.20.tgz
 ```
 
 Preview the dashboard without reading local transcripts:
@@ -144,6 +144,7 @@ mizan --add-work-marker /Clients/
 mizan --set-transcripts personal="$HOME/.claude/projects" work="$HOME/.claude-work/projects"
 mizan --support-bundle
 mizan --feedback
+mizan --share
 mizan --pricing
 mizan --summary
 mizan --report
@@ -194,6 +195,9 @@ looks wrong.
 
 `mizan --feedback` prints the GitHub issue link, the redacted support-bundle
 command, and a privacy checklist for safe bug reports or adoption feedback.
+
+`mizan --share` prints safe public launch copy with the current GitHub-tag demo
+and install commands. It does not scan transcripts or start the dashboard.
 
 `mizan --pricing` prints the static pricing table Mizan uses for estimates.
 
