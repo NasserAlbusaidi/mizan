@@ -69,6 +69,14 @@ test("parseCliArgs supports a today shorthand", () => {
   assert.equal(opts.open, false);
 });
 
+test("parseCliArgs supports a weekly report shorthand", () => {
+  const opts = parseCliArgs(["--weekly"]);
+  assert.equal(opts.report, true);
+  assert.equal(opts.window, "7");
+  assert.equal(opts.windowDays, 7);
+  assert.equal(opts.open, false);
+});
+
 test("parseCliArgs supports the first-run try command", () => {
   const opts = parseCliArgs(["--try"]);
   assert.equal(opts.tryDemo, true);
@@ -123,6 +131,8 @@ test("helpText documents the scriptable JSON path", () => {
   assert.match(text, /Try Mizan in the terminal with demo data/);
   assert.match(text, /Preview the dashboard with sample data/);
   assert.match(text, /mizan --today/);
+  assert.match(text, /mizan --weekly/);
+  assert.match(text, /Shortcut for --report --window 7/);
   assert.match(text, /mizan --summary --window 1/);
   assert.match(text, /mizan --json --window 7/);
   assert.match(text, /mizan --host 0\.0\.0\.0/);
@@ -169,6 +179,7 @@ test("parseCliArgs supports report mode", () => {
 test("parseCliArgs supports output for one-shot commands", () => {
   assert.equal(parseCliArgs(["--summary", "--output", "summary.txt"]).output, "summary.txt");
   assert.equal(parseCliArgs(["--today", "--output", "today.txt"]).output, "today.txt");
+  assert.equal(parseCliArgs(["--weekly", "--output", "weekly.md"]).output, "weekly.md");
   assert.equal(parseCliArgs(["--json", "--output", "data.json"]).output, "data.json");
   assert.equal(parseCliArgs(["--doctor", "--output", "doctor.txt"]).output, "doctor.txt");
   assert.equal(parseCliArgs(["--setup", "--output", "setup.txt"]).output, "setup.txt");

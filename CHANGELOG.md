@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.21
+
+- Adds `mizan --weekly`, a shorter shortcut for the redacted 7-day Markdown
+  report used in recurring reviews, setup-kit automation, and reimbursement
+  notes.
+
 ## 0.1.20
 
 - Adds `mizan --share`, a safe public launch guide with versioned demo and

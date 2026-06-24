@@ -36,7 +36,7 @@ export function buildDoctorReport({ env = process.env, home = os.homedir() } = {
     );
   } else {
     recommendations.push(
-      "Setup looks usable. Run `mizan` for the dashboard, `mizan --report --window 7` for a weekly report, or `mizan --json --window 7` for a scriptable snapshot.",
+      "Setup looks usable. Run `mizan` for the dashboard, `mizan --weekly` for a weekly report, or `mizan --json --window 7` for a scriptable snapshot.",
     );
   }
 
@@ -72,7 +72,7 @@ export function buildDoctorReport({ env = process.env, home = os.homedir() } = {
 
   if (recommendations.length === 0) {
     recommendations.push(
-      "Setup looks usable. Run `mizan` for the dashboard, `mizan --report --window 7` for a weekly report, or `mizan --json --window 7` for a scriptable snapshot.",
+      "Setup looks usable. Run `mizan` for the dashboard, `mizan --weekly` for a weekly report, or `mizan --json --window 7` for a scriptable snapshot.",
     );
   }
 

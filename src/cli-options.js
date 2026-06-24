@@ -54,6 +54,13 @@ export function parseCliArgs(argv, defaults = {}) {
       options.open = false;
       continue;
     }
+    if (arg === "--weekly") {
+      options.report = true;
+      options.window = "7";
+      options.windowDays = WINDOW_DAYS["7"];
+      options.open = false;
+      continue;
+    }
     if (arg === "--try") {
       options.tryDemo = true;
       options.demo = true;
@@ -215,7 +222,7 @@ function validateOptions(options) {
     options.json;
   if (!writesOneShotOutput) {
     throw new Error(
-      "--output requires a one-shot output mode: --report, --summary, --today, --json, --try, --setup, --doctor, --setup-kit, --pricing, --support-bundle, --feedback, or --share.",
+      "--output requires a one-shot output mode: --report, --summary, --today, --weekly, --json, --try, --setup, --doctor, --setup-kit, --pricing, --support-bundle, --feedback, or --share.",
     );
   }
 }
@@ -331,6 +338,7 @@ First minute:
   mizan --demo                  Preview the dashboard with sample data
   mizan --setup                 Check transcript folders and config
   mizan --today                 Print today's spend summary
+  mizan --weekly                Print a redacted 7-day Markdown report
   mizan                         Open the local dashboard
 
 Usage:
@@ -339,6 +347,7 @@ Usage:
   mizan --port 7788             Start on a different port
   mizan --host 0.0.0.0          Intentionally expose the dashboard on your network
   mizan --today                 Print today's spend summary
+  mizan --weekly                Print a redacted 7-day Markdown report
   mizan --summary --window 1    Print today's spend summary
   mizan --json --window 7       Print the computed payload and exit
   mizan --try                   Run the first-minute demo summary and next steps
@@ -364,6 +373,7 @@ Usage:
 Options:
   --window 1|7|30|90|all        Time window for dashboard warm-up or JSON output
   --today                       Shortcut for --summary --window 1
+  --weekly                      Shortcut for --report --window 7
   --try                         Print a demo summary and the next setup commands
   --demo                        Use anonymized sample data instead of transcripts
   --setup                       Create config if needed, then run setup diagnostics
@@ -382,7 +392,7 @@ Options:
   --summary                     Print compact summary and exit
   --report                      Print redacted Markdown report; combine with --json for structured output
   --check                       Exit 2 on leaks/budgets, or unusable setup with --doctor
-  --output <file>               Save one-shot output from report/summary/json/try/setup/doctor/setup-kit/pricing/support/feedback/share
+  --output <file>               Save one-shot output from report/summary/today/weekly/json/try/setup/doctor/setup-kit/pricing/support/feedback/share
   --version                     Print package version and exit
   --no-warm                     Skip the startup cache warm-up
   --no-open                     Do not open the browser automatically

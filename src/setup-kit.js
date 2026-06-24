@@ -33,8 +33,8 @@ mizan --set-budget daily=20 monthly=250
 
 \`\`\`bash
 mizan --doctor --check
-mizan --report --window 7 --output "$HOME/Documents/Mizan/mizan-weekly-$(date +%F).md"
-mizan --report --check --window 7
+mizan --weekly --output "$HOME/Documents/Mizan/mizan-weekly-$(date +%F).md"
+mizan --weekly --check
 \`\`\`
 
 Read the report before sharing it. Paths are redacted, but you own the final
@@ -43,7 +43,7 @@ privacy check.
 ## Cron Example
 
 \`\`\`cron
-0 16 * * 5 /usr/bin/env bash -lc 'mizan --report --window 7 --output "$HOME/Documents/Mizan/mizan-weekly-$(date +\\%F).md"'
+0 16 * * 5 /usr/bin/env bash -lc 'mizan --weekly --output "$HOME/Documents/Mizan/mizan-weekly-$(date +\\%F).md"'
 \`\`\`
 
 If cron cannot find Mizan, replace \`mizan\` with the absolute path from:
@@ -70,7 +70,7 @@ Replace \`/opt/homebrew/bin/mizan\` with the output of \`command -v mizan\`.
   <array>
     <string>/bin/bash</string>
     <string>-lc</string>
-    <string>/opt/homebrew/bin/mizan --report --window 7 --output "$HOME/Documents/Mizan/mizan-weekly-$(date +%F).md"</string>
+    <string>/opt/homebrew/bin/mizan --weekly --output "$HOME/Documents/Mizan/mizan-weekly-$(date +%F).md"</string>
   </array>
 
   <key>StartCalendarInterval</key>

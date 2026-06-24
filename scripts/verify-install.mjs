@@ -35,6 +35,7 @@ try {
   assertIncludes(help, "mizan --try", "--help should document first-run try mode");
   assertIncludes(help, "mizan --setup", "--help should document guided setup");
   assertIncludes(help, "mizan --today", "--help should document the daily summary shortcut");
+  assertIncludes(help, "mizan --weekly", "--help should document the weekly report shortcut");
   assertIncludes(help, "mizan --host 0.0.0.0", "--help should document explicit network binding");
   assertIncludes(help, "mizan --set-budget daily=20 monthly=250", "--help should document budget setup");
   assertIncludes(help, "mizan --add-work-marker /Clients/", "--help should document work marker setup");
@@ -45,7 +46,7 @@ try {
   assertIncludes(help, "mizan --share", "--help should document public sharing copy");
 
   const version = run(bin, ["--version"]).stdout.trim();
-  if (version !== "@nasseralbusaidi/mizan 0.1.20") {
+  if (version !== "@nasseralbusaidi/mizan 0.1.21") {
     throw new Error(`installed --version printed ${JSON.stringify(version)}`);
   }
 
@@ -73,7 +74,7 @@ try {
 
   const shareGuide = run(bin, ["--share"]).stdout;
   assertIncludes(shareGuide, "# Share Mizan", "--share should print Markdown");
-  assertIncludes(shareGuide, "github:NasserAlbusaidi/mizan#v0.1.20", "--share should include the tagged install path");
+  assertIncludes(shareGuide, "github:NasserAlbusaidi/mizan#v0.1.21", "--share should include the tagged install path");
   assertIncludes(shareGuide, "No account. No upload.", "--share should include the privacy claim");
 
   const pricing = JSON.parse(run(bin, ["--pricing", "--json"]).stdout);
@@ -91,6 +92,10 @@ try {
 
   const today = run(bin, ["--today", "--demo"]).stdout;
   assertIncludes(today, "Window: last 1d", "--today should print a one-day summary");
+
+  const weekly = run(bin, ["--weekly", "--demo"]).stdout;
+  assertIncludes(weekly, "# Mizan Spend Report", "--weekly should print a Markdown report");
+  assertIncludes(weekly, "Window: last 7d", "--weekly should use the seven-day report window");
 
   const emptyPersonalDir = path.join(tempRoot, "empty-personal-projects");
   const emptyWorkDir = path.join(tempRoot, "empty-work-projects");

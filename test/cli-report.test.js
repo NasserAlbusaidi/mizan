@@ -34,6 +34,31 @@ test("--report --output writes a redacted report file and keeps check exit statu
   assert.doesNotMatch(report, new RegExp(escapeRegExp(os.homedir())));
 });
 
+test("--weekly prints a redacted seven-day report", () => {
+  const result = spawnSync(process.execPath, [bin, "--weekly", "--demo"], {
+    encoding: "utf8",
+  });
+
+  assert.equal(result.status, 0, result.stderr);
+  assert.match(result.stdout, /^# Mizan Spend Report/m);
+  assert.match(result.stdout, /Window: last 7d/);
+  assert.doesNotMatch(result.stdout, /^Mizan summary/m);
+});
+
+test("--weekly --output writes the seven-day report", () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "mizan-weekly-output-"));
+  const output = path.join(dir, "weekly.md");
+  const result = spawnSync(process.execPath, [bin, "--weekly", "--demo", "--output", output], {
+    encoding: "utf8",
+  });
+
+  assert.equal(result.status, 0, result.stderr);
+  assert.match(result.stdout, new RegExp(`Wrote report to ${escapeRegExp(output)}`));
+  const report = fs.readFileSync(output, "utf8");
+  assert.match(report, /^# Mizan Spend Report/m);
+  assert.match(report, /Window: last 7d/);
+});
+
 function escapeRegExp(value) {
   return String(value).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }

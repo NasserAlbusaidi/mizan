@@ -33,19 +33,19 @@ client, employer, or reimbursement log.
 Try a terminal demo without installing anything globally:
 
 ```bash
-npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.20 -- mizan --try
+npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.21 -- mizan --try
 ```
 
 Install the current GitHub release from its tag:
 
 ```bash
-npm install -g github:NasserAlbusaidi/mizan#v0.1.20
+npm install -g github:NasserAlbusaidi/mizan#v0.1.21
 ```
 
 If your npm client cannot install from GitHub tags, use the release tarball:
 
 ```bash
-npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.20/nasseralbusaidi-mizan-0.1.20.tgz
+npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.21/nasseralbusaidi-mizan-0.1.21.tgz
 ```
 
 Preview the dashboard without reading local transcripts:
@@ -131,6 +131,7 @@ mizan --port 7788
 mizan --host 0.0.0.0
 mizan --try
 mizan --today
+mizan --weekly
 mizan --summary --window 1
 mizan --json --window 7
 mizan --demo
@@ -157,6 +158,10 @@ mizan --help
 opening a browser or reading local transcripts. It is the fastest way to decide
 whether Mizan is worth installing. The demo intentionally includes leaks, so a
 `[FAIL]` status means the detector is being shown.
+
+`mizan --weekly` prints the same redacted 7-day Markdown report as
+`mizan --report --window 7`. It is the shortest command for a recurring review
+or reimbursement note.
 
 `mizan --setup` is the one-command first run. It creates the local config if
 needed, prints setup diagnostics, and exits with code `2` when Mizan still
@@ -217,6 +222,8 @@ Examples:
 
 ```bash
 mizan --today
+mizan --weekly
+mizan --weekly --output "$HOME/Documents/Mizan/mizan-weekly.md"
 mizan --summary --window 1
 mizan --summary --window 7
 mizan --report --window 7
@@ -238,9 +245,9 @@ mizan --check --json --window 30
 Use `--report --check` in scheduled jobs when you want a Markdown report in the
 logs and a failing exit code whenever leaks or budget overruns need attention.
 Add `--output path/to/report.md` to save one-shot output from `--report`,
-`--summary`, `--today`, `--json`, `--setup`, `--doctor`, `--setup-kit`,
-`--pricing`, `--support-bundle`, or `--feedback` without shell redirection;
-parent directories are created automatically.
+`--summary`, `--today`, `--weekly`, `--json`, `--setup`, `--doctor`,
+`--setup-kit`, `--pricing`, `--support-bundle`, `--feedback`, or `--share`
+without shell redirection; parent directories are created automatically.
 
 For recurring reviews, automation examples, and reimbursement note templates,
 see the [Setup Kit](docs/SETUP_KIT.md). For demo flow and public post copy, see
@@ -250,8 +257,8 @@ the [Launch Kit](docs/LAUNCH_KIT.md).
 
 - **Action queue** — leaks, spend jumps, budgets, and setup commands worth
   checking before reading charts.
-- **Weekly review command** — copy `mizan --report --window 7` from the action
-  queue for redacted recurring notes.
+- **Weekly review command** — copy `mizan --weekly` from the action queue for
+  redacted recurring notes.
 - **Copy report** — one-click redacted Markdown from the dashboard for notes,
   status updates, or reimbursements.
 - **Headline KPIs** — spend in window, previous-window trend, today, 7-day burn

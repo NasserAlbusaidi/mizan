@@ -27,6 +27,7 @@ node bin/mizan.js --try
 node bin/mizan.js --share
 node bin/mizan.js --pricing
 node bin/mizan.js --summary --demo --window 7
+node bin/mizan.js --weekly --demo
 node bin/mizan.js --report --demo --window 7
 node bin/mizan.js --report --check --demo --window 7
 node bin/mizan.js --check --demo --window 7
@@ -45,6 +46,8 @@ Expected:
   browser.
 - `--share` should print safe public launch copy and current install commands.
 - `--summary --demo` should print a compact report without opening a browser.
+- `--weekly --demo` should print a redacted seven-day Markdown report without
+  opening a browser.
 - `--report --demo` should print Markdown with redacted local paths.
 - `--report --check --demo` should print Markdown and exit with code `2`.
 - `--check --demo` should exit with code `2` because demo data includes leaks.

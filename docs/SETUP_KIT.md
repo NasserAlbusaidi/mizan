@@ -53,8 +53,8 @@ Run this on Friday or before sending a client/internal note:
 
 ```bash
 mizan --doctor --check
-mizan --report --window 7 --output "$HOME/Documents/Mizan/mizan-weekly-$(date +%F).md"
-mizan --report --check --window 7
+mizan --weekly --output "$HOME/Documents/Mizan/mizan-weekly-$(date +%F).md"
+mizan --weekly --check
 ```
 
 Read the report before sharing it. The report redacts home paths, but you still
@@ -63,15 +63,15 @@ previous matching window, so a 7-day report shows whether spend and request
 count moved up or down from the prior 7 days and which projects drove the
 change.
 
-Use `mizan --report --check --window 7` when you want the command to fail if
-Mizan finds account leaks or budget overruns.
+Use `mizan --weekly --check` when you want the command to fail if Mizan finds
+account leaks or budget overruns.
 
 ## Cron Example
 
 Create a weekly local report every Friday at 4 PM:
 
 ```cron
-0 16 * * 5 /usr/bin/env bash -lc 'mizan --report --window 7 --output "$HOME/Documents/Mizan/mizan-weekly-$(date +\%F).md"'
+0 16 * * 5 /usr/bin/env bash -lc 'mizan --weekly --output "$HOME/Documents/Mizan/mizan-weekly-$(date +\%F).md"'
 ```
 
 Cron has a minimal environment. If it cannot find `mizan`, replace `mizan` with
@@ -99,7 +99,7 @@ Replace `/opt/homebrew/bin/mizan` with the output of `command -v mizan`.
   <array>
     <string>/bin/bash</string>
     <string>-lc</string>
-    <string>/opt/homebrew/bin/mizan --report --window 7 --output "$HOME/Documents/Mizan/mizan-weekly-$(date +%F).md"</string>
+    <string>/opt/homebrew/bin/mizan --weekly --output "$HOME/Documents/Mizan/mizan-weekly-$(date +%F).md"</string>
   </array>
 
   <key>StartCalendarInterval</key>
@@ -145,7 +145,7 @@ Personal/work account leaks: none / see notes
 Budget status: within budget / over budget by $__
 
 Notes:
-- Source: `mizan --report --window 7`
+- Source: `mizan --weekly`
 - Paths are redacted.
 - Authoritative billing remains the provider billing console.
 
@@ -171,7 +171,7 @@ If Mizan finds a leak, fix the account/session setup first, then send the note.
 
 ## Privacy Checklist
 
-- Use `mizan --report --window 7`, not raw JSONL transcript files.
+- Use `mizan --weekly`, not raw JSONL transcript files.
 - Read the report before forwarding it.
 - Remove client names, private project names, and full local paths.
 - Do not attach raw transcripts.

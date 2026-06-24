@@ -10,6 +10,7 @@ Record a terminal plus browser demo in this order:
 ```bash
 mizan --setup
 mizan --demo
+mizan --weekly --demo
 mizan --report --demo --window 7
 mizan --share
 ```
@@ -23,8 +24,9 @@ Show these beats:
 4. Project changes shows which projects moved spend versus the prior window.
 5. The action queue shows the few things worth checking first.
 6. Leak detection explains wrong-account usage in plain language.
-7. Copy report turns the dashboard into a redacted weekly note.
-8. `mizan --share` prints safe launch copy and current install commands.
+7. `mizan --weekly --demo` shows the recurring report command in one short line.
+8. Copy report turns the dashboard into a redacted weekly note.
+9. `mizan --share` prints safe launch copy and current install commands.
 
 Keep the recording tight. The promise is not "analytics platform"; it is
 "private Claude Code spend and leak visibility in one local command."
@@ -34,13 +36,13 @@ Keep the recording tight. The promise is not "analytics platform"; it is
 No-global-install terminal demo:
 
 ```bash
-npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.20 -- mizan --try
+npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.21 -- mizan --try
 ```
 
 Current install path before npm publish:
 
 ```bash
-npm install -g github:NasserAlbusaidi/mizan#v0.1.20
+npm install -g github:NasserAlbusaidi/mizan#v0.1.21
 mizan --demo
 mizan --setup
 mizan
@@ -50,13 +52,13 @@ mizan --feedback
 Fallback release tarball:
 
 ```bash
-npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.20/nasseralbusaidi-mizan-0.1.20.tgz
+npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.21/nasseralbusaidi-mizan-0.1.21.tgz
 ```
 
 The npm package is prepared but not published yet. The `npm exec --package
 github:...` demo runs from the tagged GitHub release; do not claim `npx
 @nasseralbusaidi/mizan` works from the npm registry until `npm view
-@nasseralbusaidi/mizan version` returns `0.1.20`.
+@nasseralbusaidi/mizan version` returns `0.1.21`.
 
 ## Short post
 
@@ -69,7 +71,7 @@ projects, or personal quota spent on work.
 
 No account. No upload. Local-only dashboard.
 
-Release: https://github.com/NasserAlbusaidi/mizan/releases/tag/v0.1.20
+Release: https://github.com/NasserAlbusaidi/mizan/releases/tag/v0.1.21
 
 ## Longer post
 
@@ -87,7 +89,7 @@ It is a local-first CLI/dashboard for Claude Code usage:
 - Runs without runtime dependencies or uploads
 
 The first version is a GitHub release while npm publish waits on auth:
-https://github.com/NasserAlbusaidi/mizan/releases/tag/v0.1.20
+https://github.com/NasserAlbusaidi/mizan/releases/tag/v0.1.21
 
 If you run separate Claude configs or need a weekly usage note, try it. If
 anything is confusing, `mizan --feedback` prints the issue link and the redacted
@@ -115,7 +117,7 @@ It is intentionally local: no account, no upload, no hosted dashboard. The repor
 output redacts home paths for weekly notes or reimbursement logs.
 
 The first release is on GitHub while npm publishing waits on auth:
-https://github.com/NasserAlbusaidi/mizan/releases/tag/v0.1.20
+https://github.com/NasserAlbusaidi/mizan/releases/tag/v0.1.21
 ```
 
 Do not post to Show HN until the README, screenshot, release asset, and install
