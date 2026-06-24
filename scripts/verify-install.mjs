@@ -36,7 +36,7 @@ try {
   assertIncludes(help, "mizan --support-bundle", "--help should document support bundles");
 
   const version = run(bin, ["--version"]).stdout.trim();
-  if (version !== "@nasseralbusaidi/mizan 0.1.8") {
+  if (version !== "@nasseralbusaidi/mizan 0.1.9") {
     throw new Error(`installed --version printed ${JSON.stringify(version)}`);
   }
 
@@ -103,6 +103,20 @@ try {
   if (!fs.existsSync(emptySetupConfig)) {
     throw new Error("--setup did not create the requested config file for empty setup");
   }
+
+  const oneAccountHome = path.join(tempRoot, "one-account-home");
+  const oneAccountPersonal = path.join(oneAccountHome, ".claude", "projects", "project-a");
+  fs.mkdirSync(oneAccountPersonal, { recursive: true });
+  fs.writeFileSync(path.join(oneAccountPersonal, "usage.jsonl"), "{}\n");
+  const oneAccountDoctor = run(bin, ["--doctor", "--check"], {
+    env: {
+      ...process.env,
+      HOME: oneAccountHome,
+      MIZAN_CONFIG: path.join(oneAccountHome, ".mizan", "config.json"),
+    },
+  });
+  assertIncludes(oneAccountDoctor.stdout, "Setup looks usable", "--doctor should pass one-account setup");
+  assertIncludes(oneAccountDoctor.stdout, "Optional: add a work transcript folder", "--doctor should make the second account optional");
 
   const report = run(bin, ["--report", "--demo", "--window", "7"]).stdout;
   assertIncludes(report, "# Mizan Spend Report", "--report should print Markdown");

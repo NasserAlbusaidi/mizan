@@ -10,7 +10,7 @@ test("doctor reports missing transcript folders with actionable guidance", () =>
   const report = buildDoctorReport({ home, env: {} });
   assert.equal(report.ok, false);
   assert.equal(report.accounts[0].exists, false);
-  assert.match(report.recommendations.join("\n"), /mizan --demo/);
+  assert.match(report.recommendations.join("\n"), /mizan --try/);
   assert.match(report.recommendations.join("\n"), /mizan --set-transcripts/);
   assert.doesNotMatch(report.recommendations.join("\n"), /MIZAN_PERSONAL_DIR/);
 });
@@ -53,6 +53,23 @@ test("doctor counts transcripts from explicit personal and work dirs", () => {
   assert.match(formatDoctorReport(report), /mizan --report --window 7/);
   assert.match(formatDoctorReport(report), /Host: 0\.0\.0\.0 \(network-accessible\)/);
   assert.match(formatDoctorReport(report), /daily \$20, monthly \$250/);
+});
+
+test("doctor treats one-account transcript setup as usable", () => {
+  const home = fs.mkdtempSync(path.join(os.tmpdir(), "mizan-doctor-one-account-"));
+  const personal = path.join(home, ".claude", "projects", "project-a");
+  fs.mkdirSync(personal, { recursive: true });
+  fs.writeFileSync(path.join(personal, "usage.jsonl"), "{}\n");
+
+  const report = buildDoctorReport({ home, env: {} });
+  const text = formatDoctorReport(report);
+
+  assert.equal(report.ok, true);
+  assert.match(text, /personal\s+1 transcript/);
+  assert.match(text, /work\s+missing/);
+  assert.match(text, /Setup looks usable/);
+  assert.match(text, /Optional: add a work transcript folder/);
+  assert.doesNotMatch(text, /Work transcripts are missing/);
 });
 
 test("doctor recommends fixing invalid budget values", () => {

@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.9
+
+- Treats one-account transcript setups as usable when either personal or work
+  transcripts are present.
+- Makes the missing second account an optional setup note instead of the primary
+  doctor recommendation.
+- Points missing-folder onboarding at `mizan --try`.
+
 ## 0.1.8
 
 - Makes `mizan --try` start with a clearer demo-mode intro before the failing

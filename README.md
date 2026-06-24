@@ -33,19 +33,19 @@ client, employer, or reimbursement log.
 Try a terminal demo without installing anything globally:
 
 ```bash
-npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.8 -- mizan --try
+npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.9 -- mizan --try
 ```
 
 Install the current GitHub release from its tag:
 
 ```bash
-npm install -g github:NasserAlbusaidi/mizan#v0.1.8
+npm install -g github:NasserAlbusaidi/mizan#v0.1.9
 ```
 
 If your npm client cannot install from GitHub tags, use the release tarball:
 
 ```bash
-npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.8/nasseralbusaidi-mizan-0.1.8.tgz
+npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.9/nasseralbusaidi-mizan-0.1.9.tgz
 ```
 
 Preview the dashboard without reading local transcripts:
@@ -162,6 +162,8 @@ cannot see any usable `.jsonl` transcript files.
 `mizan --doctor` is the first thing to run when the dashboard looks empty. It
 prints the transcript folders Mizan can see, how many `.jsonl` files were found,
 the cache path, bind host, work markers, and the next setup step.
+For one-account users, one transcript folder is enough; the second account is
+optional unless you split personal and work Claude configs.
 Use `mizan --doctor --check` in scripts when setup should fail with exit code
 `2` unless at least one transcript folder has usable `.jsonl` files.
 

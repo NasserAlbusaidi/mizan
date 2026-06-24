@@ -23,27 +23,36 @@ export function buildDoctorReport({ env = process.env, home = os.homedir() } = {
   });
 
   const totalTranscripts = accountReports.reduce((sum, item) => sum + item.transcripts, 0);
+  const hasAnyTranscripts = accountReports.some((item) => item.transcripts > 0);
   const recommendations = [];
 
   if (!accountReports.some((item) => item.exists)) {
     recommendations.push(
-      "No transcript folders were found. Try `mizan --demo` first, then run `mizan --set-transcripts personal=/path/to/personal/projects work=/path/to/work/projects`.",
+      "No transcript folders were found. Try `mizan --try` first, then run `mizan --set-transcripts personal=/path/to/personal/projects work=/path/to/work/projects`.",
     );
   } else if (totalTranscripts === 0) {
     recommendations.push(
       "Transcript folders exist, but no .jsonl files were found. Run Claude Code once or update the saved folders with `mizan --set-transcripts personal=/path work=/path`.",
+    );
+  } else {
+    recommendations.push(
+      "Setup looks usable. Run `mizan` for the dashboard, `mizan --report --window 7` for a weekly report, or `mizan --json --window 7` for a scriptable snapshot.",
     );
   }
 
   for (const item of accountReports) {
     if (item.account === "personal" && !item.exists) {
       recommendations.push(
-        "Personal transcripts are missing. Persist the folder with `mizan --set-transcripts personal=/path/to/projects`.",
+        hasAnyTranscripts
+          ? "Optional: add a personal transcript folder with `mizan --set-transcripts personal=/path/to/projects` if you use a second Claude config."
+          : "Personal transcripts are missing. Persist the folder with `mizan --set-transcripts personal=/path/to/projects`.",
       );
     }
     if (item.account === "work" && !item.exists) {
       recommendations.push(
-        "Work transcripts are missing. This is fine for one-account users; otherwise persist it with `mizan --set-transcripts work=/path/to/projects`.",
+        hasAnyTranscripts
+          ? "Optional: add a work transcript folder with `mizan --set-transcripts work=/path/to/projects` if you use a second Claude config."
+          : "Work transcripts are missing. This is fine for one-account users; otherwise persist it with `mizan --set-transcripts work=/path/to/projects`.",
       );
     }
   }
@@ -68,7 +77,7 @@ export function buildDoctorReport({ env = process.env, home = os.homedir() } = {
   }
 
   return {
-    ok: accountReports.some((item) => item.transcripts > 0),
+    ok: hasAnyTranscripts,
     accounts: accountReports,
     configFile: { path: user.path, exists: user.exists, error: user.error },
     cacheFile: CACHE_FILE,
