@@ -174,9 +174,22 @@
 
     if (!d.totals.reqs) {
       actions.push({
+        tone: "good",
+        title: "Preview demo data first",
+        body: "Open the sample dashboard to see leak detection, burn rate, cache savings, and report copy without reading local transcripts.",
+        command: "mizan --demo",
+      });
+      actions.push({
+        tone: "neutral",
+        title: "Run setup diagnostics",
+        body: `Check whether Mizan can see the expected transcript folders: ${list((d.config?.accounts || []).map((a) => a.dir))}.`,
+        command: "mizan --setup",
+      });
+      actions.push({
         tone: "danger",
-        title: "Point Mizan at real transcript folders",
-        body: `Expected ${list((d.config?.accounts || []).map((a) => a.dir))}. Run mizan --doctor, then persist folder paths with mizan --set-transcripts personal=/path work=/path.`,
+        title: "Save transcript folders",
+        body: "Persist custom personal/work project folders when Claude Code transcripts live outside the defaults.",
+        command: "mizan --set-transcripts personal=/path work=/path",
       });
       return actions;
     }

@@ -23,6 +23,16 @@ test("dashboard exposes a copyable weekly review command", () => {
   assert.match(css, /\.mini-copy/);
 });
 
+test("dashboard empty state gives users a copyable demo command first", () => {
+  const app = fs.readFileSync("public/app.js", "utf8");
+
+  assert.match(app, /Preview demo data first/);
+  assert.match(app, /command: "mizan --demo"/);
+  assert.match(app, /Run setup diagnostics/);
+  assert.match(app, /command: "mizan --setup"/);
+  assert.match(app, /command: "mizan --set-transcripts personal=\/path work=\/path"/);
+});
+
 test("dashboard exposes a one-day spend window tab", () => {
   const index = fs.readFileSync("public/index.html", "utf8");
 

@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.3
+
+- Adds browser-facing zero-record action cards with copyable commands for demo
+  mode, setup diagnostics, and saved transcript folders.
+
 ## 0.1.2
 
 - Adds first-run dashboard guidance when no usage records are found, pointing
