@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.15
+
+- Lets dashboard action-card commands wrap instead of truncating, so copyable
+  report and setup commands remain readable in narrow cards.
+
 ## 0.1.14
 
 - Adds a dashboard action queue warning when spend materially jumps versus the

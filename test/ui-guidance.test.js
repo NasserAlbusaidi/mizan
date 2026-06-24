@@ -49,3 +49,12 @@ test("dashboard action queue warns about unpriced model usage", () => {
   assert.match(app, /findUnpricedModels/);
   assert.match(app, /Totals may be understated/);
 });
+
+test("dashboard action commands wrap instead of truncating", () => {
+  const css = fs.readFileSync("public/styles.css", "utf8");
+  const actionCommandCode = css.match(/\.action-command code\s*\{[^}]+\}/s)?.[0] || "";
+
+  assert.match(actionCommandCode, /overflow-wrap:\s*anywhere/);
+  assert.doesNotMatch(actionCommandCode, /text-overflow:\s*ellipsis/);
+  assert.doesNotMatch(actionCommandCode, /white-space:\s*nowrap/);
+});
