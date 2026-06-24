@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.25
+
+- Makes the stable latest tarball URL the primary no-global-install demo path in
+  README, launch kit, and `mizan --share`.
+
 ## 0.1.24
 
 - Uses a stable `releases/latest/download/mizan-latest.tgz` fallback install URL
