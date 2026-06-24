@@ -25,6 +25,10 @@ test("--try prints a demo summary and next steps without starting the dashboard"
   });
 
   assert.equal(result.status, 0);
+  assert.match(result.stdout, /^Mizan try mode/m);
+  assert.match(result.stdout, /Demo data only/);
+  assert.match(result.stdout, /No local transcripts are read/);
+  assert.match(result.stdout, /sample intentionally includes wrong-account leaks/);
   assert.match(result.stdout, /^Mizan summary \[FAIL\] \(demo\)/m);
   assert.match(result.stdout, /Leaks: 2/);
   assert.match(result.stdout, /Next:/);

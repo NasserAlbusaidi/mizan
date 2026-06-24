@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.1.8
+
+- Makes `mizan --try` start with a clearer demo-mode intro before the failing
+  sample summary.
+- Explains that the try command reads no local transcripts and intentionally
+  includes sample wrong-account leaks.
+
 ## 0.1.7
 
 - Adds `mizan --try`, a terminal-first demo summary with next setup commands.

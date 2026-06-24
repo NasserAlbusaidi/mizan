@@ -276,7 +276,11 @@ function formatSetupReport(config, report) {
 }
 
 function formatTryReport(summary, next) {
-  return `${formatSummary(summary)}
+  return `Mizan try mode
+Demo data only. No local transcripts are read.
+The sample intentionally includes wrong-account leaks so you can see what Mizan catches.
+
+${formatSummary(summary)}
 Next:
   - Open the sample dashboard: ${next[0]}
   - Check real transcript setup: ${next[1]}

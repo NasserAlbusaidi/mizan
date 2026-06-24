@@ -36,11 +36,15 @@ try {
   assertIncludes(help, "mizan --support-bundle", "--help should document support bundles");
 
   const version = run(bin, ["--version"]).stdout.trim();
-  if (version !== "@nasseralbusaidi/mizan 0.1.7") {
+  if (version !== "@nasseralbusaidi/mizan 0.1.8") {
     throw new Error(`installed --version printed ${JSON.stringify(version)}`);
   }
 
   const tryOutput = run(bin, ["--try"]).stdout;
+  assertIncludes(tryOutput, "Mizan try mode", "--try should identify try mode");
+  assertIncludes(tryOutput, "Demo data only", "--try should explain demo data");
+  assertIncludes(tryOutput, "No local transcripts are read", "--try should explain privacy");
+  assertIncludes(tryOutput, "sample intentionally includes wrong-account leaks", "--try should explain intentional leaks");
   assertIncludes(tryOutput, "Mizan summary [FAIL] (demo)", "--try should print a demo summary");
   assertIncludes(tryOutput, "Next:", "--try should print next steps");
   assertIncludes(tryOutput, "mizan --setup", "--try should point to setup");
