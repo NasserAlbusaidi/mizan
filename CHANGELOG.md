@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.32
+
+- Adds a Markdown report `Account Split` section with personal/work spend,
+  request count, and output tokens so saved weekly reports are more useful for
+  reimbursement and client/internal review.
+
 ## 0.1.31
 
 - Adds a dashboard `Save report` control that downloads the same redacted

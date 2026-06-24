@@ -65,6 +65,24 @@ test("markdown report is copyable and does not expose absolute home paths", () =
   assert.match(markdown, /Paths are redacted/);
 });
 
+test("markdown report includes account split for reimbursement review", () => {
+  const markdown = formatMarkdownReport(
+    buildReport(
+      baseData({
+        accounts: {
+          personal: { cost: 80, reqs: 20, output: 100_000 },
+          work: { cost: 45.5, reqs: 28, output: 120_000 },
+        },
+      }),
+    ),
+  );
+
+  assert.match(markdown, /## Account Split/);
+  assert.match(markdown, /\| Account \| Spend \| Requests \| Output tokens \|/);
+  assert.match(markdown, /\| personal \| \$80\.00 \| 20 \| 100\.0k \|/);
+  assert.match(markdown, /\| work \| \$45\.50 \| 28 \| 120\.0k \|/);
+});
+
 test("markdown report compares spend to the previous matching window", () => {
   const report = buildReport(
     baseData({

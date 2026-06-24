@@ -96,6 +96,21 @@ export function formatMarkdownReport(report) {
     }
   }
 
+  if (report.accounts.length) {
+    lines.push(
+      "",
+      "## Account Split",
+      "",
+      "| Account | Spend | Requests | Output tokens |",
+      "|---|---:|---:|---:|",
+    );
+    for (const account of report.accounts) {
+      lines.push(
+        `| ${cell(account.account)} | ${money(account.spend)} | ${account.requests} | ${tokens(account.outputTokens)} |`,
+      );
+    }
+  }
+
   if (report.actions.length) {
     lines.push("", "## Action Items", "");
     for (const action of report.actions) {
@@ -185,6 +200,13 @@ function signedPct(value) {
 
 function cell(value) {
   return String(value == null ? "" : value).replaceAll("|", "\\|");
+}
+
+function tokens(value) {
+  if (value >= 1e9) return `${(value / 1e9).toFixed(2)}B`;
+  if (value >= 1e6) return `${(value / 1e6).toFixed(1)}M`;
+  if (value >= 1e3) return `${(value / 1e3).toFixed(1)}k`;
+  return String(value || 0);
 }
 
 function titleCase(value) {
