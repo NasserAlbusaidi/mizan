@@ -1,4 +1,6 @@
 import { spawnSync } from "node:child_process";
+import fs from "node:fs";
+import os from "node:os";
 import path from "node:path";
 import { test } from "node:test";
 import assert from "node:assert/strict";
@@ -35,5 +37,38 @@ test("--try prints a demo summary and next steps without starting the dashboard"
   assert.match(result.stdout, /mizan --demo/);
   assert.match(result.stdout, /mizan --setup/);
   assert.match(result.stdout, /mizan --set-transcripts personal=\/path work=\/path/);
+  assert.doesNotMatch(result.stdout + result.stderr, /http:\/\/127\.0\.0\.1/);
+});
+
+test("--setup-kit prints recurring workflow commands without starting the dashboard", () => {
+  const result = spawnSync(process.execPath, [bin, "--setup-kit"], {
+    encoding: "utf8",
+    timeout: 5000,
+  });
+
+  assert.equal(result.status, 0);
+  assert.match(result.stdout, /^# Mizan Setup Kit/m);
+  assert.match(result.stdout, /mizan --doctor --check/);
+  assert.match(result.stdout, /mizan --report --window 7/);
+  assert.match(result.stdout, /cron/);
+  assert.match(result.stdout, /launchd/);
+  assert.match(result.stdout, /Do not attach raw transcripts/);
+  assert.doesNotMatch(result.stdout + result.stderr, /http:\/\/127\.0\.0\.1/);
+});
+
+test("--setup-kit --output writes the recurring setup artifact", () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "mizan-setup-kit-"));
+  const output = path.join(dir, "nested", "setup-kit.md");
+  const result = spawnSync(process.execPath, [bin, "--setup-kit", "--output", output], {
+    encoding: "utf8",
+    timeout: 5000,
+  });
+
+  assert.equal(result.status, 0);
+  assert.match(result.stdout, /Wrote setup kit to/);
+  const body = fs.readFileSync(output, "utf8");
+  assert.match(body, /^# Mizan Setup Kit/m);
+  assert.match(body, /mizan --report --window 7/);
+  assert.match(body, /Do not attach raw transcripts/);
   assert.doesNotMatch(result.stdout + result.stderr, /http:\/\/127\.0\.0\.1/);
 });

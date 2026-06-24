@@ -22,6 +22,7 @@ import { formatPricingReport, pricingRows, PRICING_METADATA } from "../src/prici
 import { buildSummary, formatSummary } from "../src/summary.js";
 import { buildReport, formatMarkdownReport } from "../src/report.js";
 import { buildSupportBundle, formatSupportBundle } from "../src/support-bundle.js";
+import { formatSetupKit } from "../src/setup-kit.js";
 
 const require = createRequire(import.meta.url);
 const packageJson = require("../package.json");
@@ -123,6 +124,11 @@ if (options.doctor) {
     console.error(`mizan: ${err.stack || err.message}`);
     process.exit(1);
   }
+}
+
+if (options.setupKit) {
+  emitOutput(formatSetupKit(), options.output, "setup kit");
+  process.exit(0);
 }
 
 if (options.supportBundle) {

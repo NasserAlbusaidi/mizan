@@ -12,6 +12,7 @@ test("parseCliArgs defaults to dashboard mode", () => {
   assert.equal(opts.warm, true);
   assert.equal(opts.json, false);
   assert.equal(opts.supportBundle, false);
+  assert.equal(opts.setupKit, false);
 });
 
 test("parseCliArgs supports JSON snapshots and explicit windows", () => {
@@ -39,6 +40,7 @@ test("parseCliArgs supports JSON snapshots and explicit windows", () => {
   assert.equal(opts.pricing, true);
   assert.equal(opts.version, false);
   assert.equal(opts.initConfig, false);
+  assert.equal(opts.setupKit, false);
   assert.equal(opts.summary, true);
   assert.equal(opts.report, false);
   assert.equal(opts.check, true);
@@ -86,6 +88,13 @@ test("parseCliArgs supports setup mode", () => {
   assert.equal(opts.open, false);
 });
 
+test("parseCliArgs supports setup kit mode", () => {
+  const opts = parseCliArgs(["--setup-kit", "--output", "setup-kit.md"]);
+  assert.equal(opts.setupKit, true);
+  assert.equal(opts.output, "setup-kit.md");
+  assert.equal(opts.open, false);
+});
+
 test("parseCliArgs rejects unsafe ports, hosts, and unknown windows", () => {
   assert.throws(() => parseCliArgs(["--port", "70000"]), /Invalid port/);
   assert.throws(() => parseCliArgs(["--host", "bad/host"]), /Invalid host/);
@@ -106,6 +115,7 @@ test("helpText documents the scriptable JSON path", () => {
   assert.match(text, /mizan --demo/);
   assert.match(text, /mizan --doctor/);
   assert.match(text, /mizan --doctor --check/);
+  assert.match(text, /mizan --setup-kit/);
   assert.match(text, /mizan --setup/);
   assert.match(text, /mizan --init-config/);
   assert.match(text, /mizan --set-budget daily=20 monthly=250/);
@@ -116,6 +126,7 @@ test("helpText documents the scriptable JSON path", () => {
   assert.match(text, /mizan --summary/);
   assert.match(text, /mizan --report/);
   assert.match(text, /mizan --report --output reports\/week\.md/);
+  assert.match(text, /weekly review, cron, and launchd/i);
   assert.match(text, /mizan --check/);
   assert.match(text, /unusable setup with --doctor/);
   assert.match(text, /mizan --version/);
@@ -143,6 +154,7 @@ test("parseCliArgs supports output for one-shot commands", () => {
   assert.equal(parseCliArgs(["--json", "--output", "data.json"]).output, "data.json");
   assert.equal(parseCliArgs(["--doctor", "--output", "doctor.txt"]).output, "doctor.txt");
   assert.equal(parseCliArgs(["--setup", "--output", "setup.txt"]).output, "setup.txt");
+  assert.equal(parseCliArgs(["--setup-kit", "--output", "setup-kit.md"]).output, "setup-kit.md");
   assert.equal(parseCliArgs(["--try", "--output", "try.txt"]).output, "try.txt");
   assert.equal(parseCliArgs(["--pricing", "--output", "pricing.txt"]).output, "pricing.txt");
   assert.equal(parseCliArgs(["--support-bundle", "--output", "support.md"]).output, "support.md");

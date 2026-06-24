@@ -9,6 +9,7 @@ export function parseCliArgs(argv, defaults = {}) {
     demo: false,
     setup: false,
     doctor: false,
+    setupKit: false,
     pricing: false,
     initConfig: false,
     setBudget: null,
@@ -76,6 +77,11 @@ export function parseCliArgs(argv, defaults = {}) {
     }
     if (arg === "--doctor") {
       options.doctor = true;
+      options.open = false;
+      continue;
+    }
+    if (arg === "--setup-kit") {
+      options.setupKit = true;
       options.open = false;
       continue;
     }
@@ -185,6 +191,7 @@ function validateOptions(options) {
   const writesOneShotOutput =
     options.doctor ||
     options.setup ||
+    options.setupKit ||
     options.tryDemo ||
     options.pricing ||
     options.supportBundle ||
@@ -194,7 +201,7 @@ function validateOptions(options) {
     options.json;
   if (!writesOneShotOutput) {
     throw new Error(
-      "--output requires a one-shot output mode: --report, --summary, --today, --json, --doctor, --pricing, or --support-bundle.",
+      "--output requires a one-shot output mode: --report, --summary, --today, --json, --try, --setup, --doctor, --setup-kit, --pricing, or --support-bundle.",
     );
   }
 }
@@ -325,6 +332,7 @@ Usage:
   mizan --setup                 Create config if needed, diagnose setup, and exit
   mizan --doctor                Check transcript folders and setup
   mizan --doctor --check        Exit nonzero when transcript setup is unusable
+  mizan --setup-kit             Print weekly review, cron, and launchd commands
   mizan --init-config           Create ~/.mizan/config.json template and exit
   mizan --set-budget daily=20 monthly=250
   mizan --add-work-marker /Clients/
@@ -344,6 +352,7 @@ Options:
   --demo                        Use anonymized sample data instead of transcripts
   --setup                       Create config if needed, then run setup diagnostics
   --doctor                      Print setup diagnostics and exit
+  --setup-kit                   Print a local weekly-review setup kit and exit
   --init-config                 Write a config template if one does not exist
   --set-budget daily=N monthly=N
                                 Save persistent USD budgets; use off/unset to clear
@@ -355,7 +364,7 @@ Options:
   --summary                     Print compact summary and exit
   --report                      Print redacted Markdown report; combine with --json for structured output
   --check                       Exit 2 on leaks/budgets, or unusable setup with --doctor
-  --output <file>               Save one-shot output from report/summary/json/try/setup/doctor/pricing/support
+  --output <file>               Save one-shot output from report/summary/json/try/setup/doctor/setup-kit/pricing/support
   --version                     Print package version and exit
   --no-warm                     Skip the startup cache warm-up
   --no-open                     Do not open the browser automatically

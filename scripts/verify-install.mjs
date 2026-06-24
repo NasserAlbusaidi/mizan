@@ -33,10 +33,11 @@ try {
   assertIncludes(help, "mizan --set-budget daily=20 monthly=250", "--help should document budget setup");
   assertIncludes(help, "mizan --add-work-marker /Clients/", "--help should document work marker setup");
   assertIncludes(help, "mizan --set-transcripts", "--help should document transcript setup");
+  assertIncludes(help, "mizan --setup-kit", "--help should document setup kit output");
   assertIncludes(help, "mizan --support-bundle", "--help should document support bundles");
 
   const version = run(bin, ["--version"]).stdout.trim();
-  if (version !== "@nasseralbusaidi/mizan 0.1.9") {
+  if (version !== "@nasseralbusaidi/mizan 0.1.10") {
     throw new Error(`installed --version printed ${JSON.stringify(version)}`);
   }
 
@@ -48,6 +49,19 @@ try {
   assertIncludes(tryOutput, "Mizan summary [FAIL] (demo)", "--try should print a demo summary");
   assertIncludes(tryOutput, "Next:", "--try should print next steps");
   assertIncludes(tryOutput, "mizan --setup", "--try should point to setup");
+
+  const setupKit = run(bin, ["--setup-kit"]).stdout;
+  assertIncludes(setupKit, "# Mizan Setup Kit", "--setup-kit should print Markdown");
+  assertIncludes(setupKit, "mizan --doctor --check", "--setup-kit should include setup checks");
+  assertIncludes(setupKit, "cron", "--setup-kit should include cron guidance");
+  assertIncludes(setupKit, "launchd", "--setup-kit should include launchd guidance");
+  assertIncludes(setupKit, "Do not attach raw transcripts", "--setup-kit should include privacy guidance");
+
+  const setupKitPath = path.join(tempRoot, "reports", "setup-kit.md");
+  const setupKitOutput = run(bin, ["--setup-kit", "--output", setupKitPath]).stdout;
+  assertIncludes(setupKitOutput, `Wrote setup kit to ${setupKitPath}`, "--setup-kit --output should print the saved path");
+  const savedSetupKit = fs.readFileSync(setupKitPath, "utf8");
+  assertIncludes(savedSetupKit, "# Mizan Setup Kit", "--setup-kit --output should write Markdown");
 
   const pricing = JSON.parse(run(bin, ["--pricing", "--json"]).stdout);
   if (!pricing.rows.some((row) => row.family === "mythos")) {

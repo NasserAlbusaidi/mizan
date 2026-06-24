@@ -3,6 +3,12 @@
 Use this kit to turn Mizan from a dashboard you open once into a weekly habit.
 It keeps the workflow local and avoids raw transcript sharing.
 
+You can print this workflow from an installed CLI with:
+
+```bash
+mizan --setup-kit
+```
+
 ## One-Time Setup
 
 Create a local config and check what Mizan can see:

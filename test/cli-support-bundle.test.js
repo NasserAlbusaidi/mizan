@@ -26,7 +26,7 @@ test("--support-bundle prints redacted Markdown diagnostics", () => {
 
   assert.equal(result.status, 0);
   assert.match(result.stdout, /^# Mizan Support Bundle/m);
-  assert.match(result.stdout, /Mizan: @nasseralbusaidi\/mizan 0\.1\.9/);
+  assert.match(result.stdout, /Mizan: @nasseralbusaidi\/mizan 0\.1\.10/);
   assert.match(result.stdout, /## Doctor/m);
   assert.match(result.stdout, /~\/\.claude\/projects/);
   assert.match(result.stdout, /No raw transcript lines are included/);

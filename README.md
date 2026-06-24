@@ -33,19 +33,19 @@ client, employer, or reimbursement log.
 Try a terminal demo without installing anything globally:
 
 ```bash
-npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.9 -- mizan --try
+npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.10 -- mizan --try
 ```
 
 Install the current GitHub release from its tag:
 
 ```bash
-npm install -g github:NasserAlbusaidi/mizan#v0.1.9
+npm install -g github:NasserAlbusaidi/mizan#v0.1.10
 ```
 
 If your npm client cannot install from GitHub tags, use the release tarball:
 
 ```bash
-npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.9/nasseralbusaidi-mizan-0.1.9.tgz
+npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.10/nasseralbusaidi-mizan-0.1.10.tgz
 ```
 
 Preview the dashboard without reading local transcripts:
@@ -137,6 +137,7 @@ mizan --demo
 mizan --setup
 mizan --doctor
 mizan --doctor --check
+mizan --setup-kit
 mizan --init-config
 mizan --set-budget daily=20 monthly=250
 mizan --add-work-marker /Clients/
@@ -166,6 +167,11 @@ For one-account users, one transcript folder is enough; the second account is
 optional unless you split personal and work Claude configs.
 Use `mizan --doctor --check` in scripts when setup should fail with exit code
 `2` unless at least one transcript folder has usable `.jsonl` files.
+
+`mizan --setup-kit` prints a copyable weekly review setup kit: first-run checks,
+report commands, cron, launchd, and privacy reminders. Use
+`mizan --setup-kit --output "$HOME/Documents/Mizan/setup-kit.md"` if you want to
+save it beside generated reports.
 
 `mizan --init-config` creates `~/.mizan/config.json` with editable defaults.
 
@@ -211,6 +217,7 @@ mizan --set-budget daily=20 monthly=250
 mizan --add-work-marker /Clients/
 mizan --set-transcripts personal="$HOME/.claude/projects" work="$HOME/.claude-work/projects"
 mizan --support-bundle --output "$HOME/Documents/Mizan/support-bundle.md"
+mizan --setup-kit --output "$HOME/Documents/Mizan/setup-kit.md"
 mizan --doctor --check
 MIZAN_DAILY_BUDGET=20 MIZAN_MONTHLY_BUDGET=250 mizan --check
 mizan --check --json --window 30
@@ -219,9 +226,9 @@ mizan --check --json --window 30
 Use `--report --check` in scheduled jobs when you want a Markdown report in the
 logs and a failing exit code whenever leaks or budget overruns need attention.
 Add `--output path/to/report.md` to save one-shot output from `--report`,
-`--summary`, `--today`, `--json`, `--setup`, `--doctor`, `--pricing`, or
-`--support-bundle` without shell redirection; parent directories are created
-automatically.
+`--summary`, `--today`, `--json`, `--setup`, `--doctor`, `--setup-kit`,
+`--pricing`, or `--support-bundle` without shell redirection; parent directories
+are created automatically.
 
 For recurring reviews, automation examples, and reimbursement note templates,
 see the [Setup Kit](docs/SETUP_KIT.md). For demo flow and public post copy, see

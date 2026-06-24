@@ -7,6 +7,8 @@ test("README links to the packaged setup kit", () => {
   const pkg = JSON.parse(fs.readFileSync("package.json", "utf8"));
 
   assert.match(readme, /\[Setup Kit\]\(docs\/SETUP_KIT\.md\)/);
+  assert.match(readme, /mizan --setup-kit/);
+  assert.match(readme, /weekly review setup kit/i);
   assert.ok(pkg.files.includes("docs"));
 });
 

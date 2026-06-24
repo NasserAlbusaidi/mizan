@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.10
+
+- Adds `mizan --setup-kit`, a copyable weekly-review setup kit with first-run
+  checks, report commands, cron, launchd, and privacy reminders.
+- Supports `mizan --setup-kit --output path/to/setup-kit.md` for saving the
+  recurring workflow beside generated reports.
+- Extends packaged install verification to cover the setup-kit command.
+
 ## 0.1.9
 
 - Treats one-account transcript setups as usable when either personal or work
