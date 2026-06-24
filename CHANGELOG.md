@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.6
+
+- Refreshes pricing metadata against Anthropic's public pricing page.
+- Prices retired Haiku 3.5 transcript records separately from Haiku 4.5 so old
+  local history is not overcounted.
+- Clarifies that estimates use standard global Claude API rates and do not apply
+  fast mode, batch, partner cloud, or data residency multipliers.
+
 ## 0.1.5
 
 - Makes the tag-pinned GitHub install command the primary pre-npm install path.

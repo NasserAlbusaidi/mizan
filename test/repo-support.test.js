@@ -29,7 +29,7 @@ test("repo has public support and security docs", () => {
 test("package metadata points npm users to the public GitHub repo", () => {
   const pkg = JSON.parse(fs.readFileSync("package.json", "utf8"));
 
-  assert.equal(pkg.version, "0.1.5");
+  assert.equal(pkg.version, "0.1.6");
   assert.deepEqual(pkg.repository, {
     type: "git",
     url: "git+https://github.com/NasserAlbusaidi/mizan.git",
@@ -52,6 +52,17 @@ test("README documents the support bundle command", () => {
 
   assert.match(readme, /mizan --support-bundle/);
   assert.match(readme, /redacted support bundle/);
+});
+
+test("README pricing section names current source date and estimate limits", () => {
+  const readme = fs.readFileSync("README.md", "utf8");
+  const pricing = section(readme, "## Pricing", "## Configuration");
+
+  assert.match(pricing, /checked on\s+2026-06-25/);
+  assert.match(pricing, /Haiku 3\.5/);
+  assert.match(pricing, /\$0\.80/);
+  assert.match(pricing, /standard global Claude API rates/);
+  assert.match(pricing, /does not apply fast mode, batch,\s+partner cloud, or data residency multipliers/);
 });
 
 test("README shows public trust signals before install", () => {
@@ -99,14 +110,14 @@ test("README documents the versioned GitHub install paths before npm publish", (
   const readme = fs.readFileSync("README.md", "utf8");
   const quickStart = section(readme, "## Quick Start", "## CLI");
 
-  assert.match(quickStart, /npm install -g github:NasserAlbusaidi\/mizan#v0\.1\.5/);
+  assert.match(quickStart, /npm install -g github:NasserAlbusaidi\/mizan#v0\.1\.6/);
   assert.ok(
-    quickStart.indexOf("github:NasserAlbusaidi/mizan#v0.1.5") <
-      quickStart.indexOf("releases/download/v0.1.5"),
+    quickStart.indexOf("github:NasserAlbusaidi/mizan#v0.1.6") <
+      quickStart.indexOf("releases/download/v0.1.6"),
   );
   assert.match(
     readme,
-    /npm install -g https:\/\/github\.com\/NasserAlbusaidi\/mizan\/releases\/download\/v0\.1\.5\/nasseralbusaidi-mizan-0\.1\.5\.tgz/,
+    /npm install -g https:\/\/github\.com\/NasserAlbusaidi\/mizan\/releases\/download\/v0\.1\.6\/nasseralbusaidi-mizan-0\.1\.6\.tgz/,
   );
   assert.match(readme, /npm package is prepared but not published yet/i);
   assert.match(readme, /npx @nasseralbusaidi\/mizan.*after npm publish/is);
@@ -133,10 +144,10 @@ test("launch kit gives a practical public launch script", () => {
   assert.match(kit, /mizan --setup/);
   assert.match(kit, /mizan --demo/);
   assert.match(kit, /Copy report/);
-  assert.match(kit, /npm install -g github:NasserAlbusaidi\/mizan#v0\.1\.5/);
+  assert.match(kit, /npm install -g github:NasserAlbusaidi\/mizan#v0\.1\.6/);
   assert.match(
     kit,
-    /npm install -g https:\/\/github\.com\/NasserAlbusaidi\/mizan\/releases\/download\/v0\.1\.5\/nasseralbusaidi-mizan-0\.1\.5\.tgz/,
+    /npm install -g https:\/\/github\.com\/NasserAlbusaidi\/mizan\/releases\/download\/v0\.1\.6\/nasseralbusaidi-mizan-0\.1\.6\.tgz/,
   );
   assert.match(kit, /Show HN/);
   assert.match(kit, /npm package is prepared but not published yet/i);

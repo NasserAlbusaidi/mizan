@@ -33,13 +33,13 @@ client, employer, or reimbursement log.
 Install the current GitHub release from its tag:
 
 ```bash
-npm install -g github:NasserAlbusaidi/mizan#v0.1.5
+npm install -g github:NasserAlbusaidi/mizan#v0.1.6
 ```
 
 If your npm client cannot install from GitHub tags, use the release tarball:
 
 ```bash
-npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.5/nasseralbusaidi-mizan-0.1.5.tgz
+npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.6/nasseralbusaidi-mizan-0.1.6.tgz
 ```
 
 Preview the product without reading local transcripts:
@@ -270,7 +270,7 @@ See [SUPPORT.md](SUPPORT.md), [SECURITY.md](SECURITY.md), and
 ## Pricing — read this
 
 This tool uses Anthropic Claude API public per-MTok pricing checked on
-2026-06-24:
+2026-06-25:
 
 | Model | Input | Output |
 |---|---|---|
@@ -280,8 +280,11 @@ This tool uses Anthropic Claude API public per-MTok pricing checked on
 | Opus 4.1 / 4.0 | $15 | $75 |
 | Sonnet 4.6 | $3 | $15 |
 | Haiku 4.5 | $1 | $5 |
+| Haiku 3.5 | $0.80 | $4 |
 
 Cache tiers are derived: read = 0.1× input, write-5m = 1.25×, write-1h = 2×.
+Mizan uses standard global Claude API rates and does not apply fast mode, batch,
+partner cloud, or data residency multipliers.
 Unmatched non-synthetic models are priced at `$0` and shown as unpriced warnings
 in the dashboard, summary, and report so totals are not trusted silently.
 

@@ -1,6 +1,6 @@
 // Cost computation — MONEY CODE. Table-driven, pure, and unit-tested.
 //
-// Public per-MTok pricing (USD), Anthropic Claude API, checked 2026-06-24:
+// Public per-MTok pricing (USD), Anthropic Claude API, checked 2026-06-25:
 //   Fable 5      $10 / $50
 //   Mythos 5     $10 / $50
 //   Opus 4.5–4.8 $5  / $25
@@ -9,6 +9,8 @@
 //                                 undercounted.
 //   Sonnet 4.6   $3  / $15
 //   Haiku 4.5    $1  / $5
+//   Haiku 3.5    $0.80 / $4     <- retired, but older transcript records may
+//                                 still exist and should not be overcounted.
 //
 // Cache tiers are fixed multiples of the input price:
 //   cache read      = 0.10x input
@@ -19,11 +21,11 @@
 // unmatched non-synthetic model usage so estimates are not trusted silently.
 
 export const PRICING_METADATA = Object.freeze({
-  checkedAt: "2026-06-24",
+  checkedAt: "2026-06-25",
   sourceName: "Anthropic Claude API pricing",
   sourceUrl: "https://docs.anthropic.com/en/docs/about-claude/pricing",
   claudeCodeCostsUrl: "https://docs.anthropic.com/en/docs/claude-code/costs",
-  note: "Claude Code charges by API token consumption. Mizan estimates from local transcript usage records; authoritative billing remains Anthropic. Unmatched non-synthetic models are flagged as unpriced warnings.",
+  note: "Claude Code charges by API token consumption. Mizan estimates from local transcript usage records using standard global Claude API rates; authoritative billing remains Anthropic. It does not apply fast mode, batch, partner cloud, or data residency multipliers. Unmatched non-synthetic models are flagged as unpriced warnings.",
 });
 
 const PER_MTOK = [
@@ -33,6 +35,7 @@ const PER_MTOK = [
   ["opus-4.1/4", /opus-4(?:-1\b|-1-|-\d{8}|$)/, 15, 75],
   ["opus-4.5+", /opus/, 5, 25],
   ["sonnet", /sonnet/, 3, 15],
+  ["haiku-3.5", /haiku-3-5|3-5-haiku|haiku-2024|haiku-3\.5/, 0.8, 4],
   ["haiku", /haiku/, 1, 5],
 ];
 

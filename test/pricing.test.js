@@ -19,6 +19,7 @@ test("priceFor resolves each model family and derived cache tiers", () => {
     ["claude-opus-4-20250514", 15, 75, 1.5, 18.75, 30],
     ["claude-sonnet-4-6", 3, 15, 0.3, 3.75, 6],
     ["claude-haiku-4-5-20251001", 1, 5, 0.1, 1.25, 2],
+    ["claude-3-5-haiku-20241022", 0.8, 4, 0.08, 1, 1.6],
     ["claude-fable-5", 10, 50, 1, 12.5, 20],
     ["claude-mythos-5", 10, 50, 1, 12.5, 20],
     ["<synthetic>", 0, 0, 0, 0, 0], // local, never billed
@@ -40,15 +41,19 @@ test("priceFor matches fable before opus (ordering does not misclassify)", () =>
 });
 
 test("pricing metadata and report expose source and checked date", () => {
-  assert.equal(PRICING_METADATA.checkedAt, "2026-06-24");
+  assert.equal(PRICING_METADATA.checkedAt, "2026-06-25");
   assert.match(PRICING_METADATA.sourceUrl, /anthropic\.com/);
   assert.ok(pricingRows().some((row) => row.family === "mythos"));
   assert.ok(pricingRows().some((row) => row.family === "opus-4.1/4"));
+  assert.ok(pricingRows().some((row) => row.family === "haiku-3.5"));
   const report = formatPricingReport();
   assert.match(report, /Mizan pricing assumptions/);
   assert.match(report, /mythos/);
   assert.match(report, /opus-4\.1\/4/);
-  assert.match(report, /checked 2026-06-24/);
+  assert.match(report, /haiku-3\.5/);
+  assert.match(report, /checked 2026-06-25/);
+  assert.match(report, /standard global Claude API rates/);
+  assert.match(report, /does not apply fast mode, batch, partner cloud, or data residency multipliers/);
   assert.match(report, /unpriced warnings/);
 });
 
