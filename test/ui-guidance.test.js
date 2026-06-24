@@ -13,12 +13,18 @@ test("dashboard setup guidance prefers persistent setup commands", () => {
 });
 
 test("dashboard exposes a copyable weekly review command", () => {
+  const index = fs.readFileSync("public/index.html", "utf8");
   const app = fs.readFileSync("public/app.js", "utf8");
   const css = fs.readFileSync("public/styles.css", "utf8");
 
   assert.match(app, /mizan --weekly/);
   assert.match(app, /mizan --setup-kit/);
   assert.match(app, /Make Mizan a weekly habit/);
+  assert.match(index, /id="copy-report"/);
+  assert.match(index, /id="download-report"/);
+  assert.match(app, /downloadReport/);
+  assert.match(app, /URL\.createObjectURL/);
+  assert.match(app, /mizan-report-/);
   assert.match(app, /data-copy-command/);
   assert.match(app, /copyActionCommand/);
   assert.match(css, /\.action-command/);

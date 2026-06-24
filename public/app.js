@@ -41,6 +41,16 @@
       }, 2200);
     }
   };
+  const setDownloadState = (label) => {
+    const btn = document.getElementById("download-report");
+    btn.textContent = label;
+    window.clearTimeout(btn._mzResetTimer);
+    if (label !== "Save report") {
+      btn._mzResetTimer = window.setTimeout(() => {
+        btn.textContent = "Save report";
+      }, 2200);
+    }
+  };
 
   // model -> color
   const MODEL_COLORS = [
@@ -561,6 +571,7 @@
   });
   document.getElementById("refresh").addEventListener("click", load);
   document.getElementById("copy-report").addEventListener("click", copyReport);
+  document.getElementById("download-report").addEventListener("click", downloadReport);
   document.getElementById("actions").addEventListener("click", copyActionCommand);
   window.addEventListener("resize", () => {
     if (window._mz) {
@@ -586,6 +597,33 @@
       console.error(err);
       setCopyState("Copy failed");
     } finally {
+      btn.disabled = false;
+    }
+  }
+
+  async function downloadReport() {
+    const btn = document.getElementById("download-report");
+    btn.disabled = true;
+    setDownloadState("Saving...");
+    let url = null;
+    try {
+      const res = await fetch(`/api/report?window=${state.window}`);
+      const markdown = await res.text();
+      if (!res.ok) throw new Error(markdown || res.statusText);
+      const blob = new Blob([markdown], { type: "text/markdown;charset=utf-8" });
+      url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = reportFilename();
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      setDownloadState("Saved");
+    } catch (err) {
+      console.error(err);
+      setDownloadState("Save failed");
+    } finally {
+      if (url) window.setTimeout(() => URL.revokeObjectURL(url), 0);
       btn.disabled = false;
     }
   }
@@ -629,5 +667,10 @@
     } finally {
       ta.remove();
     }
+  }
+
+  function reportFilename() {
+    const day = new Date().toISOString().slice(0, 10);
+    return `mizan-report-${state.window}-${day}.md`;
   }
 })();

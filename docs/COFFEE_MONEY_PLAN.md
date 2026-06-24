@@ -53,7 +53,7 @@ uploads.
 4. Record a 60-second demo:
    - `mizan --doctor`
    - `mizan --demo`
-   - action queue, leak detection, copy report
+   - action queue, leak detection, copy/save report
 5. Post in places where Claude Code power users already are:
    - personal X/LinkedIn
    - relevant Discord/Slack groups where self-promotion is allowed

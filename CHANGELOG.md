@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.31
+
+- Adds a dashboard `Save report` control that downloads the same redacted
+  Markdown report as `Copy report`, giving weekly review and reimbursement
+  workflows a one-click file artifact.
+
 ## 0.1.30
 
 - Makes `mizan --doctor` suggest discovered default Claude transcript folders

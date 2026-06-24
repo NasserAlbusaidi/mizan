@@ -33,13 +33,13 @@ client, employer, or reimbursement log.
 Try a terminal demo without installing anything globally:
 
 ```bash
-npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.30 -- mizan --try
+npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.31 -- mizan --try
 ```
 
 Install the current GitHub release from its pinned tag:
 
 ```bash
-npm install -g github:NasserAlbusaidi/mizan#v0.1.30
+npm install -g github:NasserAlbusaidi/mizan#v0.1.31
 ```
 
 If your npm client cannot install from GitHub tags, use the stable latest
@@ -263,8 +263,8 @@ the [Launch Kit](docs/LAUNCH_KIT.md).
   checking before reading charts.
 - **Weekly review command** — copy `mizan --weekly` from the action queue for
   redacted recurring notes.
-- **Copy report** — one-click redacted Markdown from the dashboard for notes,
-  status updates, or reimbursements.
+- **Copy or save report** — one-click redacted Markdown from the dashboard for
+  notes, status updates, or reimbursements.
 - **Headline KPIs** — spend in window, previous-window trend, today, 7-day burn
   rate, projected monthly spend, request count.
 - **Project changes** — top projects that drove spend up versus the previous

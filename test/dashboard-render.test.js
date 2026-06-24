@@ -25,24 +25,34 @@ const ids = [
   "pricing-note",
   "window-tabs",
   "copy-report",
+  "download-report",
   "updated",
 ];
 
 function makeElement(id) {
+  const listeners = {};
   return {
     id,
     hidden: false,
     innerHTML: "",
     textContent: "",
     disabled: false,
+    href: "",
+    download: "",
+    listeners,
     classList: {
       add() {},
       remove() {},
     },
-    addEventListener() {},
+    addEventListener(type, handler) {
+      listeners[type] = handler;
+    },
     closest() {
       return null;
     },
+    click() {},
+    remove() {},
+    setAttribute() {},
   };
 }
 
@@ -130,8 +140,27 @@ test("dashboard leak action explains marker fixes", async () => {
   assert.match(actions, /really work/);
 });
 
-async function renderDashboard(overrides = {}) {
+test("dashboard report download saves the redacted Markdown report", async () => {
+  const downloads = [];
+  const elements = await renderDashboard(
+    {},
+    {
+      reportMarkdown: "# Mizan Spend Report\n\nPaths are redacted\n",
+      downloads,
+    },
+  );
+
+  await elements.get("download-report").listeners.click();
+
+  assert.equal(downloads.length, 1);
+  assert.match(downloads[0].href, /^blob:mizan-report$/);
+  assert.match(downloads[0].download, /^mizan-report-30-\d{4}-\d{2}-\d{2}\.md$/);
+  assert.equal(elements.get("download-report").textContent, "Saved");
+});
+
+async function renderDashboard(overrides = {}, options = {}) {
   const elements = new Map(ids.map((id) => [id, makeElement(id)]));
+  const downloads = options.downloads || [];
   const context = {
     console,
     Date,
@@ -143,11 +172,34 @@ async function renderDashboard(overrides = {}) {
       return 1;
     },
     addEventListener() {},
-    fetch: async () => ({
-      ok: true,
-      json: async () => dashboardData(overrides),
-    }),
+    fetch: async (url) =>
+      String(url).startsWith("/api/report")
+        ? {
+            ok: true,
+            text: async () => options.reportMarkdown || "# Mizan Spend Report\n",
+          }
+        : {
+            ok: true,
+            json: async () => dashboardData(overrides),
+          },
+    Blob,
+    URL: {
+      createObjectURL() {
+        return "blob:mizan-report";
+      },
+      revokeObjectURL() {},
+    },
     document: {
+      body: {
+        appendChild() {},
+      },
+      createElement(tag) {
+        const element = makeElement(tag);
+        element.click = () => {
+          if (tag === "a") downloads.push({ href: element.href, download: element.download });
+        };
+        return element;
+      },
       getElementById(id) {
         if (!elements.has(id)) elements.set(id, makeElement(id));
         return elements.get(id);
