@@ -46,7 +46,7 @@ try {
   assertIncludes(help, "mizan --share", "--help should document public sharing copy");
 
   const version = run(bin, ["--version"]).stdout.trim();
-  if (version !== "@nasseralbusaidi/mizan 0.1.28") {
+  if (version !== "@nasseralbusaidi/mizan 0.1.29") {
     throw new Error(`installed --version printed ${JSON.stringify(version)}`);
   }
 
@@ -62,6 +62,7 @@ try {
   const setupKit = run(bin, ["--setup-kit"]).stdout;
   assertIncludes(setupKit, "# Mizan Setup Kit", "--setup-kit should print Markdown");
   assertIncludes(setupKit, "mizan --doctor --check", "--setup-kit should include setup checks");
+  assertIncludes(setupKit, "parseable Claude usage record", "--setup-kit should explain the setup check");
   assertIncludes(setupKit, "cron", "--setup-kit should include cron guidance");
   assertIncludes(setupKit, "launchd", "--setup-kit should include launchd guidance");
   assertIncludes(setupKit, "Do not attach raw transcripts", "--setup-kit should include privacy guidance");
@@ -76,10 +77,10 @@ try {
   assertIncludes(shareGuide, "# Share Mizan", "--share should print Markdown");
   assertIncludes(
     shareGuide,
-    "npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.28 -- mizan --try",
+    "npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.29 -- mizan --try",
     "--share should include the pinned no-global demo path",
   );
-  assertIncludes(shareGuide, "github:NasserAlbusaidi/mizan#v0.1.28", "--share should include the tagged install path");
+  assertIncludes(shareGuide, "github:NasserAlbusaidi/mizan#v0.1.29", "--share should include the tagged install path");
   assertIncludes(
     shareGuide,
     "releases/latest/download/mizan-latest.tgz",
@@ -152,7 +153,7 @@ try {
   const oneAccountHome = path.join(tempRoot, "one-account-home");
   const oneAccountPersonal = path.join(oneAccountHome, ".claude", "projects", "project-a");
   fs.mkdirSync(oneAccountPersonal, { recursive: true });
-  fs.writeFileSync(path.join(oneAccountPersonal, "usage.jsonl"), "{}\n");
+  fs.writeFileSync(path.join(oneAccountPersonal, "usage.jsonl"), `${usageLine("one-account")}\n`);
   const oneAccountDoctor = run(bin, ["--doctor", "--check"], {
     env: {
       ...process.env,
@@ -161,6 +162,7 @@ try {
     },
   });
   assertIncludes(oneAccountDoctor.stdout, "Setup looks usable", "--doctor should pass one-account setup");
+  assertIncludes(oneAccountDoctor.stdout, "1 usage record", "--doctor should count parseable usage records");
   assertIncludes(oneAccountDoctor.stdout, "Optional: add a work transcript folder", "--doctor should make the second account optional");
 
   const report = run(bin, ["--report", "--demo", "--window", "7"]).stdout;
@@ -223,9 +225,9 @@ try {
   const personalDir = path.join(tempRoot, "personal-projects");
   const workDir = path.join(tempRoot, "work-projects");
   fs.mkdirSync(path.join(personalDir, "project-a"), { recursive: true });
-  fs.writeFileSync(path.join(personalDir, "project-a", "usage.jsonl"), "{}\n");
+  fs.writeFileSync(path.join(personalDir, "project-a", "usage.jsonl"), `${usageLine("personal")}\n`);
   fs.mkdirSync(path.join(workDir, "project-b"), { recursive: true });
-  fs.writeFileSync(path.join(workDir, "project-b", "usage.jsonl"), "{}\n");
+  fs.writeFileSync(path.join(workDir, "project-b", "usage.jsonl"), `${usageLine("work")}\n`);
   run(bin, ["--set-transcripts", `personal=${personalDir}`, `work=${workDir}`], {
     env: { ...process.env, MIZAN_CONFIG: configPath },
   });
@@ -282,4 +284,21 @@ function assertIncludes(text, needle, message) {
   if (!text.includes(needle)) {
     throw new Error(`${message}\nExpected to find: ${needle}\nOutput:\n${text}`);
   }
+}
+
+function usageLine(id) {
+  return JSON.stringify({
+    timestamp: "2026-06-24T12:00:00.000Z",
+    cwd: "/tmp/project",
+    sessionId: `session-${id}`,
+    requestId: `request-${id}`,
+    message: {
+      id: `message-${id}`,
+      model: "claude-sonnet-4-6",
+      usage: {
+        input_tokens: 100,
+        output_tokens: 20,
+      },
+    },
+  });
 }

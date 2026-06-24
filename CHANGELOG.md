@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.29
+
+- Makes setup diagnostics verify parseable Claude usage records instead of
+  counting empty `.jsonl` files as usable, so `mizan --doctor --check` fails
+  earlier on empty or incompatible transcript folders.
+
 ## 0.1.28
 
 - Keeps demo mode self-contained by ignoring saved local budgets, config paths,

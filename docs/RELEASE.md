@@ -31,7 +31,7 @@ node bin/mizan.js --weekly --demo
 node bin/mizan.js --report --demo --window 7
 node bin/mizan.js --report --check --demo --window 7
 node bin/mizan.js --check --demo --window 7
-tmpdir="$(mktemp -d)" && mkdir -p "$tmpdir/personal/project-a" "$tmpdir/work/project-b" && touch "$tmpdir/personal/project-a/usage.jsonl" "$tmpdir/work/project-b/usage.jsonl" && MIZAN_CONFIG="$tmpdir/config.json" MIZAN_PERSONAL_DIR="$tmpdir/personal" MIZAN_WORK_DIR="$tmpdir/work" node bin/mizan.js --setup
+tmpdir="$(mktemp -d)" && mkdir -p "$tmpdir/personal/project-a" "$tmpdir/work/project-b" && node -e 'const fs=require("fs"); const line=JSON.stringify({timestamp:"2026-06-24T12:00:00.000Z",cwd:"/tmp/project",sessionId:"release-check",requestId:"release-check",message:{id:"release-check",model:"claude-sonnet-4-6",usage:{input_tokens:100,output_tokens:20}}}); for (const file of process.argv.slice(1)) fs.writeFileSync(file,line+"\n");' "$tmpdir/personal/project-a/usage.jsonl" "$tmpdir/work/project-b/usage.jsonl" && MIZAN_CONFIG="$tmpdir/config.json" MIZAN_PERSONAL_DIR="$tmpdir/personal" MIZAN_WORK_DIR="$tmpdir/work" node bin/mizan.js --setup
 tmpdir="$(mktemp -d)" && MIZAN_CONFIG="$tmpdir/config.json" node bin/mizan.js --set-budget daily=20 monthly=250
 tmpdir="$(mktemp -d)" && MIZAN_CONFIG="$tmpdir/config.json" node bin/mizan.js --add-work-marker /Clients/
 tmpdir="$(mktemp -d)" && MIZAN_CONFIG="$tmpdir/config.json" node bin/mizan.js --set-transcripts personal="$tmpdir/personal" work="$tmpdir/work"
@@ -52,7 +52,7 @@ Expected:
 - `--report --check --demo` should print Markdown and exit with code `2`.
 - `--check --demo` should exit with code `2` because demo data includes leaks.
 - `--setup` should create the selected config file, print diagnostics, and exit
-  `0` when the selected transcript folders contain `.jsonl` files.
+  `0` when the selected transcript folders contain parseable usage records.
 - `--set-budget` should create/update only the selected config file.
 - `--add-work-marker` should create/update only the selected config file.
 - `--set-transcripts` should create/update only the selected config file.

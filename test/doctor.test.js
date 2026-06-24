@@ -21,8 +21,8 @@ test("doctor counts transcripts from explicit personal and work dirs", () => {
   const work = path.join(root, "work");
   fs.mkdirSync(path.join(personal, "project-a"), { recursive: true });
   fs.mkdirSync(path.join(work, "project-b", "nested"), { recursive: true });
-  fs.writeFileSync(path.join(personal, "project-a", "a.jsonl"), "{}\n");
-  fs.writeFileSync(path.join(work, "project-b", "nested", "b.jsonl"), "{}\n");
+  fs.writeFileSync(path.join(personal, "project-a", "a.jsonl"), `${usageLine("personal-a")}\n`);
+  fs.writeFileSync(path.join(work, "project-b", "nested", "b.jsonl"), `${usageLine("work-b")}\n`);
   fs.writeFileSync(path.join(work, "project-b", "notes.txt"), "ignore me\n");
 
   const report = buildDoctorReport({
@@ -39,10 +39,10 @@ test("doctor counts transcripts from explicit personal and work dirs", () => {
 
   assert.equal(report.ok, true);
   assert.deepEqual(
-    report.accounts.map((item) => [item.account, item.transcripts]),
+    report.accounts.map((item) => [item.account, item.transcripts, item.usageRecords]),
     [
-      ["personal", 1],
-      ["work", 1],
+      ["personal", 1, 1],
+      ["work", 1, 1],
     ],
   );
   assert.deepEqual(report.workMarkers, ["/Clients/", "/Company/"]);
@@ -59,17 +59,35 @@ test("doctor treats one-account transcript setup as usable", () => {
   const home = fs.mkdtempSync(path.join(os.tmpdir(), "mizan-doctor-one-account-"));
   const personal = path.join(home, ".claude", "projects", "project-a");
   fs.mkdirSync(personal, { recursive: true });
-  fs.writeFileSync(path.join(personal, "usage.jsonl"), "{}\n");
+  fs.writeFileSync(path.join(personal, "usage.jsonl"), `${usageLine("one-account")}\n`);
 
   const report = buildDoctorReport({ home, env: {} });
   const text = formatDoctorReport(report);
 
   assert.equal(report.ok, true);
   assert.match(text, /personal\s+1 transcript/);
+  assert.match(text, /1 usage record/);
   assert.match(text, /work\s+missing/);
   assert.match(text, /Setup looks usable/);
   assert.match(text, /Optional: add a work transcript folder/);
   assert.doesNotMatch(text, /Work transcripts are missing/);
+});
+
+test("doctor does not treat empty transcript files as usable", () => {
+  const home = fs.mkdtempSync(path.join(os.tmpdir(), "mizan-doctor-empty-"));
+  const personal = path.join(home, ".claude", "projects", "project-a");
+  fs.mkdirSync(personal, { recursive: true });
+  fs.writeFileSync(path.join(personal, "usage.jsonl"), "{}\n");
+
+  const report = buildDoctorReport({ home, env: {} });
+  const text = formatDoctorReport(report);
+
+  assert.equal(report.ok, false);
+  assert.equal(report.accounts[0].transcripts, 1);
+  assert.equal(report.accounts[0].usageRecords, 0);
+  assert.match(text, /1 transcript, 0 usage records/);
+  assert.match(text, /no parseable usage records/i);
+  assert.match(text, /mizan --support-bundle/);
 });
 
 test("doctor recommends fixing invalid budget values", () => {
@@ -86,3 +104,20 @@ test("doctor recommends fixing invalid budget values", () => {
   assert.equal(report.budgetIssues.length, 2);
   assert.match(report.recommendations.join("\n"), /MIZAN_MONTHLY_BUDGET/);
 });
+
+function usageLine(id) {
+  return JSON.stringify({
+    timestamp: "2026-06-24T12:00:00.000Z",
+    cwd: "/tmp/project",
+    sessionId: `session-${id}`,
+    requestId: `request-${id}`,
+    message: {
+      id: `message-${id}`,
+      model: "claude-sonnet-4-6",
+      usage: {
+        input_tokens: 100,
+        output_tokens: 20,
+      },
+    },
+  });
+}

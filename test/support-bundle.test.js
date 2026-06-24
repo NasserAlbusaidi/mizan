@@ -12,8 +12,22 @@ test("support bundle formats diagnostics without exposing absolute home paths", 
     doctorReport: {
       ok: true,
       accounts: [
-        { account: "personal", dir: "/Users/nasser/.claude/projects", exists: true, transcripts: 12 },
-        { account: "work", dir: "/Users/nasser/.claude-work/projects", exists: false, transcripts: 0 },
+        {
+          account: "personal",
+          dir: "/Users/nasser/.claude/projects",
+          exists: true,
+          transcripts: 12,
+          sampled: 12,
+          usageRecords: 12,
+        },
+        {
+          account: "work",
+          dir: "/Users/nasser/.claude-work/projects",
+          exists: false,
+          transcripts: 0,
+          sampled: 0,
+          usageRecords: 0,
+        },
       ],
       configFile: { path: "/Users/nasser/.mizan/config.json", exists: true, error: null },
       cacheFile: "/Users/nasser/.mizan/cache.json",
@@ -33,7 +47,7 @@ test("support bundle formats diagnostics without exposing absolute home paths", 
   assert.match(markdown, /Mizan: @nasseralbusaidi\/mizan 0\.1\.0/);
   assert.match(markdown, /Node: v20\.0\.0/);
   assert.match(markdown, /Platform: darwin arm64/);
-  assert.match(markdown, /personal\s+12 transcripts\s+~\/\.claude\/projects/);
+  assert.match(markdown, /personal\s+12 transcripts, 12 usage records\s+~\/\.claude\/projects/);
   assert.match(markdown, /Config: ~\/\.mizan\/config\.json/);
   assert.match(markdown, /Work markers: ~\/Desktop\/Work\/, \/Clients\//);
   assert.match(markdown, /No raw transcript lines are included/);

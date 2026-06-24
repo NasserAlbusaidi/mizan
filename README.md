@@ -33,13 +33,13 @@ client, employer, or reimbursement log.
 Try a terminal demo without installing anything globally:
 
 ```bash
-npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.28 -- mizan --try
+npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.29 -- mizan --try
 ```
 
 Install the current GitHub release from its pinned tag:
 
 ```bash
-npm install -g github:NasserAlbusaidi/mizan#v0.1.28
+npm install -g github:NasserAlbusaidi/mizan#v0.1.29
 ```
 
 If your npm client cannot install from GitHub tags, use the stable latest
@@ -90,8 +90,8 @@ npx @nasseralbusaidi/mizan
 ```
 
 `mizan --setup` creates `~/.mizan/config.json` when it is missing, prints the
-same diagnostics as `mizan --doctor`, and exits with code `2` when no usable
-transcript files are found.
+same diagnostics as `mizan --doctor`, and exits with code `2` when no parseable
+Claude usage records are found.
 
 Check without writing config:
 
@@ -166,15 +166,16 @@ or reimbursement note.
 
 `mizan --setup` is the one-command first run. It creates the local config if
 needed, prints setup diagnostics, and exits with code `2` when Mizan still
-cannot see any usable `.jsonl` transcript files.
+cannot see any parseable Claude usage records.
 
 `mizan --doctor` is the first thing to run when the dashboard looks empty. It
-prints the transcript folders Mizan can see, how many `.jsonl` files were found,
-the cache path, bind host, work markers, and the next setup step.
+prints the transcript folders Mizan can see, how many `.jsonl` files and
+parseable usage records were found, the cache path, bind host, work markers, and
+the next setup step.
 For one-account users, one transcript folder is enough; the second account is
 optional unless you split personal and work Claude configs.
 Use `mizan --doctor --check` in scripts when setup should fail with exit code
-`2` unless at least one transcript folder has usable `.jsonl` files.
+`2` unless at least one transcript folder has parseable usage records.
 
 `mizan --setup-kit` prints a copyable weekly review setup kit: first-run checks,
 report commands, cron, launchd, and privacy reminders. Use

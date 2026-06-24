@@ -11,19 +11,24 @@ import {
   resolveWorkMarkers,
   isLocalHost,
 } from "./config.js";
+import { parseUsageLine } from "./parser.js";
 import { PRICING_METADATA } from "./pricing.js";
+
+const USAGE_SCAN_LIMIT = 50;
 
 export function buildDoctorReport({ env = process.env, home = os.homedir() } = {}) {
   const user = loadUserConfig({ env, home });
   const accounts = resolveAccounts(env, home, user.config);
   const accountReports = Object.entries(accounts).map(([account, dir]) => {
     const exists = fs.existsSync(dir);
-    const transcripts = exists ? countTranscripts(dir) : 0;
-    return { account, dir, exists, transcripts };
+    const transcriptScan = exists ? inspectTranscripts(dir) : { transcripts: 0, sampled: 0, usageRecords: 0 };
+    return { account, dir, exists, ...transcriptScan };
   });
 
   const totalTranscripts = accountReports.reduce((sum, item) => sum + item.transcripts, 0);
+  const totalUsageRecords = accountReports.reduce((sum, item) => sum + item.usageRecords, 0);
   const hasAnyTranscripts = accountReports.some((item) => item.transcripts > 0);
+  const hasAnyUsageRecords = accountReports.some((item) => item.usageRecords > 0);
   const recommendations = [];
 
   if (!accountReports.some((item) => item.exists)) {
@@ -33,6 +38,11 @@ export function buildDoctorReport({ env = process.env, home = os.homedir() } = {
   } else if (totalTranscripts === 0) {
     recommendations.push(
       "Transcript folders exist, but no .jsonl files were found. Run Claude Code once or update the saved folders with `mizan --set-transcripts personal=/path work=/path`.",
+    );
+  } else if (totalUsageRecords === 0) {
+    const sampleCount = accountReports.reduce((sum, item) => sum + item.sampled, 0);
+    recommendations.push(
+      `Transcript files were found, but no parseable usage records were found in the newest ${sampleCount} transcript file${sampleCount === 1 ? "" : "s"}. Run Claude Code once, then run \`mizan --doctor\` again. If this seems wrong, run \`mizan --support-bundle\` and open an issue.`,
     );
   } else {
     recommendations.push(
@@ -77,7 +87,7 @@ export function buildDoctorReport({ env = process.env, home = os.homedir() } = {
   }
 
   return {
-    ok: hasAnyTranscripts,
+    ok: hasAnyUsageRecords,
     accounts: accountReports,
     configFile: { path: user.path, exists: user.exists, error: user.error },
     cacheFile: CACHE_FILE,
@@ -95,7 +105,7 @@ export function formatDoctorReport(report) {
   const lines = ["Mizan doctor", ""];
   lines.push("Transcript folders:");
   for (const item of report.accounts) {
-    const status = item.exists ? `${item.transcripts} transcript${item.transcripts === 1 ? "" : "s"}` : "missing";
+    const status = item.exists ? formatTranscriptStatus(item) : "missing";
     lines.push(`  ${item.account.padEnd(8)} ${status.padEnd(16)} ${item.dir}`);
   }
   lines.push("");
@@ -115,23 +125,62 @@ function formatBudget(value) {
   return value == null ? "(unset)" : `$${value}`;
 }
 
-function countTranscripts(dir) {
-  let count = 0;
+function formatTranscriptStatus(item) {
+  const transcripts = `${item.transcripts} transcript${item.transcripts === 1 ? "" : "s"}`;
+  if (!item.transcripts) return transcripts;
+  const records = `${item.usageRecords} usage record${item.usageRecords === 1 ? "" : "s"}`;
+  const sampled =
+    item.sampled && item.sampled < item.transcripts ? ` in newest ${item.sampled}` : "";
+  return `${transcripts}, ${records}${sampled}`;
+}
+
+function inspectTranscripts(dir) {
+  const files = listTranscriptFiles(dir);
+  let usageRecords = 0;
+  for (const file of files.slice(0, USAGE_SCAN_LIMIT)) {
+    usageRecords += countUsageRecords(file.path);
+  }
+  return {
+    transcripts: files.length,
+    sampled: Math.min(files.length, USAGE_SCAN_LIMIT),
+    usageRecords,
+  };
+}
+
+function listTranscriptFiles(dir) {
+  const files = [];
   let entries;
   try {
     entries = fs.readdirSync(dir, { recursive: true });
   } catch {
-    return 0;
+    return files;
   }
   for (const entry of entries) {
     if (typeof entry === "string" && entry.endsWith(".jsonl")) {
       const abs = path.join(dir, entry);
       try {
-        if (fs.statSync(abs).isFile()) count += 1;
+        const stat = fs.statSync(abs);
+        if (stat.isFile()) files.push({ path: abs, mtimeMs: stat.mtimeMs });
       } catch {
         // Ignore racing files.
       }
     }
+  }
+  return files.sort((a, b) => b.mtimeMs - a.mtimeMs);
+}
+
+function countUsageRecords(file) {
+  let text;
+  try {
+    text = fs.readFileSync(file, "utf8");
+  } catch {
+    return 0;
+  }
+
+  let count = 0;
+  for (const line of text.split("\n")) {
+    if (line.indexOf('"usage"') === -1) continue;
+    if (parseUsageLine(line)) count += 1;
   }
   return count;
 }
