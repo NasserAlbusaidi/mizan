@@ -151,6 +151,26 @@ if (options.pricing) {
   process.exit(0);
 }
 
+if (options.tryDemo) {
+  try {
+    const data = compute(options.windowDays, { useMemo: false, demo: true, host, port });
+    const summary = buildSummary(data);
+    const next = [
+      "mizan --demo",
+      "mizan --setup",
+      "mizan --set-transcripts personal=/path work=/path",
+    ];
+    const content = options.json
+      ? JSON.stringify({ summary, next }, null, 2)
+      : formatTryReport(summary, next);
+    emitOutput(content, options.output, "try report");
+    process.exit(0);
+  } catch (err) {
+    console.error(`mizan: ${err.stack || err.message}`);
+    process.exit(1);
+  }
+}
+
 if (options.report) {
   try {
     const data = compute(options.windowDays, { useMemo: false, demo: options.demo, host, port });
@@ -253,6 +273,14 @@ function formatBudget(value) {
 function formatSetupReport(config, report) {
   const header = config.created ? `Created ${config.path}` : `Config already exists at ${config.path}`;
   return `${header}\n\n${formatDoctorReport(report)}`;
+}
+
+function formatTryReport(summary, next) {
+  return `${formatSummary(summary)}
+Next:
+  - Open the sample dashboard: ${next[0]}
+  - Check real transcript setup: ${next[1]}
+  - Save custom folders: ${next[2]}`;
 }
 
 function emitOutput(content, outputPath, label) {

@@ -5,6 +5,7 @@ export function parseCliArgs(argv, defaults = {}) {
   const options = {
     help: false,
     version: false,
+    tryDemo: false,
     demo: false,
     setup: false,
     doctor: false,
@@ -47,6 +48,14 @@ export function parseCliArgs(argv, defaults = {}) {
       options.summary = true;
       options.window = "1";
       options.windowDays = WINDOW_DAYS["1"];
+      options.open = false;
+      continue;
+    }
+    if (arg === "--try") {
+      options.tryDemo = true;
+      options.demo = true;
+      options.window = "7";
+      options.windowDays = WINDOW_DAYS["7"];
       options.open = false;
       continue;
     }
@@ -176,6 +185,7 @@ function validateOptions(options) {
   const writesOneShotOutput =
     options.doctor ||
     options.setup ||
+    options.tryDemo ||
     options.pricing ||
     options.supportBundle ||
     options.report ||
@@ -296,6 +306,7 @@ export function helpText(defaultPort = 7777) {
   return `Mizan - local Claude Code spend and leak dashboard
 
 First minute:
+  mizan --try                   Try Mizan in the terminal with demo data
   mizan --demo                  Preview the dashboard with sample data
   mizan --setup                 Check transcript folders and config
   mizan --today                 Print today's spend summary
@@ -309,6 +320,7 @@ Usage:
   mizan --today                 Print today's spend summary
   mizan --summary --window 1    Print today's spend summary
   mizan --json --window 7       Print the computed payload and exit
+  mizan --try                   Run the first-minute demo summary and next steps
   mizan --demo                  Run with realistic sample data
   mizan --setup                 Create config if needed, diagnose setup, and exit
   mizan --doctor                Check transcript folders and setup
@@ -328,6 +340,7 @@ Usage:
 Options:
   --window 1|7|30|90|all        Time window for dashboard warm-up or JSON output
   --today                       Shortcut for --summary --window 1
+  --try                         Print a demo summary and the next setup commands
   --demo                        Use anonymized sample data instead of transcripts
   --setup                       Create config if needed, then run setup diagnostics
   --doctor                      Print setup diagnostics and exit
@@ -342,7 +355,7 @@ Options:
   --summary                     Print compact summary and exit
   --report                      Print redacted Markdown report; combine with --json for structured output
   --check                       Exit 2 on leaks/budgets, or unusable setup with --doctor
-  --output <file>               Save one-shot output from report/summary/json/setup/doctor/pricing/support
+  --output <file>               Save one-shot output from report/summary/json/try/setup/doctor/pricing/support
   --version                     Print package version and exit
   --no-warm                     Skip the startup cache warm-up
   --no-open                     Do not open the browser automatically

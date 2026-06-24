@@ -65,6 +65,15 @@ test("parseCliArgs supports a today shorthand", () => {
   assert.equal(opts.open, false);
 });
 
+test("parseCliArgs supports the first-run try command", () => {
+  const opts = parseCliArgs(["--try"]);
+  assert.equal(opts.tryDemo, true);
+  assert.equal(opts.demo, true);
+  assert.equal(opts.window, "7");
+  assert.equal(opts.windowDays, 7);
+  assert.equal(opts.open, false);
+});
+
 test("parseCliArgs supports support bundle mode", () => {
   const opts = parseCliArgs(["--support-bundle"]);
   assert.equal(opts.supportBundle, true);
@@ -87,6 +96,8 @@ test("parseCliArgs rejects unsafe ports, hosts, and unknown windows", () => {
 test("helpText documents the scriptable JSON path", () => {
   const text = helpText(7777);
   assert.match(text, /First minute:/);
+  assert.match(text, /mizan --try/);
+  assert.match(text, /Try Mizan in the terminal with demo data/);
   assert.match(text, /Preview the dashboard with sample data/);
   assert.match(text, /mizan --today/);
   assert.match(text, /mizan --summary --window 1/);
@@ -132,6 +143,7 @@ test("parseCliArgs supports output for one-shot commands", () => {
   assert.equal(parseCliArgs(["--json", "--output", "data.json"]).output, "data.json");
   assert.equal(parseCliArgs(["--doctor", "--output", "doctor.txt"]).output, "doctor.txt");
   assert.equal(parseCliArgs(["--setup", "--output", "setup.txt"]).output, "setup.txt");
+  assert.equal(parseCliArgs(["--try", "--output", "try.txt"]).output, "try.txt");
   assert.equal(parseCliArgs(["--pricing", "--output", "pricing.txt"]).output, "pricing.txt");
   assert.equal(parseCliArgs(["--support-bundle", "--output", "support.md"]).output, "support.md");
 });

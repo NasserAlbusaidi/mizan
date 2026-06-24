@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.7
+
+- Adds `mizan --try`, a terminal-first demo summary with next setup commands.
+- Leads public install copy with a lower-friction GitHub-tag `npm exec` try path.
+- Extends packaged install verification to cover the first-run try command.
+
 ## 0.1.6
 
 - Refreshes pricing metadata against Anthropic's public pricing page.

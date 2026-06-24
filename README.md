@@ -33,19 +33,19 @@ client, employer, or reimbursement log.
 Try a terminal demo without installing anything globally:
 
 ```bash
-npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.6 -- mizan --summary --demo --window 7
+npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.7 -- mizan --try
 ```
 
 Install the current GitHub release from its tag:
 
 ```bash
-npm install -g github:NasserAlbusaidi/mizan#v0.1.6
+npm install -g github:NasserAlbusaidi/mizan#v0.1.7
 ```
 
 If your npm client cannot install from GitHub tags, use the release tarball:
 
 ```bash
-npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.6/nasseralbusaidi-mizan-0.1.6.tgz
+npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.7/nasseralbusaidi-mizan-0.1.7.tgz
 ```
 
 Preview the dashboard without reading local transcripts:
@@ -129,6 +129,7 @@ mizan --add-work-marker /Clients/
 mizan --no-open
 mizan --port 7788
 mizan --host 0.0.0.0
+mizan --try
 mizan --today
 mizan --summary --window 1
 mizan --json --window 7
@@ -148,6 +149,10 @@ mizan --check
 mizan --version
 mizan --help
 ```
+
+`mizan --try` prints a demo spend summary and the next setup commands without
+opening a browser or reading local transcripts. It is the fastest way to decide
+whether Mizan is worth installing.
 
 `mizan --setup` is the one-command first run. It creates the local config if
 needed, prints setup diagnostics, and exits with code `2` when Mizan still

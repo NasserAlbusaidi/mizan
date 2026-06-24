@@ -26,6 +26,7 @@ try {
 
   const help = run(bin, ["--help"]).stdout;
   assertIncludes(help, "mizan --demo", "--help should document demo mode");
+  assertIncludes(help, "mizan --try", "--help should document first-run try mode");
   assertIncludes(help, "mizan --setup", "--help should document guided setup");
   assertIncludes(help, "mizan --today", "--help should document the daily summary shortcut");
   assertIncludes(help, "mizan --host 0.0.0.0", "--help should document explicit network binding");
@@ -35,9 +36,14 @@ try {
   assertIncludes(help, "mizan --support-bundle", "--help should document support bundles");
 
   const version = run(bin, ["--version"]).stdout.trim();
-  if (version !== "@nasseralbusaidi/mizan 0.1.6") {
+  if (version !== "@nasseralbusaidi/mizan 0.1.7") {
     throw new Error(`installed --version printed ${JSON.stringify(version)}`);
   }
+
+  const tryOutput = run(bin, ["--try"]).stdout;
+  assertIncludes(tryOutput, "Mizan summary [FAIL] (demo)", "--try should print a demo summary");
+  assertIncludes(tryOutput, "Next:", "--try should print next steps");
+  assertIncludes(tryOutput, "mizan --setup", "--try should point to setup");
 
   const pricing = JSON.parse(run(bin, ["--pricing", "--json"]).stdout);
   if (!pricing.rows.some((row) => row.family === "mythos")) {
