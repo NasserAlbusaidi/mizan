@@ -33,13 +33,13 @@ client, employer, or reimbursement log.
 Try a terminal demo without installing anything globally:
 
 ```bash
-npm exec --yes --package https://github.com/NasserAlbusaidi/mizan/releases/latest/download/mizan-latest.tgz -- mizan --try
+npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.26 -- mizan --try
 ```
 
 Install the current GitHub release from its pinned tag:
 
 ```bash
-npm install -g github:NasserAlbusaidi/mizan#v0.1.25
+npm install -g github:NasserAlbusaidi/mizan#v0.1.26
 ```
 
 If your npm client cannot install from GitHub tags, use the stable latest

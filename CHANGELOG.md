@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.26
+
+- Restores the pinned GitHub tag as the no-global-install demo path after
+  verifying that npm can reuse cached tarballs for stable latest URLs.
+- Keeps `mizan-latest.tgz` as the stable install fallback only.
+
 ## 0.1.25
 
 - Makes the stable latest tarball URL the primary no-global-install demo path in
