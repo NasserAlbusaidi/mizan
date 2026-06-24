@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.23
+
+- Expands `mizan --share` with ready-to-post short, long, and Show HN launch
+  copy plus a "what not to claim" checklist for safe public promotion.
+
 ## 0.1.22
 
 - Adds clearer leak guidance in summaries, Markdown reports, and the dashboard:
