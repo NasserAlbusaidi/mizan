@@ -17,6 +17,8 @@ test("dashboard exposes a copyable weekly review command", () => {
   const css = fs.readFileSync("public/styles.css", "utf8");
 
   assert.match(app, /mizan --report --window 7/);
+  assert.match(app, /mizan --setup-kit/);
+  assert.match(app, /Make Mizan a weekly habit/);
   assert.match(app, /data-copy-command/);
   assert.match(app, /copyActionCommand/);
   assert.match(css, /\.action-command/);

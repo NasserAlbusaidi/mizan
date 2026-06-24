@@ -214,6 +214,12 @@
       body: "Print a redacted Markdown report for notes, reimbursements, or a Friday spend review.",
       command: weeklyReviewCommand(),
     });
+    actions.push({
+      tone: "neutral",
+      title: "Make Mizan a weekly habit",
+      body: "Print cron, launchd, report, and privacy-check commands you can save beside generated reports.",
+      command: "mizan --setup-kit",
+    });
 
     if (unpricedModels.length) {
       actions.push({

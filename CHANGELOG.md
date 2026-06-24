@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.11
+
+- Adds a dashboard action queue item for `mizan --setup-kit`, making the weekly
+  habit workflow discoverable from the UI after users have working data.
+
 ## 0.1.10
 
 - Adds `mizan --setup-kit`, a copyable weekly-review setup kit with first-run
