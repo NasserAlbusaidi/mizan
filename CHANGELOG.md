@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.17
+
+- Adds a dashboard Project changes panel, so spend jumps identify the projects
+  that moved directly in the local UI instead of requiring a report first.
+
 ## 0.1.16
 
 - Adds project-level spend movers to previous-window comparisons in Markdown

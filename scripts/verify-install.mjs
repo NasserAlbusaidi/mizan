@@ -22,6 +22,12 @@ try {
     env: realNpmEnv,
   });
 
+  const installedRoot = path.join(tempRoot, "node_modules", "@nasseralbusaidi", "mizan");
+  const dashboardHtml = fs.readFileSync(path.join(installedRoot, "public", "index.html"), "utf8");
+  const dashboardApp = fs.readFileSync(path.join(installedRoot, "public", "app.js"), "utf8");
+  assertIncludes(dashboardHtml, "panel-project-changes", "packaged dashboard should include project movers panel");
+  assertIncludes(dashboardApp, "renderProjectChanges", "packaged dashboard should render project movers");
+
   const bin = path.join(tempRoot, "node_modules", ".bin", process.platform === "win32" ? "mizan.cmd" : "mizan");
 
   const help = run(bin, ["--help"]).stdout;
@@ -37,7 +43,7 @@ try {
   assertIncludes(help, "mizan --support-bundle", "--help should document support bundles");
 
   const version = run(bin, ["--version"]).stdout.trim();
-  if (version !== "@nasseralbusaidi/mizan 0.1.16") {
+  if (version !== "@nasseralbusaidi/mizan 0.1.17") {
     throw new Error(`installed --version printed ${JSON.stringify(version)}`);
   }
 

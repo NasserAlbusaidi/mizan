@@ -19,9 +19,10 @@ Show these beats:
 2. `mizan --demo` opens the local dashboard without reading real transcripts.
 3. The KPI row shows whether spend and requests are up or down versus the
    previous matching window.
-4. The action queue shows the few things worth checking first.
-5. Leak detection explains wrong-account usage in plain language.
-6. Copy report turns the dashboard into a redacted weekly note.
+4. Project changes shows which projects moved spend versus the prior window.
+5. The action queue shows the few things worth checking first.
+6. Leak detection explains wrong-account usage in plain language.
+7. Copy report turns the dashboard into a redacted weekly note.
 
 Keep the recording tight. The promise is not "analytics platform"; it is
 "private Claude Code spend and leak visibility in one local command."
@@ -31,13 +32,13 @@ Keep the recording tight. The promise is not "analytics platform"; it is
 No-global-install terminal demo:
 
 ```bash
-npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.16 -- mizan --try
+npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.17 -- mizan --try
 ```
 
 Current install path before npm publish:
 
 ```bash
-npm install -g github:NasserAlbusaidi/mizan#v0.1.16
+npm install -g github:NasserAlbusaidi/mizan#v0.1.17
 mizan --demo
 mizan --setup
 mizan
@@ -46,13 +47,13 @@ mizan
 Fallback release tarball:
 
 ```bash
-npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.16/nasseralbusaidi-mizan-0.1.16.tgz
+npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.17/nasseralbusaidi-mizan-0.1.17.tgz
 ```
 
 The npm package is prepared but not published yet. The `npm exec --package
 github:...` demo runs from the tagged GitHub release; do not claim `npx
 @nasseralbusaidi/mizan` works from the npm registry until `npm view
-@nasseralbusaidi/mizan version` returns `0.1.16`.
+@nasseralbusaidi/mizan version` returns `0.1.17`.
 
 ## Short post
 
@@ -65,7 +66,7 @@ projects, or personal quota spent on work.
 
 No account. No upload. Local-only dashboard.
 
-Release: https://github.com/NasserAlbusaidi/mizan/releases/tag/v0.1.16
+Release: https://github.com/NasserAlbusaidi/mizan/releases/tag/v0.1.17
 
 ## Longer post
 
@@ -77,12 +78,13 @@ It is a local-first CLI/dashboard for Claude Code usage:
 - Reads local JSONL transcripts
 - Estimates spend with visible pricing assumptions
 - Separates personal vs work usage
+- Shows which projects drove spend changes
 - Flags wrong-account leaks
 - Produces redacted weekly Markdown reports
 - Runs without runtime dependencies or uploads
 
 The first version is a GitHub release while npm publish waits on auth:
-https://github.com/NasserAlbusaidi/mizan/releases/tag/v0.1.16
+https://github.com/NasserAlbusaidi/mizan/releases/tag/v0.1.17
 
 If you run separate Claude configs or need a weekly usage note, try it and open
 an issue with the redacted support bundle.
@@ -109,7 +111,7 @@ It is intentionally local: no account, no upload, no hosted dashboard. The repor
 output redacts home paths for weekly notes or reimbursement logs.
 
 The first release is on GitHub while npm publishing waits on auth:
-https://github.com/NasserAlbusaidi/mizan/releases/tag/v0.1.16
+https://github.com/NasserAlbusaidi/mizan/releases/tag/v0.1.17
 ```
 
 Do not post to Show HN until the README, screenshot, release asset, and install

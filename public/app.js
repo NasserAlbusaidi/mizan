@@ -89,6 +89,7 @@
     renderActions(d);
     renderKpis(d);
     renderLeaks(d);
+    renderProjectChanges(d);
     renderAccounts(d);
     MizanCharts.drawDaily(document.getElementById("daily-chart"), d.days);
     renderModels(d);
@@ -467,6 +468,45 @@
           `<div class="bar-row"><div class="bar-label"><span class="tag ${esc(p.account)}">${esc(p.account[0].toUpperCase())}</span>${esc(p.display)}</div>` +
           `<div class="bar-cost">${money(p.cost)}</div>` +
           `<div class="bar-track"><div class="bar-fill" style="width:${(p.cost / max) * 100}%;background:${col}"></div></div></div>`
+        );
+      })
+      .join("");
+  }
+
+  function renderProjectChanges(d) {
+    const panel = document.getElementById("panel-project-changes");
+    const el = document.getElementById("project-changes");
+    const comparison = d.comparison;
+    if (!comparison || !comparison.windowDays) {
+      panel.hidden = true;
+      el.innerHTML = "";
+      return;
+    }
+
+    panel.hidden = false;
+    const movers = comparison.projects || [];
+    if (!movers.length) {
+      el.innerHTML = `<div class="empty-note">Project spend is flat versus the previous window.</div>`;
+      return;
+    }
+
+    const max = movers.reduce((largest, item) => Math.max(largest, Math.abs(item.delta?.cost || 0)), 1);
+    el.innerHTML = movers
+      .slice(0, 5)
+      .map((project) => {
+        const account = project.account || "unknown";
+        const delta = project.delta || {};
+        const current = project.current || {};
+        const previous = project.previous || {};
+        const col = account === "work" ? "#e3b259" : "#5b9dff";
+        return (
+          `<div class="mover-row">` +
+          `<div class="mover-main"><span class="tag ${esc(account)}">${esc(account.slice(0, 1).toUpperCase())}</span>` +
+          `<span class="mover-project" title="${esc(project.project)}">${esc(project.project)}</span></div>` +
+          `<div class="mover-change">${signedMoney(delta.cost || 0)} <span>${signedPct(delta.costPct ?? null)}</span></div>` +
+          `<div class="mover-meta">${money(current.cost || 0)} now · ${money(previous.cost || 0)} before · ${signedNumber(delta.reqs || 0)} reqs</div>` +
+          `<div class="mover-track"><div style="width:${(Math.abs(delta.cost || 0) / max) * 100}%;background:${col}"></div></div>` +
+          `</div>`
         );
       })
       .join("");

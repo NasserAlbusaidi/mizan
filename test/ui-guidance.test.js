@@ -50,6 +50,20 @@ test("dashboard action queue warns about unpriced model usage", () => {
   assert.match(app, /Totals may be understated/);
 });
 
+test("dashboard surfaces project-level spend movers", () => {
+  const index = fs.readFileSync("public/index.html", "utf8");
+  const app = fs.readFileSync("public/app.js", "utf8");
+  const css = fs.readFileSync("public/styles.css", "utf8");
+
+  assert.match(index, /id="panel-project-changes"/);
+  assert.match(index, /id="project-changes"/);
+  assert.match(app, /renderProjectChanges\(d\)/);
+  assert.match(app, /comparison\.projects/);
+  assert.match(app, /Project spend is flat versus the previous window/);
+  assert.match(css, /\.mover-row/);
+  assert.match(css, /\.mover-change/);
+});
+
 test("dashboard action commands wrap instead of truncating", () => {
   const css = fs.readFileSync("public/styles.css", "utf8");
   const actionCommandCode = css.match(/\.action-command code\s*\{[^}]+\}/s)?.[0] || "";
