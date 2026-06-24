@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.16
+
+- Adds project-level spend movers to previous-window comparisons in Markdown
+  reports, so spend jumps point to the projects that actually changed.
+
 ## 0.1.15
 
 - Lets dashboard action-card commands wrap instead of truncating, so copyable

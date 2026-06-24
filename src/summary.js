@@ -164,6 +164,24 @@ function normalizeComparison(comparison) {
       costPct: comparison.delta?.costPct ?? null,
       reqsPct: comparison.delta?.reqsPct ?? null,
     },
+    projects: (comparison.projects || []).map((project) => ({
+      account: project.account || "unknown",
+      project: project.project || "(unknown)",
+      current: {
+        cost: project.current?.cost || 0,
+        reqs: project.current?.reqs || 0,
+      },
+      previous: {
+        cost: project.previous?.cost || 0,
+        reqs: project.previous?.reqs || 0,
+      },
+      delta: {
+        cost: project.delta?.cost || 0,
+        reqs: project.delta?.reqs || 0,
+        costPct: project.delta?.costPct ?? null,
+        reqsPct: project.delta?.reqsPct ?? null,
+      },
+    })),
   };
 }
 

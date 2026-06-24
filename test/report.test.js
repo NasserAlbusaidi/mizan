@@ -70,13 +70,35 @@ test("markdown report compares spend to the previous matching window", () => {
         windowDays: 7,
         previous: { cost: 80, reqs: 40 },
         delta: { cost: 45.5, reqs: 8, costPct: 0.56875, reqsPct: 0.2 },
+        projects: [
+          {
+            account: "personal",
+            project: "/Users/nasser/Desktop/Personal/SecretApp",
+            current: { cost: 80, reqs: 20 },
+            previous: { cost: 40, reqs: 10 },
+            delta: { cost: 40, reqs: 10, costPct: 1, reqsPct: 1 },
+          },
+          {
+            account: "work",
+            project: "/Users/nasser/Desktop/Work/ClientPortal",
+            current: { cost: 45.5, reqs: 28 },
+            previous: { cost: 0, reqs: 0 },
+            delta: { cost: 45.5, reqs: 28, costPct: null, reqsPct: null },
+          },
+        ],
       },
     }),
   );
   const markdown = formatMarkdownReport(report);
 
   assert.deepEqual(report.comparison.previous, { cost: 80, reqs: 40 });
+  assert.equal(report.comparison.projects[0].project, "~/Desktop/Personal/SecretApp");
   assert.match(markdown, /Previous 7d: \$80\.00; change \+\$45\.50 \(\+56\.9%\), \+8 requests/);
+  assert.match(markdown, /## Project Changes/);
+  assert.match(markdown, /\| Project \| Account \| Current \| Previous \| Change \| Requests \|/);
+  assert.match(markdown, /~\/Desktop\/Work\/ClientPortal/);
+  assert.match(markdown, /\+\$45\.50 \(new\)/);
+  assert.doesNotMatch(markdown, /\/Users\/nasser/);
 });
 
 test("markdown report warns when no usage records are found", () => {

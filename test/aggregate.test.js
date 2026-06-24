@@ -118,11 +118,58 @@ test("comparison summarizes the previous matching display window", () => {
   const d = aggregate(units, cutoff, NOW);
 
   assert.equal(d.totals.cost, 50);
-  assert.deepEqual(d.comparison, {
+  assert.deepEqual({
+    windowDays: d.comparison.windowDays,
+    previous: d.comparison.previous,
+    delta: d.comparison.delta,
+  }, {
     windowDays: 7,
     previous: { cost: 25, reqs: 1 },
     delta: { cost: 25, reqs: 1, costPct: 1, reqsPct: 1 },
   });
+  assert.deepEqual(d.comparison.projects.map((project) => project.project), ["~/Desktop/Personal/Rihla"]);
+});
+
+test("comparison identifies projects that drove spend increases", () => {
+  const cutoff = NOW - 7 * 86_400_000;
+  const previousWindow = NOW - 10 * 86_400_000;
+  const rihla = `${HOME}/Desktop/Personal/Rihla`;
+  const client = `${HOME}/Desktop/Work/ClientPortal`;
+  const old = `${HOME}/Desktop/Personal/OldProject`;
+  const units = [
+    unit("personal", rihla, "rihla-current", [
+      rec("rc|1", "claude-opus-4-8", 1_000_000, today),
+      rec("rc|2", "claude-opus-4-8", 1_000_000, NOW - 2 * 86_400_000),
+    ]),
+    unit("personal", rihla, "rihla-previous", [
+      rec("rp|1", "claude-opus-4-8", 1_000_000, previousWindow),
+    ]),
+    unit("work", client, "client-current", [
+      rec("cc|1", "claude-opus-4-8", 1_000_000, today),
+    ]),
+    unit("personal", old, "old-previous", [
+      rec("op|1", "claude-opus-4-8", 1_000_000, previousWindow),
+    ]),
+  ];
+
+  const d = aggregate(units, cutoff, NOW);
+
+  assert.deepEqual(d.comparison.projects, [
+    {
+      account: "personal",
+      project: "~/Desktop/Personal/Rihla",
+      current: { cost: 50, reqs: 2 },
+      previous: { cost: 25, reqs: 1 },
+      delta: { cost: 25, reqs: 1, costPct: 1, reqsPct: 1 },
+    },
+    {
+      account: "work",
+      project: "~/Desktop/Work/ClientPortal",
+      current: { cost: 25, reqs: 1 },
+      previous: { cost: 0, reqs: 0 },
+      delta: { cost: 25, reqs: 1, costPct: null, reqsPct: null },
+    },
+  ]);
 });
 
 test("cache hit ratio reflects cheap cache reads vs fresh input", () => {

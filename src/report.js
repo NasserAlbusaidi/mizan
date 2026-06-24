@@ -25,7 +25,7 @@ export function buildReport(data) {
       leakTotal: summary.leaks.total,
       budgets: summary.budgets,
     },
-    comparison: summary.comparison,
+    comparison: redactComparison(summary.comparison),
     accounts: Object.entries(data.accounts || {}).map(([account, bucket]) => ({
       account,
       spend: bucket.cost || 0,
@@ -81,6 +81,21 @@ export function formatMarkdownReport(report) {
     );
   }
 
+  if (report.comparison?.projects?.length) {
+    lines.push(
+      "",
+      "## Project Changes",
+      "",
+      "| Project | Account | Current | Previous | Change | Requests |",
+      "|---|---:|---:|---:|---:|---:|",
+    );
+    for (const project of report.comparison.projects) {
+      lines.push(
+        `| ${cell(project.project)} | ${cell(project.account)} | ${money(project.current.cost)} | ${money(project.previous.cost)} | ${signedMoney(project.delta.cost)} (${signedPct(project.delta.costPct)}) | ${signedNumber(project.delta.reqs)} |`,
+      );
+    }
+  }
+
   if (report.actions.length) {
     lines.push("", "## Action Items", "");
     for (const action of report.actions) {
@@ -126,6 +141,17 @@ export function redactPath(value) {
     .replaceAll(HOME, "~")
     .replace(/^\/Users\/[^/]+(?=\/|$)/, "~")
     .replace(/^[A-Za-z]:\\Users\\[^\\]+(?=\\|$)/, "~");
+}
+
+function redactComparison(comparison) {
+  if (!comparison) return null;
+  return {
+    ...comparison,
+    projects: (comparison.projects || []).map((project) => ({
+      ...project,
+      project: redactPath(project.project),
+    })),
+  };
 }
 
 function money(n) {

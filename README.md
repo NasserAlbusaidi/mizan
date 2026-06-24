@@ -33,19 +33,19 @@ client, employer, or reimbursement log.
 Try a terminal demo without installing anything globally:
 
 ```bash
-npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.15 -- mizan --try
+npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.16 -- mizan --try
 ```
 
 Install the current GitHub release from its tag:
 
 ```bash
-npm install -g github:NasserAlbusaidi/mizan#v0.1.15
+npm install -g github:NasserAlbusaidi/mizan#v0.1.16
 ```
 
 If your npm client cannot install from GitHub tags, use the release tarball:
 
 ```bash
-npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.15/nasseralbusaidi-mizan-0.1.15.tgz
+npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.16/nasseralbusaidi-mizan-0.1.16.tgz
 ```
 
 Preview the dashboard without reading local transcripts:
@@ -197,8 +197,8 @@ looks wrong.
 `mizan --report` prints a redacted Markdown report for weekly reviews, cron
 logs, or copy/pasting into a note without exposing absolute local paths.
 For finite windows, both commands compare spend and request count against the
-previous matching window, so a 7-day report shows what changed since the prior
-7 days.
+previous matching window. Markdown reports also list project-level spend movers,
+so a 7-day report shows which projects changed since the prior 7 days.
 `mizan --check` prints the same report and exits with code `2` when Mizan finds
 cross-account leaks or spend that exceeds configured budgets.
 If a summary finds zero usage records, Mizan reports `WARN` and points you to
@@ -255,8 +255,8 @@ the [Launch Kit](docs/LAUNCH_KIT.md).
   the reverse: personal quota spent on `~/Desktop/Work/` projects.
 - **Model mix**, **top projects**, **cache efficiency**, and costliest sessions.
 - **Redacted Markdown reports** — copyable weekly spend snapshots that omit full
-  home paths while preserving the useful project/account breakdown and previous
-  window comparison.
+  home paths while preserving the useful project/account breakdown,
+  project-level movers, and previous-window comparison.
 
 ## Privacy Model
 
