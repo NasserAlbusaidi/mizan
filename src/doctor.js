@@ -4,6 +4,7 @@ import path from "node:path";
 import {
   CACHE_FILE,
   budgetIssues,
+  defaultConfig,
   loadUserConfig,
   resolveAccounts,
   resolveBudgets,
@@ -29,6 +30,7 @@ export function buildDoctorReport({ env = process.env, home = os.homedir() } = {
   const totalUsageRecords = accountReports.reduce((sum, item) => sum + item.usageRecords, 0);
   const hasAnyTranscripts = accountReports.some((item) => item.transcripts > 0);
   const hasAnyUsageRecords = accountReports.some((item) => item.usageRecords > 0);
+  const suggestedTranscriptFolders = suggestTranscriptFolders(accountReports, { env, home });
   const recommendations = [];
 
   if (!accountReports.some((item) => item.exists)) {
@@ -79,6 +81,11 @@ export function buildDoctorReport({ env = process.env, home = os.homedir() } = {
   if (user.error) {
     recommendations.push(`Config file could not be read: ${user.error}`);
   }
+  for (const suggestion of suggestedTranscriptFolders) {
+    recommendations.push(
+      `Found parseable ${suggestion.account} usage records at ${suggestion.dir}. Save it with \`${formatSetTranscriptCommand(suggestion.account, suggestion.dir)}\`.`,
+    );
+  }
 
   if (recommendations.length === 0) {
     recommendations.push(
@@ -89,6 +96,7 @@ export function buildDoctorReport({ env = process.env, home = os.homedir() } = {
   return {
     ok: hasAnyUsageRecords,
     accounts: accountReports,
+    suggestedTranscriptFolders,
     configFile: { path: user.path, exists: user.exists, error: user.error },
     cacheFile: CACHE_FILE,
     workMarkers,
@@ -147,6 +155,29 @@ function inspectTranscripts(dir) {
   };
 }
 
+function suggestTranscriptFolders(accountReports, { env, home }) {
+  const suggestions = [];
+  for (const accountReport of accountReports) {
+    if (accountReport.usageRecords > 0) continue;
+    for (const dir of candidateTranscriptDirs(accountReport.account, { env, home, current: accountReport.dir })) {
+      const scan = inspectTranscripts(dir);
+      if (scan.usageRecords === 0) continue;
+      suggestions.push({ account: accountReport.account, dir, ...scan });
+      break;
+    }
+  }
+  return suggestions;
+}
+
+function candidateTranscriptDirs(account, { env, home, current }) {
+  const defaults = defaultConfig(home);
+  const dirs = account === "personal" ? [defaults.personalDir] : [defaults.workDir];
+  if (account === "personal" && env.CLAUDE_CONFIG_DIR) {
+    dirs.push(path.join(env.CLAUDE_CONFIG_DIR, "projects"));
+  }
+  return [...new Set(dirs)].filter((dir) => dir && path.resolve(dir) !== path.resolve(current));
+}
+
 function listTranscriptFiles(dir) {
   const files = [];
   let entries;
@@ -183,4 +214,12 @@ function countUsageRecords(file) {
     if (parseUsageLine(line)) count += 1;
   }
   return count;
+}
+
+function formatSetTranscriptCommand(account, dir) {
+  return `mizan --set-transcripts ${account}=${shellQuote(dir)}`;
+}
+
+function shellQuote(value) {
+  return `'${String(value).replaceAll("'", "'\\''")}'`;
 }

@@ -33,13 +33,13 @@ client, employer, or reimbursement log.
 Try a terminal demo without installing anything globally:
 
 ```bash
-npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.29 -- mizan --try
+npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.30 -- mizan --try
 ```
 
 Install the current GitHub release from its pinned tag:
 
 ```bash
-npm install -g github:NasserAlbusaidi/mizan#v0.1.29
+npm install -g github:NasserAlbusaidi/mizan#v0.1.30
 ```
 
 If your npm client cannot install from GitHub tags, use the stable latest
@@ -171,7 +171,9 @@ cannot see any parseable Claude usage records.
 `mizan --doctor` is the first thing to run when the dashboard looks empty. It
 prints the transcript folders Mizan can see, how many `.jsonl` files and
 parseable usage records were found, the cache path, bind host, work markers, and
-the next setup step.
+the next setup step. If a saved or environment-provided transcript path is
+wrong, it checks the common Claude Code defaults and suggests a copyable
+`mizan --set-transcripts ...` command when it finds parseable usage there.
 For one-account users, one transcript folder is enough; the second account is
 optional unless you split personal and work Claude configs.
 Use `mizan --doctor --check` in scripts when setup should fail with exit code

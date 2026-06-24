@@ -68,6 +68,29 @@ test("--doctor --check exits nonzero when transcript files have no parseable usa
   assert.match(result.stdout, /no parseable usage records/i);
 });
 
+test("--doctor suggests a discovered default transcript folder when saved paths are wrong", () => {
+  const home = fs.mkdtempSync(path.join(os.tmpdir(), "mizan-doctor-suggest-cli-"));
+  const personal = path.join(home, ".claude", "projects", "project-a");
+  fs.mkdirSync(personal, { recursive: true });
+  fs.writeFileSync(path.join(personal, "usage.jsonl"), `${usageLine("suggest-cli")}\n`);
+
+  const result = spawnSync(process.execPath, [bin, "--doctor"], {
+    encoding: "utf8",
+    env: {
+      ...process.env,
+      HOME: home,
+      MIZAN_CONFIG: path.join(home, ".mizan", "config.json"),
+      MIZAN_PERSONAL_DIR: path.join(home, "wrong-personal"),
+      MIZAN_WORK_DIR: path.join(home, "wrong-work"),
+    },
+  });
+
+  assert.equal(result.status, 0);
+  assert.match(result.stdout, /Found parseable personal usage records/);
+  assert.match(result.stdout, /mizan --set-transcripts personal='/);
+  assert.match(result.stdout, new RegExp(escapeRegExp(path.join(home, ".claude", "projects"))));
+});
+
 test("--setup creates a config and exits nonzero when setup is still unusable", () => {
   const home = fs.mkdtempSync(path.join(os.tmpdir(), "mizan-setup-missing-"));
   const configPath = path.join(home, ".mizan", "config.json");

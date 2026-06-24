@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.30
+
+- Makes `mizan --doctor` suggest discovered default Claude transcript folders
+  with a copyable `mizan --set-transcripts ...` command when saved paths are
+  wrong but parseable usage records exist in the common locations.
+
 ## 0.1.29
 
 - Makes setup diagnostics verify parseable Claude usage records instead of

@@ -90,6 +90,30 @@ test("doctor does not treat empty transcript files as usable", () => {
   assert.match(text, /mizan --support-bundle/);
 });
 
+test("doctor suggests discovered transcript folders when configured paths are wrong", () => {
+  const home = fs.mkdtempSync(path.join(os.tmpdir(), "mizan-doctor-suggest-"));
+  const discovered = path.join(home, ".claude", "projects", "project-a");
+  fs.mkdirSync(discovered, { recursive: true });
+  fs.writeFileSync(path.join(discovered, "usage.jsonl"), `${usageLine("discovered")}\n`);
+
+  const report = buildDoctorReport({
+    home,
+    env: {
+      MIZAN_PERSONAL_DIR: path.join(home, "missing-personal"),
+      MIZAN_WORK_DIR: path.join(home, "missing-work"),
+    },
+  });
+  const text = formatDoctorReport(report);
+
+  assert.equal(report.ok, false);
+  assert.deepEqual(report.suggestedTranscriptFolders.map((item) => [item.account, item.usageRecords]), [
+    ["personal", 1],
+  ]);
+  assert.match(text, /Found parseable personal usage records/);
+  assert.match(text, /mizan --set-transcripts personal='/);
+  assert.match(text, new RegExp(escapeRegExp(path.join(home, ".claude", "projects"))));
+});
+
 test("doctor recommends fixing invalid budget values", () => {
   const home = fs.mkdtempSync(path.join(os.tmpdir(), "mizan-doctor-budget-"));
   const report = buildDoctorReport({
@@ -120,4 +144,8 @@ function usageLine(id) {
       },
     },
   });
+}
+
+function escapeRegExp(value) {
+  return String(value).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }

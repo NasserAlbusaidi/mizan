@@ -46,7 +46,7 @@ try {
   assertIncludes(help, "mizan --share", "--help should document public sharing copy");
 
   const version = run(bin, ["--version"]).stdout.trim();
-  if (version !== "@nasseralbusaidi/mizan 0.1.29") {
+  if (version !== "@nasseralbusaidi/mizan 0.1.30") {
     throw new Error(`installed --version printed ${JSON.stringify(version)}`);
   }
 
@@ -77,10 +77,10 @@ try {
   assertIncludes(shareGuide, "# Share Mizan", "--share should print Markdown");
   assertIncludes(
     shareGuide,
-    "npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.29 -- mizan --try",
+    "npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.30 -- mizan --try",
     "--share should include the pinned no-global demo path",
   );
-  assertIncludes(shareGuide, "github:NasserAlbusaidi/mizan#v0.1.29", "--share should include the tagged install path");
+  assertIncludes(shareGuide, "github:NasserAlbusaidi/mizan#v0.1.30", "--share should include the tagged install path");
   assertIncludes(
     shareGuide,
     "releases/latest/download/mizan-latest.tgz",
@@ -149,6 +149,30 @@ try {
   if (!fs.existsSync(emptySetupConfig)) {
     throw new Error("--setup did not create the requested config file for empty setup");
   }
+
+  const suggestedHome = path.join(tempRoot, "suggested-home");
+  const suggestedPersonal = path.join(suggestedHome, ".claude", "projects", "project-a");
+  fs.mkdirSync(suggestedPersonal, { recursive: true });
+  fs.writeFileSync(path.join(suggestedPersonal, "usage.jsonl"), `${usageLine("suggested-personal")}\n`);
+  const suggestedDoctor = run(bin, ["--doctor"], {
+    env: {
+      ...process.env,
+      HOME: suggestedHome,
+      MIZAN_CONFIG: path.join(suggestedHome, ".mizan", "config.json"),
+      MIZAN_PERSONAL_DIR: path.join(suggestedHome, "wrong-personal"),
+      MIZAN_WORK_DIR: path.join(suggestedHome, "wrong-work"),
+    },
+  });
+  assertIncludes(
+    suggestedDoctor.stdout,
+    "Found parseable personal usage records",
+    "--doctor should suggest discovered default transcript folders",
+  );
+  assertIncludes(
+    suggestedDoctor.stdout,
+    `mizan --set-transcripts personal='${path.join(suggestedHome, ".claude", "projects")}'`,
+    "--doctor should print a copyable set-transcripts command",
+  );
 
   const oneAccountHome = path.join(tempRoot, "one-account-home");
   const oneAccountPersonal = path.join(oneAccountHome, ".claude", "projects", "project-a");
