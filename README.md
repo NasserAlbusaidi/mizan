@@ -30,10 +30,16 @@ client, employer, or reimbursement log.
 
 ## Quick Start
 
-Install the current GitHub release:
+Install the current GitHub release from its tag:
 
 ```bash
-npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.4/nasseralbusaidi-mizan-0.1.4.tgz
+npm install -g github:NasserAlbusaidi/mizan#v0.1.5
+```
+
+If your npm client cannot install from GitHub tags, use the release tarball:
+
+```bash
+npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.5/nasseralbusaidi-mizan-0.1.5.tgz
 ```
 
 Preview the product without reading local transcripts:

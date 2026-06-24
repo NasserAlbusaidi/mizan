@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.5
+
+- Makes the tag-pinned GitHub install command the primary pre-npm install path.
+- Keeps the versioned release tarball as a fallback for npm clients that cannot
+  install from GitHub tags.
+
 ## 0.1.4
 
 - Adds visible README trust signals for CI, latest release, license, and
