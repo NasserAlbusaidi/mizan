@@ -57,6 +57,8 @@ test("markdown report is copyable and does not expose absolute home paths", () =
 
   assert.match(markdown, /^# Mizan Spend Report/m);
   assert.match(markdown, /Status: \*\*FAIL\*\*/);
+  assert.match(markdown, /mizan --add-work-marker/);
+  assert.match(markdown, /If a flagged path is really work/);
   assert.match(markdown, /\| Project \| Account \| Spend \| Requests \|/);
   assert.match(markdown, /~\/Desktop\/Personal\/SecretApp/);
   assert.doesNotMatch(markdown, /\/Users\/nasser/);

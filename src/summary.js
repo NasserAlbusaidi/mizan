@@ -21,7 +21,7 @@ export function buildSummary(data) {
   if ((data.leaks?.count || 0) > 0) {
     issues.push({
       type: "leak",
-      message: `${data.leaks.count} cross-account leak${data.leaks.count === 1 ? "" : "s"} totaling ${money(leakTotal)}.`,
+      message: `${data.leaks.count} cross-account leak${data.leaks.count === 1 ? "" : "s"} totaling ${money(leakTotal)}. Switch the session to the right Claude account. If a flagged path is really work, run mizan --add-work-marker /Clients/ with a path fragment from that repo.`,
     });
   }
 

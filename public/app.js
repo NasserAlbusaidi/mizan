@@ -206,7 +206,8 @@
       actions.push({
         tone: "danger",
         title: "Stop the account leak first",
-        body: `Largest leaking session is ${money(d.leaks.sessions[0]?.cost || 0)} on ${d.leaks.sessions[0]?.account || "unknown"} for ${d.leaks.sessions[0]?.project || "unknown project"}.`,
+        body: `Largest leaking session is ${money(d.leaks.sessions[0]?.cost || 0)} on ${d.leaks.sessions[0]?.account || "unknown"} for ${d.leaks.sessions[0]?.project || "unknown project"}. Switch the session to the right Claude account. If a flagged path is really work, add a work marker.`,
+        command: "mizan --add-work-marker /Clients/",
       });
     } else {
       actions.push({

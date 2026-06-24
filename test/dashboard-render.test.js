@@ -114,6 +114,22 @@ test("dashboard action queue warns when spend jumps versus the previous window",
   assert.match(actions, /mizan --weekly/);
 });
 
+test("dashboard leak action explains marker fixes", async () => {
+  const elements = await renderDashboard({
+    leaks: {
+      count: 1,
+      totals: { work_pays_personal: 12, personal_pays_work: 0 },
+      sessions: [{ account: "work", project: "~/Clients/Acme", cost: 12 }],
+    },
+  });
+
+  const actions = elements.get("actions").innerHTML;
+  assert.match(actions, /Stop the account leak first/);
+  assert.match(actions, /mizan --add-work-marker/);
+  assert.match(actions, /data-copy-command="mizan --add-work-marker \/Clients\/"/);
+  assert.match(actions, /really work/);
+});
+
 async function renderDashboard(overrides = {}) {
   const elements = new Map(ids.map((id) => [id, makeElement(id)]));
   const context = {

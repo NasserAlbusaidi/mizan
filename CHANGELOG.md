@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.22
+
+- Adds clearer leak guidance in summaries, Markdown reports, and the dashboard:
+  switch the Claude account for real leaks, or add a work marker when the
+  flagged path is legitimately work.
+
 ## 0.1.21
 
 - Adds `mizan --weekly`, a shorter shortcut for the redacted 7-day Markdown

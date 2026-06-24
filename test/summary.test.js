@@ -66,6 +66,8 @@ test("summary fails on cross-account leaks", () => {
   assert.equal(summary.status, "fail");
   assert.equal(summary.leaks.total, 12);
   assert.match(summary.issues[0].message, /2 cross-account leaks/);
+  assert.match(summary.issues[0].message, /mizan --add-work-marker/);
+  assert.match(formatSummary(summary), /If a flagged path is really work/);
 });
 
 test("summary fails on exceeded budgets and warns near budgets", () => {
