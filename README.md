@@ -30,6 +30,12 @@ client, employer, or reimbursement log.
 
 ## Quick Start
 
+Try a terminal demo without installing anything globally:
+
+```bash
+npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.6 -- mizan --summary --demo --window 7
+```
+
 Install the current GitHub release from its tag:
 
 ```bash
@@ -42,7 +48,7 @@ If your npm client cannot install from GitHub tags, use the release tarball:
 npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.6/nasseralbusaidi-mizan-0.1.6.tgz
 ```
 
-Preview the product without reading local transcripts:
+Preview the dashboard without reading local transcripts:
 
 ```bash
 mizan --demo

@@ -82,8 +82,17 @@ test("README quick start previews value before setup", () => {
   const readme = fs.readFileSync("README.md", "utf8");
   const quickStart = section(readme, "## Quick Start", "## CLI");
 
+  assert.match(
+    quickStart,
+    /npm exec --yes --package github:NasserAlbusaidi\/mizan#v0\.1\.6 -- mizan --summary --demo --window 7/,
+  );
+  assert.ok(
+    quickStart.indexOf("npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.6") <
+      quickStart.indexOf("npm install -g github:NasserAlbusaidi/mizan#v0.1.6"),
+  );
   assert.ok(quickStart.indexOf("mizan --demo") < quickStart.indexOf("mizan --setup"));
-  assert.match(quickStart, /Preview the product without reading local transcripts/);
+  assert.match(quickStart, /Try a terminal demo without installing anything globally/);
+  assert.match(quickStart, /Preview the dashboard without reading local transcripts/);
   assert.match(quickStart, /Then check whether Mizan can see your transcripts/);
 });
 
@@ -144,6 +153,10 @@ test("launch kit gives a practical public launch script", () => {
   assert.match(kit, /mizan --setup/);
   assert.match(kit, /mizan --demo/);
   assert.match(kit, /Copy report/);
+  assert.match(
+    kit,
+    /npm exec --yes --package github:NasserAlbusaidi\/mizan#v0\.1\.6 -- mizan --summary --demo --window 7/,
+  );
   assert.match(kit, /npm install -g github:NasserAlbusaidi\/mizan#v0\.1\.6/);
   assert.match(
     kit,

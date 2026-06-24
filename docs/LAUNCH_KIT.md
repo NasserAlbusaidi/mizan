@@ -26,6 +26,12 @@ Keep the recording tight. The promise is not "analytics platform"; it is
 
 ## Install copy
 
+No-global-install terminal demo:
+
+```bash
+npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.6 -- mizan --summary --demo --window 7
+```
+
 Current install path before npm publish:
 
 ```bash
@@ -41,9 +47,10 @@ Fallback release tarball:
 npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.6/nasseralbusaidi-mizan-0.1.6.tgz
 ```
 
-The npm package is prepared but not published yet. Do not claim `npx
-@nasseralbusaidi/mizan` works until `npm view @nasseralbusaidi/mizan version`
-returns `0.1.6`.
+The npm package is prepared but not published yet. The `npm exec --package
+github:...` demo runs from the tagged GitHub release; do not claim `npx
+@nasseralbusaidi/mizan` works from the npm registry until `npm view
+@nasseralbusaidi/mizan version` returns `0.1.6`.
 
 ## Short post
 
@@ -108,7 +115,9 @@ command have been rechecked that day.
 
 ## What not to claim
 
-- Do not claim npm install or `npx` works before npm publish.
+- Do not claim `npx @nasseralbusaidi/mizan` works before npm publish. The
+  GitHub-tag `npm exec --package github:...` demo path is okay after rechecking
+  it that day.
 - Do not claim provider-billing accuracy; say estimates and link the pricing
   assumptions.
 - Do not imply transcript upload, team sync, or cloud history exists.
