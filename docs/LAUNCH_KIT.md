@@ -31,13 +31,13 @@ Keep the recording tight. The promise is not "analytics platform"; it is
 No-global-install terminal demo:
 
 ```bash
-npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.13 -- mizan --try
+npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.14 -- mizan --try
 ```
 
 Current install path before npm publish:
 
 ```bash
-npm install -g github:NasserAlbusaidi/mizan#v0.1.13
+npm install -g github:NasserAlbusaidi/mizan#v0.1.14
 mizan --demo
 mizan --setup
 mizan
@@ -46,13 +46,13 @@ mizan
 Fallback release tarball:
 
 ```bash
-npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.13/nasseralbusaidi-mizan-0.1.13.tgz
+npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.14/nasseralbusaidi-mizan-0.1.14.tgz
 ```
 
 The npm package is prepared but not published yet. The `npm exec --package
 github:...` demo runs from the tagged GitHub release; do not claim `npx
 @nasseralbusaidi/mizan` works from the npm registry until `npm view
-@nasseralbusaidi/mizan version` returns `0.1.13`.
+@nasseralbusaidi/mizan version` returns `0.1.14`.
 
 ## Short post
 
@@ -65,7 +65,7 @@ projects, or personal quota spent on work.
 
 No account. No upload. Local-only dashboard.
 
-Release: https://github.com/NasserAlbusaidi/mizan/releases/tag/v0.1.13
+Release: https://github.com/NasserAlbusaidi/mizan/releases/tag/v0.1.14
 
 ## Longer post
 
@@ -82,7 +82,7 @@ It is a local-first CLI/dashboard for Claude Code usage:
 - Runs without runtime dependencies or uploads
 
 The first version is a GitHub release while npm publish waits on auth:
-https://github.com/NasserAlbusaidi/mizan/releases/tag/v0.1.13
+https://github.com/NasserAlbusaidi/mizan/releases/tag/v0.1.14
 
 If you run separate Claude configs or need a weekly usage note, try it and open
 an issue with the redacted support bundle.
@@ -109,7 +109,7 @@ It is intentionally local: no account, no upload, no hosted dashboard. The repor
 output redacts home paths for weekly notes or reimbursement logs.
 
 The first release is on GitHub while npm publishing waits on auth:
-https://github.com/NasserAlbusaidi/mizan/releases/tag/v0.1.13
+https://github.com/NasserAlbusaidi/mizan/releases/tag/v0.1.14
 ```
 
 Do not post to Show HN until the README, screenshot, release asset, and install

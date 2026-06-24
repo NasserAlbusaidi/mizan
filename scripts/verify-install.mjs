@@ -37,7 +37,7 @@ try {
   assertIncludes(help, "mizan --support-bundle", "--help should document support bundles");
 
   const version = run(bin, ["--version"]).stdout.trim();
-  if (version !== "@nasseralbusaidi/mizan 0.1.13") {
+  if (version !== "@nasseralbusaidi/mizan 0.1.14") {
     throw new Error(`installed --version printed ${JSON.stringify(version)}`);
   }
 

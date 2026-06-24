@@ -33,19 +33,19 @@ client, employer, or reimbursement log.
 Try a terminal demo without installing anything globally:
 
 ```bash
-npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.13 -- mizan --try
+npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.14 -- mizan --try
 ```
 
 Install the current GitHub release from its tag:
 
 ```bash
-npm install -g github:NasserAlbusaidi/mizan#v0.1.13
+npm install -g github:NasserAlbusaidi/mizan#v0.1.14
 ```
 
 If your npm client cannot install from GitHub tags, use the release tarball:
 
 ```bash
-npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.13/nasseralbusaidi-mizan-0.1.13.tgz
+npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.14/nasseralbusaidi-mizan-0.1.14.tgz
 ```
 
 Preview the dashboard without reading local transcripts:
@@ -239,7 +239,8 @@ the [Launch Kit](docs/LAUNCH_KIT.md).
 
 ## What it shows
 
-- **Action queue** — the few things worth checking before reading charts.
+- **Action queue** — leaks, spend jumps, budgets, and setup commands worth
+  checking before reading charts.
 - **Weekly review command** — copy `mizan --report --window 7` from the action
   queue for redacted recurring notes.
 - **Copy report** — one-click redacted Markdown from the dashboard for notes,

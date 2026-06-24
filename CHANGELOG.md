@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.14
+
+- Adds a dashboard action queue warning when spend materially jumps versus the
+  previous matching window, with a copyable report command for the same window.
+
 ## 0.1.13
 
 - Shows previous-window spend and request changes directly in the dashboard KPI

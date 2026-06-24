@@ -215,6 +215,9 @@
       });
     }
 
+    const spendJump = spendJumpAction(d.comparison);
+    if (spendJump) actions.push(spendJump);
+
     actions.push({
       tone: "neutral",
       title: "Weekly review command",
@@ -297,6 +300,21 @@
     });
 
     return actions.slice(0, 5);
+  }
+
+  function spendJumpAction(comparison) {
+    if (!comparison || !comparison.windowDays) return null;
+    const deltaCost = comparison.delta?.cost || 0;
+    const deltaPct = comparison.delta?.costPct ?? null;
+    const materialJump = deltaCost >= 5 && (deltaPct == null || deltaPct >= 0.25);
+    if (!materialJump) return null;
+
+    return {
+      tone: "warn",
+      title: "Spend jumped vs previous window",
+      body: `${signedMoney(deltaCost)} (${signedPct(deltaPct)}) versus the previous ${comparison.windowDays}d. Run a report to see which projects moved it.`,
+      command: `mizan --report --window ${comparison.windowDays}`,
+    };
   }
 
   function findUnpricedModels(models) {

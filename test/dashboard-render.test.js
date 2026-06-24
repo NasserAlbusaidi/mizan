@@ -96,6 +96,24 @@ function dashboardData(overrides = {}) {
 }
 
 test("dashboard spend KPI renders previous-window comparison", async () => {
+  const elements = await renderDashboard();
+
+  const kpis = elements.get("kpis").innerHTML;
+  assert.match(kpis, /Spend · last 7d/);
+  assert.match(kpis, /\+\$45\.50 \(\+56\.9%\) vs previous 7d/);
+  assert.match(kpis, /\+8 reqs vs previous 7d/);
+});
+
+test("dashboard action queue warns when spend jumps versus the previous window", async () => {
+  const elements = await renderDashboard();
+
+  const actions = elements.get("actions").innerHTML;
+  assert.match(actions, /Spend jumped vs previous window/);
+  assert.match(actions, /\+\$45\.50 \(\+56\.9%\) versus the previous 7d/);
+  assert.match(actions, /mizan --report --window 7/);
+});
+
+async function renderDashboard(overrides = {}) {
   const elements = new Map(ids.map((id) => [id, makeElement(id)]));
   const context = {
     console,
@@ -110,7 +128,7 @@ test("dashboard spend KPI renders previous-window comparison", async () => {
     addEventListener() {},
     fetch: async () => ({
       ok: true,
-      json: async () => dashboardData(),
+      json: async () => dashboardData(overrides),
     }),
     document: {
       getElementById(id) {
@@ -131,9 +149,5 @@ test("dashboard spend KPI renders previous-window comparison", async () => {
 
   vm.runInNewContext(fs.readFileSync("public/app.js", "utf8"), context, { filename: "public/app.js" });
   await new Promise((resolve) => setImmediate(resolve));
-
-  const kpis = elements.get("kpis").innerHTML;
-  assert.match(kpis, /Spend · last 7d/);
-  assert.match(kpis, /\+\$45\.50 \(\+56\.9%\) vs previous 7d/);
-  assert.match(kpis, /\+8 reqs vs previous 7d/);
-});
+  return elements;
+}
