@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.1.2
+
+- Adds first-run dashboard guidance when no usage records are found, pointing
+  users to demo mode, setup diagnostics, and saved transcript folders.
+- Adds a first-minute path to CLI help so new users can preview, diagnose, and
+  open the local dashboard without reading the full README.
+
 ## 0.1.1
 
 - Adds the public launch kit to the packaged docs.

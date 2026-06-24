@@ -28,7 +28,7 @@ client, employer, or reimbursement log.
 Install the current GitHub release:
 
 ```bash
-npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.1/nasseralbusaidi-mizan-0.1.1.tgz
+npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.2/nasseralbusaidi-mizan-0.1.2.tgz
 ```
 
 Create the local config if needed and check whether Mizan can see your
@@ -49,6 +49,10 @@ Start the private local dashboard:
 ```bash
 mizan
 ```
+
+If the dashboard starts with zero records, preview the product with
+`mizan --demo`, diagnose folders with `mizan --setup`, or save custom transcript
+folders with `mizan --set-transcripts personal=/path work=/path`.
 
 From the public GitHub source:
 

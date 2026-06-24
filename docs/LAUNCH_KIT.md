@@ -29,14 +29,14 @@ Keep the recording tight. The promise is not "analytics platform"; it is
 Current install path before npm publish:
 
 ```bash
-npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.1/nasseralbusaidi-mizan-0.1.1.tgz
+npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.2/nasseralbusaidi-mizan-0.1.2.tgz
 mizan --setup
 mizan
 ```
 
 The npm package is prepared but not published yet. Do not claim `npx
 @nasseralbusaidi/mizan` works until `npm view @nasseralbusaidi/mizan version`
-returns `0.1.1`.
+returns `0.1.2`.
 
 ## Short post
 
@@ -49,7 +49,7 @@ projects, or personal quota spent on work.
 
 No account. No upload. Local-only dashboard.
 
-Release: https://github.com/NasserAlbusaidi/mizan/releases/tag/v0.1.1
+Release: https://github.com/NasserAlbusaidi/mizan/releases/tag/v0.1.2
 
 ## Longer post
 
@@ -66,7 +66,7 @@ It is a local-first CLI/dashboard for Claude Code usage:
 - Runs without runtime dependencies or uploads
 
 The first version is a GitHub release while npm publish waits on auth:
-https://github.com/NasserAlbusaidi/mizan/releases/tag/v0.1.1
+https://github.com/NasserAlbusaidi/mizan/releases/tag/v0.1.2
 
 If you run separate Claude configs or need a weekly usage note, try it and open
 an issue with the redacted support bundle.
@@ -93,7 +93,7 @@ It is intentionally local: no account, no upload, no hosted dashboard. The repor
 output redacts home paths for weekly notes or reimbursement logs.
 
 The first release is on GitHub while npm publishing waits on auth:
-https://github.com/NasserAlbusaidi/mizan/releases/tag/v0.1.1
+https://github.com/NasserAlbusaidi/mizan/releases/tag/v0.1.2
 ```
 
 Do not post to Show HN until the README, screenshot, release asset, and install

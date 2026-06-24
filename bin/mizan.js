@@ -200,6 +200,12 @@ if (options.warm) {
     console.log(
       `   ready in ${((Date.now() - t0) / 1000).toFixed(1)}s — ${s.files} files (${s.parsed} parsed, ${s.cached} cached), ${s.records} records`,
     );
+    if (!options.demo && s.records === 0) {
+      console.log("   No usage records found.");
+      console.log("   Try `mizan --demo` to preview the dashboard with sample data.");
+      console.log("   Run `mizan --setup` to diagnose transcript folders.");
+      console.log("   Save custom folders with `mizan --set-transcripts personal=/path work=/path`.");
+    }
   } catch (err) {
     console.error("   warm-up failed (server will still start):", err.message);
   }

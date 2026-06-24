@@ -295,6 +295,12 @@ function parseTranscriptAssignments(values) {
 export function helpText(defaultPort = 7777) {
   return `Mizan - local Claude Code spend and leak dashboard
 
+First minute:
+  mizan --demo                  Preview the dashboard with sample data
+  mizan --setup                 Check transcript folders and config
+  mizan --today                 Print today's spend summary
+  mizan                         Open the local dashboard
+
 Usage:
   mizan                         Start the dashboard on port ${defaultPort}
   mizan --no-open               Start the dashboard without opening a browser

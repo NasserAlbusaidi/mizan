@@ -86,6 +86,8 @@ test("parseCliArgs rejects unsafe ports, hosts, and unknown windows", () => {
 
 test("helpText documents the scriptable JSON path", () => {
   const text = helpText(7777);
+  assert.match(text, /First minute:/);
+  assert.match(text, /Preview the dashboard with sample data/);
   assert.match(text, /mizan --today/);
   assert.match(text, /mizan --summary --window 1/);
   assert.match(text, /mizan --json --window 7/);

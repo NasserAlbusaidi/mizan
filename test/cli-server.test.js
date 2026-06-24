@@ -1,5 +1,7 @@
 import { spawn } from "node:child_process";
+import fs from "node:fs";
 import net from "node:net";
+import os from "node:os";
 import path from "node:path";
 import { test } from "node:test";
 import assert from "node:assert/strict";
@@ -16,6 +18,30 @@ test("dashboard binds and advertises localhost by default", async () => {
     const stdout = await waitForOutput(child, /http:\/\/127\.0\.0\.1:\d+/);
     assert.match(stdout, new RegExp(`http://127\\.0\\.0\\.1:${port}`));
     assert.match(stdout, /local-only/i);
+  } finally {
+    child.kill("SIGTERM");
+  }
+});
+
+test("dashboard startup guides first-time users when no usage records are found", async () => {
+  const port = await freePort();
+  const home = fs.mkdtempSync(path.join(os.tmpdir(), "mizan-empty-startup-"));
+  const child = spawn(process.execPath, [bin, "--no-open", "--port", String(port), "--window", "1"], {
+    stdio: ["ignore", "pipe", "pipe"],
+    env: {
+      ...process.env,
+      HOME: home,
+      MIZAN_CONFIG: path.join(home, ".mizan", "config.json"),
+      MIZAN_PERSONAL_DIR: path.join(home, "personal-projects"),
+      MIZAN_WORK_DIR: path.join(home, "work-projects"),
+    },
+  });
+
+  try {
+    const stdout = await waitForOutput(child, /mizan --set-transcripts/);
+    assert.match(stdout, /mizan --demo/);
+    assert.match(stdout, /mizan --setup/);
+    assert.match(stdout, /mizan --set-transcripts/);
   } finally {
     child.kill("SIGTERM");
   }
