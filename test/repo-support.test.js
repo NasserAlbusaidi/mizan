@@ -26,6 +26,19 @@ test("repo has public support and security docs", () => {
   assert.ok(pkg.files.includes("SECURITY.md"));
 });
 
+test("package metadata points npm users to the public GitHub repo", () => {
+  const pkg = JSON.parse(fs.readFileSync("package.json", "utf8"));
+
+  assert.deepEqual(pkg.repository, {
+    type: "git",
+    url: "git+https://github.com/NasserAlbusaidi/mizan.git",
+  });
+  assert.equal(pkg.homepage, "https://github.com/NasserAlbusaidi/mizan#readme");
+  assert.deepEqual(pkg.bugs, {
+    url: "https://github.com/NasserAlbusaidi/mizan/issues",
+  });
+});
+
 test("README documents the quick daily check", () => {
   const readme = fs.readFileSync("README.md", "utf8");
 

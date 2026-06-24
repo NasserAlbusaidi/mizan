@@ -3,6 +3,14 @@
   "version": "0.1.0",
   "description": "Local Claude Code spend dashboard with dual-account leak detection and zero runtime dependencies.",
   "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NasserAlbusaidi/mizan.git"
+  },
+  "homepage": "https://github.com/NasserAlbusaidi/mizan#readme",
+  "bugs": {
+    "url": "https://github.com/NasserAlbusaidi/mizan/issues"
+  },
   "bin": {
     "mizan": "bin/mizan.js"
   },

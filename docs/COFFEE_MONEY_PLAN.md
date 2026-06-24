@@ -45,17 +45,20 @@ uploads.
 ## Launch Checklist
 
 1. Publish `@nasseralbusaidi/mizan` publicly on npm.
-2. Add repository, homepage, and support/sponsor links to `package.json` once the
-   public repo and support page exist.
-3. Record a 60-second demo:
+2. Keep `package.json` pointed at the public repo:
+   - `repository`: https://github.com/NasserAlbusaidi/mizan
+   - `homepage`: https://github.com/NasserAlbusaidi/mizan#readme
+   - `bugs`: https://github.com/NasserAlbusaidi/mizan/issues
+3. Add a `funding` link only after a real sponsorship or support URL is verified.
+4. Record a 60-second demo:
    - `mizan --doctor`
    - `mizan --demo`
    - action queue, leak detection, copy report
-4. Post in places where Claude Code power users already are:
+5. Post in places where Claude Code power users already are:
    - personal X/LinkedIn
    - relevant Discord/Slack groups where self-promotion is allowed
    - Hacker News "Show HN" only after the README has a screenshot or GIF
-5. Track only public signals at first:
+6. Track only public signals at first:
    - npm downloads
    - GitHub stars
    - support clicks/sponsors
@@ -65,8 +68,8 @@ uploads.
 
 Highest-leverage polish before launch:
 
-- Add `repository`, `homepage`, `bugs`, and `funding` fields after the public
-  repo/support links exist.
+- Publish the npm package from a machine logged into npm.
+- Add a verified `funding` field after a real sponsorship or support URL exists.
 
 Do not build accounts, cloud sync, payments, or teams until strangers are using
 the free local version.
