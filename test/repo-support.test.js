@@ -70,6 +70,17 @@ test("README documents running from the public GitHub source", () => {
   assert.match(readme, /npm start/);
 });
 
+test("README documents the versioned GitHub release install path before npm publish", () => {
+  const readme = fs.readFileSync("README.md", "utf8");
+
+  assert.match(
+    readme,
+    /npm install -g https:\/\/github\.com\/NasserAlbusaidi\/mizan\/releases\/download\/v0\.1\.0\/nasseralbusaidi-mizan-0\.1\.0\.tgz/,
+  );
+  assert.match(readme, /npm package is prepared but not published yet/i);
+  assert.match(readme, /npx @nasseralbusaidi\/mizan.*after npm publish/is);
+});
+
 test("release checklist lists every packaged public surface", () => {
   const release = fs.readFileSync("docs/RELEASE.md", "utf8");
   const pkg = JSON.parse(fs.readFileSync("package.json", "utf8"));

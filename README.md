@@ -25,33 +25,29 @@ client, employer, or reimbursement log.
 
 ## Quick Start
 
+Install the current GitHub release:
+
+```bash
+npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.0/nasseralbusaidi-mizan-0.1.0.tgz
+```
+
 Create the local config if needed and check whether Mizan can see your
 transcripts:
 
 ```bash
-npx @nasseralbusaidi/mizan --setup
-```
-
-`mizan --setup` creates `~/.mizan/config.json` when it is missing, prints the
-same diagnostics as `mizan --doctor`, and exits with code `2` when no usable
-transcript files are found.
-
-Check without writing config:
-
-```bash
-npx @nasseralbusaidi/mizan --doctor
+mizan --setup
 ```
 
 Preview the product without reading local transcripts:
 
 ```bash
-npx @nasseralbusaidi/mizan --demo
+mizan --demo
 ```
 
 Start the private local dashboard:
 
 ```bash
-npx @nasseralbusaidi/mizan
+mizan
 ```
 
 From the public GitHub source:
@@ -61,6 +57,25 @@ git clone https://github.com/NasserAlbusaidi/mizan.git
 cd mizan
 node bin/mizan.js --setup
 npm start
+```
+
+The npm package is prepared but not published yet. The
+`npx @nasseralbusaidi/mizan` path is available after npm publish:
+
+```bash
+npx @nasseralbusaidi/mizan --setup
+npx @nasseralbusaidi/mizan --demo
+npx @nasseralbusaidi/mizan
+```
+
+`mizan --setup` creates `~/.mizan/config.json` when it is missing, prints the
+same diagnostics as `mizan --doctor`, and exits with code `2` when no usable
+transcript files are found.
+
+Check without writing config:
+
+```bash
+mizan --doctor
 ```
 
 From an existing local checkout:
