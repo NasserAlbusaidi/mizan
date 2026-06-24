@@ -1,0 +1,47 @@
+{
+  "name": "@nasseralbusaidi/mizan",
+  "version": "0.1.0",
+  "description": "Local Claude Code spend dashboard with dual-account leak detection and zero runtime dependencies.",
+  "type": "module",
+  "bin": {
+    "mizan": "bin/mizan.js"
+  },
+  "files": [
+    "assets",
+    "bin",
+    "docs",
+    "public",
+    "src",
+    "CHANGELOG.md",
+    "CONTRIBUTING.md",
+    "README.md",
+    "SECURITY.md",
+    "SUPPORT.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "start": "node bin/mizan.js",
+    "test": "node --test",
+    "smoke": "node bin/mizan.js --doctor && node bin/mizan.js --pricing > /dev/null && node bin/mizan.js --summary --demo --window 7 > /dev/null && node bin/mizan.js --report --demo --window 7 > /dev/null && node bin/mizan.js --json --demo --window 30 > /dev/null",
+    "pack:check": "npm pack --dry-run",
+    "install:check": "node scripts/verify-install.mjs",
+    "release:check": "npm test && npm run smoke && npm run pack:check && npm run install:check",
+    "prepublishOnly": "npm run release:check"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "keywords": [
+    "claude-code",
+    "usage",
+    "billing",
+    "dashboard",
+    "tokens",
+    "local-first"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "author": "Nasser Al Busaidi",
+  "license": "MIT"
+}

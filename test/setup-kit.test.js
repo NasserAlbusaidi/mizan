@@ -1,0 +1,25 @@
+import { test } from "node:test";
+import assert from "node:assert/strict";
+import fs from "node:fs";
+
+test("README links to the packaged setup kit", () => {
+  const readme = fs.readFileSync("README.md", "utf8");
+  const pkg = JSON.parse(fs.readFileSync("package.json", "utf8"));
+
+  assert.match(readme, /\[Setup Kit\]\(docs\/SETUP_KIT\.md\)/);
+  assert.ok(pkg.files.includes("docs"));
+});
+
+test("setup kit documents recurring report workflows safely", () => {
+  const kit = fs.readFileSync("docs/SETUP_KIT.md", "utf8");
+
+  assert.match(kit, /mizan --doctor --check/);
+  assert.match(kit, /mizan --setup/);
+  assert.match(kit, /mizan --report --window 7/);
+  assert.match(kit, /--output "\$HOME\/Documents\/Mizan\/mizan-weekly-\$\(date \+%F\)\.md"/);
+  assert.match(kit, /mizan --report --check --window 7/);
+  assert.match(kit, /cron/);
+  assert.match(kit, /launchd/);
+  assert.match(kit, /Reimbursement note/);
+  assert.match(kit, /Do not attach raw transcripts/);
+});

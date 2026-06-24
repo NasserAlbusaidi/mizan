@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Mizan · Claude Code spend</title>
+    <link rel="stylesheet" href="/styles.css" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%9A%96%EF%B8%8F%3C/text%3E%3C/svg%3E"
+    />
+  </head>
+  <body>
+    <div id="app">
+      <header class="topbar">
+        <div class="brand">
+          <span class="brand-mark">⚖</span>
+          <div class="brand-text">
+            <h1>Mizan<span class="brand-ar">ميزان</span></h1>
+            <p>Claude Code spend &amp; usage · dual-account</p>
+          </div>
+        </div>
+        <div class="controls">
+          <div class="window-tabs" id="window-tabs" role="tablist">
+            <button data-window="1">1d</button>
+            <button data-window="7">7d</button>
+            <button data-window="30" class="active">30d</button>
+            <button data-window="90">90d</button>
+            <button data-window="all">All</button>
+          </div>
+          <button id="copy-report" class="copy-btn" title="Copy redacted Markdown report">Copy report</button>
+          <button id="refresh" class="ghost-btn" title="Refresh">↻</button>
+          <span id="updated" class="updated"></span>
+        </div>
+      </header>
+
+      <main id="content">
+        <div id="loading" class="loading">Reading transcripts…</div>
+        <div id="dashboard" hidden>
+          <section class="briefing" id="briefing">
+            <div class="brief-main">
+              <p class="eyebrow">Local budget guard</p>
+              <h2 id="brief-title">Scanning your Claude Code transcripts</h2>
+              <p id="brief-copy"></p>
+            </div>
+            <div class="trust-grid" id="trust-grid"></div>
+          </section>
+
+          <section class="action-panel" id="actions"></section>
+
+          <section class="kpis" id="kpis"></section>
+
+          <section id="leak-banner" class="leak-banner" hidden></section>
+
+          <div class="grid">
+            <section class="panel span-2" id="panel-daily">
+              <div class="panel-head">
+                <h2>Daily spend</h2>
+                <div class="legend">
+                  <span class="dot personal"></span>Personal
+                  <span class="dot work"></span>Work
+                </div>
+              </div>
+              <canvas id="daily-chart" height="240"></canvas>
+            </section>
+
+            <section class="panel" id="panel-accounts">
+              <div class="panel-head"><h2>Account split</h2></div>
+              <div id="account-split"></div>
+            </section>
+
+            <section class="panel" id="panel-models">
+              <div class="panel-head"><h2>Model mix</h2></div>
+              <div class="donut-wrap">
+                <canvas id="model-donut" width="150" height="150"></canvas>
+                <div class="donut-legend" id="model-legend"></div>
+              </div>
+            </section>
+
+            <section class="panel" id="panel-cache">
+              <div class="panel-head"><h2>Cache efficiency</h2></div>
+              <div id="cache-gauge"></div>
+            </section>
+
+            <section class="panel span-2" id="panel-projects">
+              <div class="panel-head"><h2>Top projects</h2></div>
+              <div id="projects"></div>
+            </section>
+
+            <section class="panel span-3" id="panel-sessions">
+              <div class="panel-head">
+                <h2>Costliest sessions</h2>
+                <span class="hint">in window</span>
+              </div>
+              <div id="sessions" class="table-wrap"></div>
+            </section>
+          </div>
+
+          <footer class="foot">
+            <span id="foot-stats"></span>
+            <span class="foot-note" id="pricing-note"
+              >Estimated from local transcripts · authoritative billing: console.anthropic.com</span
+            >
+          </footer>
+        </div>
+        <div id="error" class="error" hidden></div>
+      </main>
+    </div>
+
+    <script src="/charts.js"></script>
+    <script src="/app.js"></script>
+  </body>
+</html>

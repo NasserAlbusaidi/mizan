@@ -1,0 +1,12 @@
+node_modules/
+coverage/
+*.log
+*.tgz
+
+.env
+.env.*
+.DS_Store
+
+.gstack/
+.mizan/
+journal.md

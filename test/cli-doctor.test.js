@@ -1,0 +1,118 @@
+import { spawnSync } from "node:child_process";
+import fs from "node:fs";
+import os from "node:os";
+import path from "node:path";
+import { test } from "node:test";
+import assert from "node:assert/strict";
+
+const bin = path.resolve("bin/mizan.js");
+
+test("--doctor --check exits nonzero when no transcript folders are usable", () => {
+  const home = fs.mkdtempSync(path.join(os.tmpdir(), "mizan-doctor-check-missing-"));
+  const result = spawnSync(process.execPath, [bin, "--doctor", "--check"], {
+    encoding: "utf8",
+    env: {
+      ...process.env,
+      HOME: home,
+      MIZAN_CONFIG: path.join(home, ".mizan", "config.json"),
+    },
+  });
+
+  assert.equal(result.status, 2);
+  assert.match(result.stdout, /^Mizan doctor/m);
+  assert.match(result.stdout, /No transcript folders were found/);
+});
+
+test("--doctor --check exits zero when transcript setup is usable", () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), "mizan-doctor-check-ok-"));
+  const personal = path.join(root, "personal-projects", "project-a");
+  const work = path.join(root, "work-projects", "project-b");
+  fs.mkdirSync(personal, { recursive: true });
+  fs.mkdirSync(work, { recursive: true });
+  fs.writeFileSync(path.join(personal, "a.jsonl"), "{}\n");
+  fs.writeFileSync(path.join(work, "b.jsonl"), "{}\n");
+
+  const result = spawnSync(process.execPath, [bin, "--doctor", "--check"], {
+    encoding: "utf8",
+    env: {
+      ...process.env,
+      MIZAN_CONFIG: path.join(root, ".mizan", "config.json"),
+      MIZAN_PERSONAL_DIR: path.join(root, "personal-projects"),
+      MIZAN_WORK_DIR: path.join(root, "work-projects"),
+    },
+  });
+
+  assert.equal(result.status, 0);
+  assert.match(result.stdout, /Setup looks usable/);
+});
+
+test("--setup creates a config and exits nonzero when setup is still unusable", () => {
+  const home = fs.mkdtempSync(path.join(os.tmpdir(), "mizan-setup-missing-"));
+  const configPath = path.join(home, ".mizan", "config.json");
+  const result = spawnSync(process.execPath, [bin, "--setup"], {
+    encoding: "utf8",
+    env: {
+      ...process.env,
+      HOME: home,
+      MIZAN_CONFIG: configPath,
+    },
+  });
+
+  assert.equal(result.status, 2);
+  assert.match(result.stdout, new RegExp(`Created ${escapeRegExp(configPath)}`));
+  assert.match(result.stdout, /^Mizan doctor/m);
+  assert.match(result.stdout, /No transcript folders were found/);
+
+  const saved = JSON.parse(fs.readFileSync(configPath, "utf8"));
+  assert.equal(saved.personalDir, path.join(home, ".claude", "projects"));
+  assert.equal(saved.workDir, path.join(home, ".claude-work", "projects"));
+  assert.equal(saved.host, "127.0.0.1");
+});
+
+test("--setup keeps an existing config and exits zero when transcripts are usable", () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), "mizan-setup-ok-"));
+  const configPath = path.join(root, ".mizan", "config.json");
+  const personalDir = path.join(root, "personal-projects");
+  const workDir = path.join(root, "work-projects");
+  fs.mkdirSync(path.join(personalDir, "project-a"), { recursive: true });
+  fs.writeFileSync(path.join(personalDir, "project-a", "usage.jsonl"), "{}\n");
+  fs.mkdirSync(path.join(workDir, "project-b"), { recursive: true });
+  fs.writeFileSync(path.join(workDir, "project-b", "usage.jsonl"), "{}\n");
+  fs.mkdirSync(path.dirname(configPath), { recursive: true });
+  fs.writeFileSync(
+    configPath,
+    `${JSON.stringify(
+      {
+        personalDir,
+        workDir,
+        workMarkers: ["/Clients/"],
+        dailyBudget: 12,
+        monthlyBudget: 120,
+        port: 7777,
+        host: "127.0.0.1",
+      },
+      null,
+      2,
+    )}\n`,
+  );
+
+  const result = spawnSync(process.execPath, [bin, "--setup"], {
+    encoding: "utf8",
+    env: {
+      ...process.env,
+      MIZAN_CONFIG: configPath,
+    },
+  });
+
+  assert.equal(result.status, 0, result.stderr);
+  assert.match(result.stdout, new RegExp(`Config already exists at ${escapeRegExp(configPath)}`));
+  assert.match(result.stdout, /Setup looks usable/);
+
+  const saved = JSON.parse(fs.readFileSync(configPath, "utf8"));
+  assert.equal(saved.dailyBudget, 12);
+  assert.deepEqual(saved.workMarkers, ["/Clients/"]);
+});
+
+function escapeRegExp(value) {
+  return String(value).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}

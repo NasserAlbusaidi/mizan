@@ -1,0 +1,43 @@
+name: Feature request
+description: Suggest a local-first improvement for Mizan.
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Mizan is intentionally local-first. Requests that preserve no-upload privacy, simple packaging, and low setup cost are easiest to evaluate.
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What workflow is hard, confusing, or missing today?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      description: What would make this better?
+    validations:
+      required: true
+  - type: dropdown
+    id: surface
+    attributes:
+      label: Product surface
+      options:
+        - Dashboard
+        - CLI
+        - Reports
+        - Setup/config
+        - Packaging/docs
+        - Other
+    validations:
+      required: true
+  - type: checkboxes
+    id: fit
+    attributes:
+      label: Fit
+      options:
+        - label: This can work without uploading transcript data.
+          required: true

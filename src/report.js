@@ -1,0 +1,142 @@
+import { HOME } from "./config.js";
+import { buildSummary } from "./summary.js";
+
+export function buildReport(data) {
+  const summary = buildSummary(data);
+  const actions = [
+    ...summary.issues.map((issue) => ({ level: "issue", ...issue })),
+    ...summary.warnings.map((warning) => ({ level: "warning", ...warning })),
+  ];
+
+  return {
+    title: "Mizan Spend Report",
+    status: summary.status,
+    generatedAt: new Date(summary.generatedAt).toISOString(),
+    window: summary.window,
+    windowLabel: summary.window.days ? `last ${summary.window.days}d` : "all-time",
+    mode: summary.demo ? "demo" : "local",
+    metrics: {
+      spend: summary.spend,
+      today: summary.today,
+      burnPerDay: summary.burnPerDay,
+      projected30d: summary.projected30d,
+      requests: summary.requests,
+      leakCount: summary.leaks.count,
+      leakTotal: summary.leaks.total,
+      budgets: summary.budgets,
+    },
+    accounts: Object.entries(data.accounts || {}).map(([account, bucket]) => ({
+      account,
+      spend: bucket.cost || 0,
+      requests: bucket.reqs || 0,
+      outputTokens: bucket.output || 0,
+    })),
+    topProjects: summary.topProjects.map((project) => ({
+      ...project,
+      project: redactPath(project.project),
+    })),
+    topLeaks: (data.leaks?.sessions || []).slice(0, 5).map((session) => ({
+      account: session.account,
+      project: redactPath(session.project || session.cwd || "(unknown)"),
+      cost: session.cost || 0,
+      durationMin: session.durationMin || 0,
+    })),
+    actions,
+    pricing: {
+      sourceName: data.pricing?.sourceName || "public pricing",
+      sourceUrl: data.pricing?.sourceUrl || null,
+      checkedAt: data.pricing?.checkedAt || null,
+    },
+    privacy: {
+      redacted: true,
+      note: "Paths are redacted to avoid exposing local usernames or full working directories.",
+    },
+  };
+}
+
+export function formatMarkdownReport(report) {
+  const statusLabel = report.status.toUpperCase();
+  const lines = [
+    `# ${report.title}`,
+    "",
+    `Status: **${statusLabel}**`,
+    `Window: ${report.windowLabel}`,
+    `Generated: ${report.generatedAt}`,
+    `Mode: ${report.mode}`,
+    "",
+    "## Snapshot",
+    "",
+    `- Spend: ${money(report.metrics.spend)}`,
+    `- Today: ${money(report.metrics.today)}`,
+    `- Burn rate: ${money(report.metrics.burnPerDay)} / day`,
+    `- Projected 30d: ${money(report.metrics.projected30d)}`,
+    `- Requests: ${report.metrics.requests}`,
+    `- Leaks: ${report.metrics.leakCount} (${money(report.metrics.leakTotal)})`,
+    `- Budgets: daily ${budget(report.metrics.budgets.daily)}; monthly ${budget(report.metrics.budgets.monthly)}`,
+  ];
+
+  if (report.actions.length) {
+    lines.push("", "## Action Items", "");
+    for (const action of report.actions) {
+      lines.push(`- **${titleCase(action.level)}:** ${action.message}`);
+    }
+  }
+
+  if (report.topLeaks.length) {
+    lines.push("", "## Top Leaks", "", "| Project | Account | Spend | Duration |", "|---|---:|---:|---:|");
+    for (const leak of report.topLeaks) {
+      lines.push(
+        `| ${cell(leak.project)} | ${cell(leak.account)} | ${money(leak.cost)} | ${leak.durationMin}m |`,
+      );
+    }
+  }
+
+  if (report.topProjects.length) {
+    lines.push("", "## Top Projects", "", "| Project | Account | Spend | Requests |", "|---|---:|---:|---:|");
+    for (const project of report.topProjects) {
+      lines.push(
+        `| ${cell(project.project)} | ${cell(project.account)} | ${money(project.cost)} | ${project.requests} |`,
+      );
+    }
+  }
+
+  lines.push(
+    "",
+    "## Notes",
+    "",
+    `- ${report.privacy.note}`,
+    `- Cost is an estimate from local Claude Code transcripts using ${report.pricing.sourceName}${
+      report.pricing.checkedAt ? ` checked ${report.pricing.checkedAt}` : ""
+    }.`,
+    "- Authoritative billing remains console.anthropic.com.",
+  );
+
+  return lines.join("\n");
+}
+
+export function redactPath(value) {
+  const text = String(value == null ? "" : value);
+  return text
+    .replaceAll(HOME, "~")
+    .replace(/^\/Users\/[^/]+(?=\/|$)/, "~")
+    .replace(/^[A-Za-z]:\\Users\\[^\\]+(?=\\|$)/, "~");
+}
+
+function money(n) {
+  const a = Math.abs(n);
+  if (a >= 1000) return `$${(n / 1000).toFixed(1)}k`;
+  if (a >= 100) return `$${n.toFixed(0)}`;
+  return `$${n.toFixed(2)}`;
+}
+
+function budget(value) {
+  return value ? money(value) : "(unset)";
+}
+
+function cell(value) {
+  return String(value == null ? "" : value).replaceAll("|", "\\|");
+}
+
+function titleCase(value) {
+  return value.slice(0, 1).toUpperCase() + value.slice(1);
+}
