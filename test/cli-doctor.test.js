@@ -113,6 +113,25 @@ test("--setup keeps an existing config and exits zero when transcripts are usabl
   assert.deepEqual(saved.workMarkers, ["/Clients/"]);
 });
 
+test("--init-config tells the user how to verify the new config", () => {
+  const home = fs.mkdtempSync(path.join(os.tmpdir(), "mizan-init-next-"));
+  const configPath = path.join(home, ".mizan", "config.json");
+  const result = spawnSync(process.execPath, [bin, "--init-config"], {
+    encoding: "utf8",
+    env: {
+      ...process.env,
+      HOME: home,
+      MIZAN_CONFIG: configPath,
+    },
+  });
+
+  assert.equal(result.status, 0, result.stderr);
+  assert.match(result.stdout, new RegExp(`Created ${escapeRegExp(configPath)}`));
+  assert.match(result.stdout, /Next:/);
+  assert.match(result.stdout, /mizan --doctor --check/);
+  assert.match(result.stdout, /mizan --set-transcripts personal=\/path work=\/path/);
+});
+
 function escapeRegExp(value) {
   return String(value).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }

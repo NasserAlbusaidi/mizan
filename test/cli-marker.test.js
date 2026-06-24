@@ -23,6 +23,9 @@ test("--add-work-marker writes persistent leak-detection markers and exits", () 
   assert.match(result.stdout, /Saved work markers/);
   assert.match(result.stdout, /\/Clients\//);
   assert.match(result.stdout, /\/Company\//);
+  assert.match(result.stdout, /Next:/);
+  assert.match(result.stdout, /mizan --summary --window 7/);
+  assert.match(result.stdout, /mizan --weekly/);
 
   const saved = JSON.parse(fs.readFileSync(configPath, "utf8"));
   assert.deepEqual(saved.workMarkers, ["/Desktop/Work/", "/Work-stuff/", "/Clients/", "/Company/"]);

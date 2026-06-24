@@ -23,6 +23,9 @@ test("--set-transcripts writes persistent transcript directories and exits", () 
   assert.match(result.stdout, /Saved transcript folders/);
   assert.match(result.stdout, /personal/);
   assert.match(result.stdout, /work/);
+  assert.match(result.stdout, /Next:/);
+  assert.match(result.stdout, /mizan --doctor --check/);
+  assert.match(result.stdout, /mizan/);
 
   const saved = JSON.parse(fs.readFileSync(configPath, "utf8"));
   assert.equal(saved.personalDir, path.join(home, "personal"));

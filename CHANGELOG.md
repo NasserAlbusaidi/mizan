@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.27
+
+- Adds copyable next-step guidance after `--init-config`, `--set-transcripts`,
+  `--add-work-marker`, and `--set-budget` so setup commands end with the
+  verification or dashboard command a new user should run next.
+
 ## 0.1.26
 
 - Restores the pinned GitHub tag as the no-global-install demo path after

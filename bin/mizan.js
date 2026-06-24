@@ -53,11 +53,11 @@ const host = options.host;
 if (options.initConfig) {
   try {
     const result = writeDefaultConfig();
-    if (result.created) {
-      console.log(`Created ${result.path}`);
-    } else {
-      console.log(`Config already exists at ${result.path}`);
-    }
+    printWithNextSteps(result.created ? `Created ${result.path}` : `Config already exists at ${result.path}`, [
+      "Verify setup: mizan --doctor --check",
+      "Save custom transcript folders if needed: mizan --set-transcripts personal=/path work=/path",
+      "Open the dashboard: mizan",
+    ]);
   } catch (err) {
     console.error(`mizan: ${err.stack || err.message}`);
     process.exit(1);
@@ -68,8 +68,13 @@ if (options.initConfig) {
 if (options.setBudget) {
   try {
     const result = writeBudgetConfig(options.setBudget);
-    console.log(
+    printWithNextSteps(
       `Saved budgets to ${result.path}: daily ${formatBudget(result.budgets.daily)}, monthly ${formatBudget(result.budgets.monthly)}`,
+      [
+        "Check thresholds now: mizan --check --window 30",
+        "Generate a weekly report: mizan --weekly",
+        "Open the dashboard: mizan",
+      ],
     );
   } catch (err) {
     console.error(`mizan: ${err.stack || err.message}`);
@@ -81,7 +86,11 @@ if (options.setBudget) {
 if (options.addWorkMarkers) {
   try {
     const result = writeWorkMarkerConfig(options.addWorkMarkers);
-    console.log(`Saved work markers to ${result.path}: ${result.workMarkers.join(", ")}`);
+    printWithNextSteps(`Saved work markers to ${result.path}: ${result.workMarkers.join(", ")}`, [
+      "Recheck leak status: mizan --summary --window 7",
+      "Generate a weekly report: mizan --weekly",
+      "Open the dashboard: mizan",
+    ]);
   } catch (err) {
     console.error(`mizan: ${err.stack || err.message}`);
     process.exit(1);
@@ -92,8 +101,13 @@ if (options.addWorkMarkers) {
 if (options.setTranscripts) {
   try {
     const result = writeTranscriptConfig(options.setTranscripts);
-    console.log(
+    printWithNextSteps(
       `Saved transcript folders to ${result.path}: personal ${result.accounts.personal}, work ${result.accounts.work}`,
+      [
+        "Verify folders: mizan --doctor --check",
+        "Open the dashboard: mizan",
+        "Preview sample data if setup is still empty: mizan --demo",
+      ],
     );
   } catch (err) {
     console.error(`mizan: ${err.stack || err.message}`);
@@ -303,6 +317,10 @@ Next:
   - Open the sample dashboard: ${next[0]}
   - Check real transcript setup: ${next[1]}
   - Save custom folders: ${next[2]}`;
+}
+
+function printWithNextSteps(message, steps) {
+  console.log(`${message}\n\nNext:\n${steps.map((step) => `  - ${step}`).join("\n")}`);
 }
 
 function emitOutput(content, outputPath, label) {

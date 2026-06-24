@@ -21,8 +21,8 @@ test("--share prints safe public launch copy without reading transcripts", () =>
   assert.equal(result.status, 0, result.stderr);
   assert.match(result.stdout, /^# Share Mizan/m);
   assert.match(result.stdout, /private Claude Code spend dashboard/i);
-  assert.match(result.stdout, /npm exec --yes --package github:NasserAlbusaidi\/mizan#v0\.1\.26 -- mizan --try/);
-  assert.match(result.stdout, /npm install -g github:NasserAlbusaidi\/mizan#v0\.1\.26/);
+  assert.match(result.stdout, /npm exec --yes --package github:NasserAlbusaidi\/mizan#v0\.1\.27 -- mizan --try/);
+  assert.match(result.stdout, /npm install -g github:NasserAlbusaidi\/mizan#v0\.1\.27/);
   assert.match(
     result.stdout,
     /npm install -g https:\/\/github\.com\/NasserAlbusaidi\/mizan\/releases\/latest\/download\/mizan-latest\.tgz/,
@@ -54,8 +54,8 @@ test("--share --output writes the public launch copy", () => {
   assert.match(result.stdout, new RegExp(`Wrote share guide to ${escapeRegExp(output)}`));
   const markdown = fs.readFileSync(output, "utf8");
   assert.match(markdown, /^# Share Mizan/m);
-  assert.match(markdown, /github:NasserAlbusaidi\/mizan#v0\.1\.26 -- mizan --try/);
-  assert.match(markdown, /github:NasserAlbusaidi\/mizan#v0\.1\.26/);
+  assert.match(markdown, /github:NasserAlbusaidi\/mizan#v0\.1\.27 -- mizan --try/);
+  assert.match(markdown, /github:NasserAlbusaidi\/mizan#v0\.1\.27/);
   assert.match(markdown, /releases\/latest\/download\/mizan-latest\.tgz/);
   assert.match(markdown, /^## Short Post/m);
   assert.match(markdown, /^## Show HN Draft/m);

@@ -61,7 +61,7 @@ test("resolveBudgets accepts positive numeric daily and monthly limits", () => {
     daily: 25,
     monthly: 300,
   });
-  assert.deepEqual(resolveBudgets({}), { daily: null, monthly: null });
+  assert.deepEqual(resolveBudgets({}, {}), { daily: null, monthly: null });
   assert.deepEqual(resolveBudgets({}, { dailyBudget: 12, monthlyBudget: 200 }), {
     daily: 12,
     monthly: 200,

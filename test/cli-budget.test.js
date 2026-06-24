@@ -23,6 +23,9 @@ test("--set-budget writes a persistent config file and exits", () => {
   assert.match(result.stdout, /Saved budgets/);
   assert.match(result.stdout, /daily \$20/);
   assert.match(result.stdout, /monthly \$250/);
+  assert.match(result.stdout, /Next:/);
+  assert.match(result.stdout, /mizan --check --window 30/);
+  assert.match(result.stdout, /mizan --weekly/);
 
   const saved = JSON.parse(fs.readFileSync(configPath, "utf8"));
   assert.equal(saved.dailyBudget, 20);
