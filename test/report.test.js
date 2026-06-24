@@ -83,6 +83,42 @@ test("markdown report includes account split for reimbursement review", () => {
   assert.match(markdown, /\| work \| \$45\.50 \| 28 \| 120\.0k \|/);
 });
 
+test("markdown report includes costliest sessions without session ids", () => {
+  const markdown = formatMarkdownReport(
+    buildReport(
+      baseData({
+        sessions: [
+          {
+            session: "secret-session-id",
+            account: "personal",
+            project: "/Users/nasser/Desktop/Personal/SecretApp",
+            cost: 80,
+            durationMin: 77,
+            reqs: 20,
+            model: "claude-opus-4-8",
+          },
+          {
+            session: "other-secret-session-id",
+            account: "work",
+            cwd: "/Users/nasser/Desktop/Work/ClientPortal",
+            cost: 45.5,
+            durationMin: 12,
+            reqs: 28,
+            model: "claude-sonnet-4-6",
+          },
+        ],
+      }),
+    ),
+  );
+
+  assert.match(markdown, /## Costliest Sessions/);
+  assert.match(markdown, /\| Project \| Account \| Spend \| Duration \| Requests \| Model \|/);
+  assert.match(markdown, /\| ~\/Desktop\/Personal\/SecretApp \| personal \| \$80\.00 \| 77m \| 20 \| claude-opus-4-8 \|/);
+  assert.match(markdown, /\| ~\/Desktop\/Work\/ClientPortal \| work \| \$45\.50 \| 12m \| 28 \| claude-sonnet-4-6 \|/);
+  assert.doesNotMatch(markdown, /secret-session-id/);
+  assert.doesNotMatch(markdown, /\/Users\/nasser/);
+});
+
 test("markdown report compares spend to the previous matching window", () => {
   const report = buildReport(
     baseData({

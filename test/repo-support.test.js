@@ -30,7 +30,7 @@ test("repo has public support and security docs", () => {
 test("package metadata points npm users to the public GitHub repo", () => {
   const pkg = JSON.parse(fs.readFileSync("package.json", "utf8"));
 
-  assert.equal(pkg.version, "0.1.32");
+  assert.equal(pkg.version, "0.1.33");
   assert.deepEqual(pkg.repository, {
     type: "git",
     url: "git+https://github.com/NasserAlbusaidi/mizan.git",
@@ -55,6 +55,7 @@ test("README documents the weekly report shortcut", () => {
   assert.match(readme, /redacted 7-day Markdown report/);
   assert.match(readme, /mizan --weekly --output/);
   assert.match(readme, /project\/account breakdown/);
+  assert.match(readme, /costliest sessions/);
 });
 
 test("README documents the support bundle command", () => {
@@ -98,11 +99,11 @@ test("README quick start previews value before setup", () => {
 
   assert.match(
     quickStart,
-    /npm exec --yes --package github:NasserAlbusaidi\/mizan#v0\.1\.32 -- mizan --try/,
+    /npm exec --yes --package github:NasserAlbusaidi\/mizan#v0\.1\.33 -- mizan --try/,
   );
   assert.ok(
-    quickStart.indexOf("npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.32") <
-      quickStart.indexOf("npm install -g github:NasserAlbusaidi/mizan#v0.1.32"),
+    quickStart.indexOf("npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.33") <
+      quickStart.indexOf("npm install -g github:NasserAlbusaidi/mizan#v0.1.33"),
   );
   assert.ok(quickStart.indexOf("mizan --demo") < quickStart.indexOf("mizan --setup"));
   assert.match(quickStart, /Try a terminal demo without installing anything globally/);
@@ -137,9 +138,9 @@ test("README documents the versioned GitHub install paths before npm publish", (
   const readme = fs.readFileSync("README.md", "utf8");
   const quickStart = section(readme, "## Quick Start", "## CLI");
 
-  assert.match(quickStart, /npm install -g github:NasserAlbusaidi\/mizan#v0\.1\.32/);
+  assert.match(quickStart, /npm install -g github:NasserAlbusaidi\/mizan#v0\.1\.33/);
   assert.ok(
-    quickStart.indexOf("npm install -g github:NasserAlbusaidi/mizan#v0.1.32") <
+    quickStart.indexOf("npm install -g github:NasserAlbusaidi/mizan#v0.1.33") <
       quickStart.indexOf(
         "npm install -g https://github.com/NasserAlbusaidi/mizan/releases/latest/download/mizan-latest.tgz",
       ),
@@ -182,9 +183,9 @@ test("launch kit gives a practical public launch script", () => {
   assert.match(kit, /Save report/);
   assert.match(
     kit,
-    /npm exec --yes --package github:NasserAlbusaidi\/mizan#v0\.1\.32 -- mizan --try/,
+    /npm exec --yes --package github:NasserAlbusaidi\/mizan#v0\.1\.33 -- mizan --try/,
   );
-  assert.match(kit, /npm install -g github:NasserAlbusaidi\/mizan#v0\.1\.32/);
+  assert.match(kit, /npm install -g github:NasserAlbusaidi\/mizan#v0\.1\.33/);
   assert.match(kit, /Do not use the stable latest tarball URL for `npm exec`/);
   assert.match(
     kit,

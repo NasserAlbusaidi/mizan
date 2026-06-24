@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.33
+
+- Adds a Markdown report `Costliest Sessions` section with redacted project,
+  account, spend, duration, request count, and model so saved weekly reports
+  point to the sessions worth inspecting without exposing raw session IDs.
+
 ## 0.1.32
 
 - Adds a Markdown report `Account Split` section with personal/work spend,

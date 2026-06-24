@@ -21,6 +21,7 @@ test("setup kit documents recurring report workflows safely", () => {
   assert.match(kit, /--output "\$HOME\/Documents\/Mizan\/mizan-weekly-\$\(date \+%F\)\.md"/);
   assert.match(kit, /mizan --weekly --check/);
   assert.match(kit, /personal\/work account split/);
+  assert.match(kit, /costliest sessions/);
   assert.match(kit, /cron/);
   assert.match(kit, /launchd/);
   assert.match(kit, /Reimbursement note/);

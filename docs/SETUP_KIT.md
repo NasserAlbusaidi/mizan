@@ -62,7 +62,8 @@ own the final privacy check. It also compares the selected window with the
 previous matching window, so a 7-day report shows whether spend and request
 count moved up or down from the prior 7 days and which projects drove the
 change. The Markdown report includes personal/work account split for
-reimbursement review without exposing full local paths.
+reimbursement review plus costliest sessions worth inspecting, without exposing
+full local paths.
 
 Use `mizan --weekly --check` when you want the command to fail if Mizan finds
 account leaks or budget overruns.

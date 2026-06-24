@@ -42,6 +42,14 @@ export function buildReport(data) {
       cost: session.cost || 0,
       durationMin: session.durationMin || 0,
     })),
+    topSessions: (data.sessions || []).slice(0, 5).map((session) => ({
+      account: session.account,
+      project: redactPath(session.project || session.cwd || "(unknown)"),
+      cost: session.cost || 0,
+      durationMin: session.durationMin || 0,
+      requests: session.reqs || 0,
+      model: session.model || "unknown",
+    })),
     actions,
     pricing: {
       sourceName: data.pricing?.sourceName || "public pricing",
@@ -123,6 +131,21 @@ export function formatMarkdownReport(report) {
     for (const leak of report.topLeaks) {
       lines.push(
         `| ${cell(leak.project)} | ${cell(leak.account)} | ${money(leak.cost)} | ${leak.durationMin}m |`,
+      );
+    }
+  }
+
+  if (report.topSessions.length) {
+    lines.push(
+      "",
+      "## Costliest Sessions",
+      "",
+      "| Project | Account | Spend | Duration | Requests | Model |",
+      "|---|---:|---:|---:|---:|---|",
+    );
+    for (const session of report.topSessions) {
+      lines.push(
+        `| ${cell(session.project)} | ${cell(session.account)} | ${money(session.cost)} | ${session.durationMin}m | ${session.requests} | ${cell(session.model)} |`,
       );
     }
   }
