@@ -40,6 +40,45 @@ test("--try prints a demo summary and next steps without starting the dashboard"
   assert.doesNotMatch(result.stdout + result.stderr, /http:\/\/127\.0\.0\.1/);
 });
 
+test("--try ignores saved local budgets so the demo stays self-contained", () => {
+  const home = fs.mkdtempSync(path.join(os.tmpdir(), "mizan-try-demo-home-"));
+  const configPath = path.join(home, ".mizan", "config.json");
+  fs.mkdirSync(path.dirname(configPath), { recursive: true });
+  fs.writeFileSync(
+    configPath,
+    `${JSON.stringify(
+      {
+        personalDir: path.join(home, ".claude", "projects"),
+        workDir: path.join(home, ".claude-work", "projects"),
+        workMarkers: ["/Desktop/Work/", "/Work-stuff/"],
+        dailyBudget: 1,
+        monthlyBudget: 1,
+        host: "127.0.0.1",
+        port: 7777,
+      },
+      null,
+      2,
+    )}\n`,
+  );
+
+  const result = spawnSync(process.execPath, [bin, "--try"], {
+    encoding: "utf8",
+    timeout: 5000,
+    env: {
+      ...process.env,
+      HOME: home,
+      MIZAN_CONFIG: configPath,
+    },
+  });
+
+  assert.equal(result.status, 0, result.stderr);
+  assert.match(result.stdout, /^Mizan summary \[FAIL\] \(demo\)/m);
+  assert.match(result.stdout, /2 cross-account leaks/);
+  assert.doesNotMatch(result.stdout, /Budgets:/);
+  assert.doesNotMatch(result.stdout, /monthly budget/);
+  assert.doesNotMatch(result.stdout, /daily budget/);
+});
+
 test("--setup-kit prints recurring workflow commands without starting the dashboard", () => {
   const result = spawnSync(process.execPath, [bin, "--setup-kit"], {
     encoding: "utf8",

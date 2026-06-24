@@ -46,7 +46,7 @@ try {
   assertIncludes(help, "mizan --share", "--help should document public sharing copy");
 
   const version = run(bin, ["--version"]).stdout.trim();
-  if (version !== "@nasseralbusaidi/mizan 0.1.27") {
+  if (version !== "@nasseralbusaidi/mizan 0.1.28") {
     throw new Error(`installed --version printed ${JSON.stringify(version)}`);
   }
 
@@ -76,10 +76,10 @@ try {
   assertIncludes(shareGuide, "# Share Mizan", "--share should print Markdown");
   assertIncludes(
     shareGuide,
-    "npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.27 -- mizan --try",
+    "npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.28 -- mizan --try",
     "--share should include the pinned no-global demo path",
   );
-  assertIncludes(shareGuide, "github:NasserAlbusaidi/mizan#v0.1.27", "--share should include the tagged install path");
+  assertIncludes(shareGuide, "github:NasserAlbusaidi/mizan#v0.1.28", "--share should include the tagged install path");
   assertIncludes(
     shareGuide,
     "releases/latest/download/mizan-latest.tgz",

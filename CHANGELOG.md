@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.28
+
+- Keeps demo mode self-contained by ignoring saved local budgets, config paths,
+  and cache paths in `mizan --try` and the sample dashboard runtime metadata.
+
 ## 0.1.27
 
 - Adds copyable next-step guidance after `--init-config`, `--set-transcripts`,

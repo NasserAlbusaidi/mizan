@@ -51,6 +51,16 @@ test("demo server returns sample rollups without reading local transcript state"
     assert.equal(res.status, 200);
     const body = await res.json();
     assert.equal(body.config.demo, true);
+    assert.deepEqual(body.config.budgets, { daily: null, monthly: null });
+    assert.equal(body.config.configFile.path, "demo://config");
+    assert.equal(body.config.cacheFile, "demo://cache");
+    assert.deepEqual(
+      body.config.accounts.map((account) => [account.account, account.dir, account.exists]),
+      [
+        ["personal", "demo://personal", true],
+        ["work", "demo://work", true],
+      ],
+    );
     assert.equal(body.stats.demo, true);
     assert.ok(body.totals.reqs > 0);
     assert.ok(body.leaks.count > 0, "demo data should demonstrate the core leak-detection value");

@@ -197,6 +197,10 @@ export const DEFAULT_PORT = resolvePort();
 export const DEFAULT_HOST = resolveHost();
 
 export function getRuntimeConfig({ demo = false, host = DEFAULT_HOST, port = DEFAULT_PORT } = {}) {
+  if (demo) {
+    return getDemoRuntimeConfig({ host, port });
+  }
+
   const user = loadUserConfig();
   return {
     demo,
@@ -212,6 +216,25 @@ export function getRuntimeConfig({ demo = false, host = DEFAULT_HOST, port = DEF
       const dir = ACCOUNTS[account];
       return { account, dir, exists: fs.existsSync(dir) };
     }),
+  };
+}
+
+function getDemoRuntimeConfig({ host = DEFAULT_HOST, port = DEFAULT_PORT } = {}) {
+  return {
+    demo: true,
+    localOnly: isLocalHost(host),
+    node: process.version,
+    host,
+    port,
+    configFile: { path: "demo://config", exists: false, error: null },
+    cacheFile: "demo://cache",
+    workMarkers: resolveWorkMarkers({}, {}),
+    budgets: { daily: null, monthly: null },
+    accounts: ACCOUNT_ORDER.map((account) => ({
+      account,
+      dir: `demo://${account}`,
+      exists: true,
+    })),
   };
 }
 
