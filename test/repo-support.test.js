@@ -61,6 +61,15 @@ test("README documents the guided setup command", () => {
   assert.match(readme, /exits with code `2`/);
 });
 
+test("README documents running from the public GitHub source", () => {
+  const readme = fs.readFileSync("README.md", "utf8");
+
+  assert.match(readme, /git clone https:\/\/github\.com\/NasserAlbusaidi\/mizan\.git/);
+  assert.match(readme, /cd mizan/);
+  assert.match(readme, /node bin\/mizan\.js --setup/);
+  assert.match(readme, /npm start/);
+});
+
 test("release checklist lists every packaged public surface", () => {
   const release = fs.readFileSync("docs/RELEASE.md", "utf8");
   const pkg = JSON.parse(fs.readFileSync("package.json", "utf8"));

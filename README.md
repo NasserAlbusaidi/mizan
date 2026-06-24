@@ -54,7 +54,16 @@ Start the private local dashboard:
 npx @nasseralbusaidi/mizan
 ```
 
-From a local checkout:
+From the public GitHub source:
+
+```bash
+git clone https://github.com/NasserAlbusaidi/mizan.git
+cd mizan
+node bin/mizan.js --setup
+npm start
+```
+
+From an existing local checkout:
 
 ```bash
 npm start
