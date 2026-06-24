@@ -89,6 +89,7 @@ test("--setup-kit prints recurring workflow commands without starting the dashbo
   assert.match(result.stdout, /^# Mizan Setup Kit/m);
   assert.match(result.stdout, /mizan --doctor --check/);
   assert.match(result.stdout, /mizan --weekly/);
+  assert.match(result.stdout, /mizan --csv --window 7/);
   assert.match(result.stdout, /cron/);
   assert.match(result.stdout, /launchd/);
   assert.match(result.stdout, /Do not attach raw transcripts/);
@@ -108,6 +109,7 @@ test("--setup-kit --output writes the recurring setup artifact", () => {
   const body = fs.readFileSync(output, "utf8");
   assert.match(body, /^# Mizan Setup Kit/m);
   assert.match(body, /mizan --weekly/);
+  assert.match(body, /mizan --csv --window 7/);
   assert.match(body, /Do not attach raw transcripts/);
   assert.doesNotMatch(result.stdout + result.stderr, /http:\/\/127\.0\.0\.1/);
 });
@@ -142,3 +144,45 @@ test("--feedback --output writes the safe issue guide", () => {
   assert.match(body, /mizan --support-bundle --output mizan-support\.md/);
   assert.match(body, /Do not attach raw transcripts/);
 });
+
+test("--csv prints a redacted reimbursement export without starting the dashboard", () => {
+  const result = spawnSync(process.execPath, [bin, "--csv", "--demo", "--window", "7"], {
+    encoding: "utf8",
+    timeout: 5000,
+  });
+
+  assert.equal(result.status, 0, result.stderr);
+  assert.match(
+    result.stdout,
+    /^row_type,project,account,spend_usd,requests,output_tokens,duration_minutes,model,note/m,
+  );
+  assert.match(result.stdout, /^account,,personal,31\.66,6,746000,,,account total/m);
+  assert.match(result.stdout, /^project,~\/Desktop\/Personal\/Rihla,personal,26\.98,4,632000,,,project total/m);
+  assert.match(
+    result.stdout,
+    /^session,~\/Desktop\/Personal\/starfield,work,33\.30,2,610000,14,claude-opus-4-8,costliest session/m,
+  );
+  assert.doesNotMatch(result.stdout, /\/Users\//);
+  assert.doesNotMatch(result.stdout + result.stderr, /http:\/\/127\.0\.0\.1/);
+});
+
+test("--csv --output writes the reimbursement export", () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "mizan-csv-output-"));
+  const output = path.join(dir, "reports", "weekly.csv");
+  const result = spawnSync(process.execPath, [bin, "--csv", "--demo", "--window", "7", "--output", output], {
+    encoding: "utf8",
+    timeout: 5000,
+  });
+
+  assert.equal(result.status, 0, result.stderr);
+  assert.match(result.stdout, new RegExp(`Wrote CSV export to ${escapeRegExp(output)}`));
+  const body = fs.readFileSync(output, "utf8");
+  assert.match(body, /^row_type,project,account,spend_usd,requests,output_tokens,duration_minutes,model,note/m);
+  assert.match(body, /^project,~\/Desktop\/Personal\/Rihla,personal,26\.98,4,632000,,,project total/m);
+  assert.doesNotMatch(body, /\/Users\//);
+  assert.doesNotMatch(result.stdout + result.stderr, /http:\/\/127\.0\.0\.1/);
+});
+
+function escapeRegExp(value) {
+  return String(value).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}

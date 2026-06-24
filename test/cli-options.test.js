@@ -15,6 +15,7 @@ test("parseCliArgs defaults to dashboard mode", () => {
   assert.equal(opts.feedback, false);
   assert.equal(opts.share, false);
   assert.equal(opts.setupKit, false);
+  assert.equal(opts.csv, false);
 });
 
 test("parseCliArgs supports JSON snapshots and explicit windows", () => {
@@ -77,6 +78,15 @@ test("parseCliArgs supports a weekly report shorthand", () => {
   assert.equal(opts.open, false);
 });
 
+test("parseCliArgs supports CSV export mode", () => {
+  const opts = parseCliArgs(["--csv", "--window", "7", "--output", "reports/week.csv"]);
+  assert.equal(opts.csv, true);
+  assert.equal(opts.open, false);
+  assert.equal(opts.window, "7");
+  assert.equal(opts.windowDays, 7);
+  assert.equal(opts.output, "reports/week.csv");
+});
+
 test("parseCliArgs supports the first-run try command", () => {
   const opts = parseCliArgs(["--try"]);
   assert.equal(opts.tryDemo, true);
@@ -135,6 +145,7 @@ test("helpText documents the scriptable JSON path", () => {
   assert.match(text, /Shortcut for --report --window 7/);
   assert.match(text, /mizan --summary --window 1/);
   assert.match(text, /mizan --json --window 7/);
+  assert.match(text, /mizan --csv --window 7/);
   assert.match(text, /mizan --host 0\.0\.0\.0/);
   assert.match(text, /mizan --demo/);
   assert.match(text, /mizan --doctor/);
@@ -153,6 +164,8 @@ test("helpText documents the scriptable JSON path", () => {
   assert.match(text, /mizan --pricing/);
   assert.match(text, /mizan --summary/);
   assert.match(text, /mizan --report/);
+  assert.match(text, /mizan --csv/);
+  assert.match(text, /spreadsheets/i);
   assert.match(text, /mizan --report --output reports\/week\.md/);
   assert.match(text, /weekly review, cron, and launchd/i);
   assert.match(text, /mizan --check/);
@@ -180,6 +193,7 @@ test("parseCliArgs supports output for one-shot commands", () => {
   assert.equal(parseCliArgs(["--summary", "--output", "summary.txt"]).output, "summary.txt");
   assert.equal(parseCliArgs(["--today", "--output", "today.txt"]).output, "today.txt");
   assert.equal(parseCliArgs(["--weekly", "--output", "weekly.md"]).output, "weekly.md");
+  assert.equal(parseCliArgs(["--csv", "--output", "weekly.csv"]).output, "weekly.csv");
   assert.equal(parseCliArgs(["--json", "--output", "data.json"]).output, "data.json");
   assert.equal(parseCliArgs(["--doctor", "--output", "doctor.txt"]).output, "doctor.txt");
   assert.equal(parseCliArgs(["--setup", "--output", "setup.txt"]).output, "setup.txt");

@@ -33,13 +33,13 @@ client, employer, or reimbursement log.
 Try a terminal demo without installing anything globally:
 
 ```bash
-npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.33 -- mizan --try
+npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.34 -- mizan --try
 ```
 
 Install the current GitHub release from its pinned tag:
 
 ```bash
-npm install -g github:NasserAlbusaidi/mizan#v0.1.33
+npm install -g github:NasserAlbusaidi/mizan#v0.1.34
 ```
 
 If your npm client cannot install from GitHub tags, use the stable latest
@@ -135,6 +135,7 @@ mizan --today
 mizan --weekly
 mizan --summary --window 1
 mizan --json --window 7
+mizan --csv --window 7
 mizan --demo
 mizan --setup
 mizan --doctor
@@ -163,6 +164,11 @@ whether Mizan is worth installing. The demo intentionally includes leaks, so a
 `mizan --weekly` prints the same redacted 7-day Markdown report as
 `mizan --report --window 7`. It is the shortest command for a recurring review
 or reimbursement note.
+
+`mizan --csv` prints a redacted account/project/session CSV for reimbursement
+spreadsheets, client notes, or internal usage logs. It uses the same window
+selection as reports, so `mizan --csv --window 7` matches the weekly report
+window.
 
 `mizan --setup` is the one-command first run. It creates the local config if
 needed, prints setup diagnostics, and exits with code `2` when Mizan still
@@ -228,6 +234,7 @@ Examples:
 mizan --today
 mizan --weekly
 mizan --weekly --output "$HOME/Documents/Mizan/mizan-weekly.md"
+mizan --csv --window 7 --output "$HOME/Documents/Mizan/mizan-weekly.csv"
 mizan --summary --window 1
 mizan --summary --window 7
 mizan --report --window 7
@@ -249,7 +256,7 @@ mizan --check --json --window 30
 Use `--report --check` in scheduled jobs when you want a Markdown report in the
 logs and a failing exit code whenever leaks or budget overruns need attention.
 Add `--output path/to/report.md` to save one-shot output from `--report`,
-`--summary`, `--today`, `--weekly`, `--json`, `--setup`, `--doctor`,
+`--csv`, `--summary`, `--today`, `--weekly`, `--json`, `--setup`, `--doctor`,
 `--setup-kit`, `--pricing`, `--support-bundle`, `--feedback`, or `--share`
 without shell redirection; parent directories are created automatically.
 
@@ -265,6 +272,8 @@ the [Launch Kit](docs/LAUNCH_KIT.md).
   redacted recurring notes.
 - **Copy or save report** — one-click redacted Markdown from the dashboard for
   notes, status updates, or reimbursements.
+- **CSV export** — redacted account, project, and costliest-session rows for
+  spreadsheets and internal/client usage logs.
 - **Headline KPIs** — spend in window, previous-window trend, today, 7-day burn
   rate, projected monthly spend, request count.
 - **Project changes** — top projects that drove spend up versus the previous

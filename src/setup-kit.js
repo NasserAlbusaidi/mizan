@@ -37,11 +37,13 @@ mizan --set-budget daily=20 monthly=250
 \`\`\`bash
 mizan --doctor --check
 mizan --weekly --output "$HOME/Documents/Mizan/mizan-weekly-$(date +%F).md"
+mizan --csv --window 7 --output "$HOME/Documents/Mizan/mizan-weekly-$(date +%F).csv"
 mizan --weekly --check
 \`\`\`
 
 Read the report before sharing it. Paths are redacted, but you own the final
-privacy check.
+privacy check. The CSV export gives the same review a spreadsheet-friendly
+account/project/session table.
 
 ## Cron Example
 
@@ -104,6 +106,7 @@ launchctl start dev.mizan.weekly-report
 ## Privacy Checklist
 
 - Read generated reports before forwarding them.
+- Use \`mizan --weekly\` or \`mizan --csv\`, not raw JSONL transcript files.
 - Do not attach raw transcripts.
 - Do not include API keys, auth tokens, or private project names.
 - Keep the default local-only dashboard unless you intentionally need LAN access.

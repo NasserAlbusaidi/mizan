@@ -36,6 +36,7 @@ try {
   assertIncludes(help, "mizan --setup", "--help should document guided setup");
   assertIncludes(help, "mizan --today", "--help should document the daily summary shortcut");
   assertIncludes(help, "mizan --weekly", "--help should document the weekly report shortcut");
+  assertIncludes(help, "mizan --csv", "--help should document CSV export");
   assertIncludes(help, "mizan --host 0.0.0.0", "--help should document explicit network binding");
   assertIncludes(help, "mizan --set-budget daily=20 monthly=250", "--help should document budget setup");
   assertIncludes(help, "mizan --add-work-marker /Clients/", "--help should document work marker setup");
@@ -46,7 +47,7 @@ try {
   assertIncludes(help, "mizan --share", "--help should document public sharing copy");
 
   const version = run(bin, ["--version"]).stdout.trim();
-  if (version !== "@nasseralbusaidi/mizan 0.1.33") {
+  if (version !== "@nasseralbusaidi/mizan 0.1.34") {
     throw new Error(`installed --version printed ${JSON.stringify(version)}`);
   }
 
@@ -63,6 +64,7 @@ try {
   assertIncludes(setupKit, "# Mizan Setup Kit", "--setup-kit should print Markdown");
   assertIncludes(setupKit, "mizan --doctor --check", "--setup-kit should include setup checks");
   assertIncludes(setupKit, "parseable Claude usage record", "--setup-kit should explain the setup check");
+  assertIncludes(setupKit, "mizan --csv --window 7", "--setup-kit should include CSV export guidance");
   assertIncludes(setupKit, "cron", "--setup-kit should include cron guidance");
   assertIncludes(setupKit, "launchd", "--setup-kit should include launchd guidance");
   assertIncludes(setupKit, "Do not attach raw transcripts", "--setup-kit should include privacy guidance");
@@ -77,10 +79,10 @@ try {
   assertIncludes(shareGuide, "# Share Mizan", "--share should print Markdown");
   assertIncludes(
     shareGuide,
-    "npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.33 -- mizan --try",
+    "npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.34 -- mizan --try",
     "--share should include the pinned no-global demo path",
   );
-  assertIncludes(shareGuide, "github:NasserAlbusaidi/mizan#v0.1.33", "--share should include the tagged install path");
+  assertIncludes(shareGuide, "github:NasserAlbusaidi/mizan#v0.1.34", "--share should include the tagged install path");
   assertIncludes(
     shareGuide,
     "releases/latest/download/mizan-latest.tgz",
@@ -107,6 +109,14 @@ try {
   const weekly = run(bin, ["--weekly", "--demo"]).stdout;
   assertIncludes(weekly, "# Mizan Spend Report", "--weekly should print a Markdown report");
   assertIncludes(weekly, "Window: last 7d", "--weekly should use the seven-day report window");
+
+  const csv = run(bin, ["--csv", "--demo", "--window", "7"]).stdout;
+  assertIncludes(csv, "row_type,project,account,spend_usd", "--csv should print a header row");
+  assertIncludes(csv, "project,~/Desktop/Personal/Rihla,personal", "--csv should include redacted project rows");
+  assertIncludes(csv, "session,~/Desktop/Personal/starfield,work", "--csv should include redacted session rows");
+  if (csv.includes(process.env.HOME || "__never__")) {
+    throw new Error("installed --csv exposed the absolute home path");
+  }
 
   const emptyPersonalDir = path.join(tempRoot, "empty-personal-projects");
   const emptyWorkDir = path.join(tempRoot, "empty-work-projects");
@@ -203,6 +213,12 @@ try {
   assertIncludes(reportOutput, `Wrote report to ${reportPath}`, "--report --output should print the saved path");
   const savedReport = fs.readFileSync(reportPath, "utf8");
   assertIncludes(savedReport, "# Mizan Spend Report", "--report --output should write Markdown");
+
+  const csvPath = path.join(tempRoot, "reports", "weekly.csv");
+  const csvOutput = run(bin, ["--csv", "--demo", "--window", "7", "--output", csvPath]).stdout;
+  assertIncludes(csvOutput, `Wrote CSV export to ${csvPath}`, "--csv --output should print the saved path");
+  const savedCsv = fs.readFileSync(csvPath, "utf8");
+  assertIncludes(savedCsv, "row_type,project,account,spend_usd", "--csv --output should write CSV");
 
   const invalidOutput = run(bin, ["--demo", "--output", path.join(tempRoot, "ignored.md")], { expectCode: 1 });
   assertIncludes(invalidOutput.stderr, "--output requires", "--output without a one-shot mode should fail clearly");

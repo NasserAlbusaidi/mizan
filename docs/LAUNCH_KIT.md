@@ -37,13 +37,13 @@ Keep the recording tight. The promise is not "analytics platform"; it is
 No-global-install terminal demo:
 
 ```bash
-npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.33 -- mizan --try
+npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.34 -- mizan --try
 ```
 
 Current pinned install path before npm publish:
 
 ```bash
-npm install -g github:NasserAlbusaidi/mizan#v0.1.33
+npm install -g github:NasserAlbusaidi/mizan#v0.1.34
 mizan --demo
 mizan --setup
 mizan
@@ -59,7 +59,7 @@ npm install -g https://github.com/NasserAlbusaidi/mizan/releases/latest/download
 The npm package is prepared but not published yet. The no-global demo uses a
 pinned GitHub tag because npm can cache package URLs by URL; do not claim `npx
 @nasseralbusaidi/mizan` works from the npm registry until `npm view
-@nasseralbusaidi/mizan version` returns `0.1.33`.
+@nasseralbusaidi/mizan version` returns `0.1.34`.
 The latest tarball URL should always point at the newest GitHub release asset
 named `mizan-latest.tgz`.
 Do not use the stable latest tarball URL for `npm exec`; use it for install
@@ -76,7 +76,7 @@ projects, or personal quota spent on work.
 
 No account. No upload. Local-only dashboard.
 
-Release: https://github.com/NasserAlbusaidi/mizan/releases/tag/v0.1.33
+Release: https://github.com/NasserAlbusaidi/mizan/releases/tag/v0.1.34
 
 ## Longer post
 
@@ -94,7 +94,7 @@ It is a local-first CLI/dashboard for Claude Code usage:
 - Runs without runtime dependencies or uploads
 
 The first version is a GitHub release while npm publish waits on auth:
-https://github.com/NasserAlbusaidi/mizan/releases/tag/v0.1.33
+https://github.com/NasserAlbusaidi/mizan/releases/tag/v0.1.34
 
 If you run separate Claude configs or need a weekly usage note, try it. If
 anything is confusing, `mizan --feedback` prints the issue link and the redacted
@@ -122,7 +122,7 @@ It is intentionally local: no account, no upload, no hosted dashboard. The repor
 output redacts home paths for weekly notes or reimbursement logs.
 
 The first release is on GitHub while npm publishing waits on auth:
-https://github.com/NasserAlbusaidi/mizan/releases/tag/v0.1.33
+https://github.com/NasserAlbusaidi/mizan/releases/tag/v0.1.34
 ```
 
 Do not post to Show HN until the README, screenshot, release asset, and install

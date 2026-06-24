@@ -20,7 +20,7 @@ import { helpText, parseCliArgs } from "../src/cli-options.js";
 import { buildDoctorReport, formatDoctorReport } from "../src/doctor.js";
 import { formatPricingReport, pricingRows, PRICING_METADATA } from "../src/pricing.js";
 import { buildSummary, formatSummary } from "../src/summary.js";
-import { buildReport, formatMarkdownReport } from "../src/report.js";
+import { buildReport, formatCsvReport, formatMarkdownReport } from "../src/report.js";
 import { buildSupportBundle, formatSupportBundle } from "../src/support-bundle.js";
 import { formatSetupKit } from "../src/setup-kit.js";
 import { formatFeedbackGuide } from "../src/feedback.js";
@@ -197,6 +197,18 @@ if (options.tryDemo) {
       : formatTryReport(summary, next);
     emitOutput(content, options.output, "try report");
     process.exit(0);
+  } catch (err) {
+    console.error(`mizan: ${err.stack || err.message}`);
+    process.exit(1);
+  }
+}
+
+if (options.csv) {
+  try {
+    const data = compute(options.windowDays, { useMemo: false, demo: options.demo, host, port });
+    const report = buildReport(data);
+    emitOutput(formatCsvReport(report), options.output, "CSV export");
+    process.exit(options.check && report.status === "fail" ? 2 : 0);
   } catch (err) {
     console.error(`mizan: ${err.stack || err.message}`);
     process.exit(1);

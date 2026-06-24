@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.34
+
+- Adds `mizan --csv`, a redacted account/project/session CSV export for
+  reimbursement spreadsheets, client notes, and internal usage logs.
+
 ## 0.1.33
 
 - Adds a Markdown report `Costliest Sessions` section with redacted project,

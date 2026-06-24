@@ -54,6 +54,7 @@ Run this on Friday or before sending a client/internal note:
 ```bash
 mizan --doctor --check
 mizan --weekly --output "$HOME/Documents/Mizan/mizan-weekly-$(date +%F).md"
+mizan --csv --window 7 --output "$HOME/Documents/Mizan/mizan-weekly-$(date +%F).csv"
 mizan --weekly --check
 ```
 
@@ -63,7 +64,8 @@ previous matching window, so a 7-day report shows whether spend and request
 count moved up or down from the prior 7 days and which projects drove the
 change. The Markdown report includes personal/work account split for
 reimbursement review plus costliest sessions worth inspecting, without exposing
-full local paths.
+full local paths. The CSV export gives the same review a spreadsheet-friendly
+account/project/session table.
 
 Use `mizan --weekly --check` when you want the command to fail if Mizan finds
 account leaks or budget overruns.
@@ -153,6 +155,7 @@ Notes:
 
 Attached:
 - Redacted Mizan report
+- Redacted Mizan CSV, if a spreadsheet is useful
 ```
 
 Do not attach raw transcripts. Do not include API keys, auth tokens, full home
@@ -173,7 +176,7 @@ If Mizan finds a leak, fix the account/session setup first, then send the note.
 
 ## Privacy Checklist
 
-- Use `mizan --weekly`, not raw JSONL transcript files.
+- Use `mizan --weekly` or `mizan --csv`, not raw JSONL transcript files.
 - Read the report before forwarding it.
 - Remove client names, private project names, and full local paths.
 - Do not attach raw transcripts.

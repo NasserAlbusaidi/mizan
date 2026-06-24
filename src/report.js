@@ -32,6 +32,13 @@ export function buildReport(data) {
       requests: bucket.reqs || 0,
       outputTokens: bucket.output || 0,
     })),
+    projects: (data.projects || []).map((project) => ({
+      account: project.account,
+      project: redactPath(project.display || project.cwd || "(unknown)"),
+      spend: project.cost || 0,
+      requests: project.reqs || 0,
+      outputTokens: project.output || 0,
+    })),
     topProjects: summary.topProjects.map((project) => ({
       ...project,
       project: redactPath(project.project),
@@ -41,6 +48,15 @@ export function buildReport(data) {
       project: redactPath(session.project || session.cwd || "(unknown)"),
       cost: session.cost || 0,
       durationMin: session.durationMin || 0,
+    })),
+    sessions: (data.sessions || []).map((session) => ({
+      account: session.account,
+      project: redactPath(session.project || session.cwd || "(unknown)"),
+      cost: session.cost || 0,
+      durationMin: session.durationMin || 0,
+      requests: session.reqs || 0,
+      outputTokens: session.output || 0,
+      model: session.model || "unknown",
     })),
     topSessions: (data.sessions || []).slice(0, 5).map((session) => ({
       account: session.account,
@@ -173,6 +189,54 @@ export function formatMarkdownReport(report) {
   return lines.join("\n");
 }
 
+export function formatCsvReport(report) {
+  const rows = [["row_type", "project", "account", "spend_usd", "requests", "output_tokens", "duration_minutes", "model", "note"]];
+
+  for (const account of report.accounts) {
+    rows.push([
+      "account",
+      "",
+      account.account,
+      cents(account.spend),
+      account.requests,
+      account.outputTokens,
+      "",
+      "",
+      "account total",
+    ]);
+  }
+
+  for (const project of report.projects) {
+    rows.push([
+      "project",
+      project.project,
+      project.account,
+      cents(project.spend),
+      project.requests,
+      project.outputTokens,
+      "",
+      "",
+      "project total",
+    ]);
+  }
+
+  for (const session of report.sessions) {
+    rows.push([
+      "session",
+      session.project,
+      session.account,
+      cents(session.cost),
+      session.requests,
+      session.outputTokens,
+      session.durationMin,
+      session.model,
+      "costliest session",
+    ]);
+  }
+
+  return rows.map((row) => row.map(csvCell).join(",")).join("\n");
+}
+
 export function redactPath(value) {
   const text = String(value == null ? "" : value);
   return text
@@ -199,6 +263,10 @@ function money(n) {
   return `$${n.toFixed(2)}`;
 }
 
+function cents(n) {
+  return (n || 0).toFixed(2);
+}
+
 function budget(value) {
   return value ? money(value) : "(unset)";
 }
@@ -223,6 +291,11 @@ function signedPct(value) {
 
 function cell(value) {
   return String(value == null ? "" : value).replaceAll("|", "\\|");
+}
+
+function csvCell(value) {
+  const text = String(value == null ? "" : value);
+  return /[",\n\r]/.test(text) ? `"${text.replaceAll('"', '""')}"` : text;
 }
 
 function tokens(value) {

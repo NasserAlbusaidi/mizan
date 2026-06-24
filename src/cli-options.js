@@ -20,6 +20,7 @@ export function parseCliArgs(argv, defaults = {}) {
     share: false,
     summary: false,
     report: false,
+    csv: false,
     check: false,
     json: false,
     output: null,
@@ -165,6 +166,11 @@ export function parseCliArgs(argv, defaults = {}) {
       options.open = false;
       continue;
     }
+    if (arg === "--csv") {
+      options.csv = true;
+      options.open = false;
+      continue;
+    }
     if (arg === "--check") {
       options.check = true;
       options.summary = true;
@@ -217,12 +223,13 @@ function validateOptions(options) {
     options.feedback ||
     options.share ||
     options.report ||
+    options.csv ||
     options.summary ||
     options.check ||
     options.json;
   if (!writesOneShotOutput) {
     throw new Error(
-      "--output requires a one-shot output mode: --report, --summary, --today, --weekly, --json, --try, --setup, --doctor, --setup-kit, --pricing, --support-bundle, --feedback, or --share.",
+      "--output requires a one-shot output mode: --report, --csv, --summary, --today, --weekly, --json, --try, --setup, --doctor, --setup-kit, --pricing, --support-bundle, --feedback, or --share.",
     );
   }
 }
@@ -350,6 +357,7 @@ Usage:
   mizan --weekly                Print a redacted 7-day Markdown report
   mizan --summary --window 1    Print today's spend summary
   mizan --json --window 7       Print the computed payload and exit
+  mizan --csv --window 7        Print a redacted reimbursement CSV and exit
   mizan --try                   Run the first-minute demo summary and next steps
   mizan --demo                  Run with realistic sample data
   mizan --setup                 Create config if needed, diagnose setup, and exit
@@ -366,6 +374,7 @@ Usage:
   mizan --pricing               Print pricing assumptions and exit
   mizan --summary               Print a compact spend/leak summary and exit
   mizan --report                Print a redacted Markdown spend report and exit
+  mizan --csv                   Print redacted account/project/session CSV and exit
   mizan --check                 Print summary and exit nonzero on leaks or exceeded budgets
   mizan --report --output reports/week.md
   mizan --version               Print package version and exit
@@ -391,8 +400,9 @@ Options:
   --pricing                     Print model pricing assumptions and exit
   --summary                     Print compact summary and exit
   --report                      Print redacted Markdown report; combine with --json for structured output
+  --csv                         Print redacted account/project/session rows for spreadsheets
   --check                       Exit 2 on leaks/budgets, or unusable setup with --doctor
-  --output <file>               Save one-shot output from report/summary/today/weekly/json/try/setup/doctor/setup-kit/pricing/support/feedback/share
+  --output <file>               Save one-shot output from report/csv/summary/today/weekly/json/try/setup/doctor/setup-kit/pricing/support/feedback/share
   --version                     Print package version and exit
   --no-warm                     Skip the startup cache warm-up
   --no-open                     Do not open the browser automatically
