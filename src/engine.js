@@ -17,9 +17,9 @@ export function compute(windowDays, { useMemo = true, demo = false, host, port }
   const now = Date.now();
   const DAY = 86_400_000;
   const displayCutoffMs = windowDays ? now - windowDays * DAY : 0;
-  // Always scan at least 30 days so burn-rate and projection metrics have data,
-  // even when the display window is shorter (e.g. 3d or 7d).
-  const scanCutoffMs = windowDays ? now - Math.max(windowDays, 30) * DAY : 0;
+  // Always scan enough history for previous-window comparison plus at least 30
+  // days for burn-rate and projection metrics.
+  const scanCutoffMs = windowDays ? now - Math.max(windowDays * 2, 30) * DAY : 0;
   const key = `${demo ? "demo:" : ""}${String(windowDays || "all")}:${host || ""}:${port || ""}`;
 
   if (useMemo && memo.key === key && now - memo.at < MEMO_TTL_MS) {

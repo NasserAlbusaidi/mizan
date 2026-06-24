@@ -22,6 +22,23 @@ test("summary is ok when there are no leaks or budget overruns", () => {
   assert.match(formatSummary(summary), /Mizan summary \[OK\]/);
 });
 
+test("summary compares spend to the previous matching window", () => {
+  const summary = buildSummary(
+    baseData({
+      comparison: {
+        windowDays: 7,
+        previous: { cost: 8, reqs: 4 },
+        delta: { cost: 4.5, reqs: 6, costPct: 0.5625, reqsPct: 1.5 },
+      },
+    }),
+  );
+  const text = formatSummary(summary);
+
+  assert.deepEqual(summary.comparison.previous, { cost: 8, reqs: 4 });
+  assert.match(text, /Previous 7d: \$8\.00/);
+  assert.match(text, /Change: \+\$4\.50 \(\+56\.3%\), \+6 reqs/);
+});
+
 test("summary warns when no usage records are found", () => {
   const summary = buildSummary(
     baseData({

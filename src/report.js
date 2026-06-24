@@ -25,6 +25,7 @@ export function buildReport(data) {
       leakTotal: summary.leaks.total,
       budgets: summary.budgets,
     },
+    comparison: summary.comparison,
     accounts: Object.entries(data.accounts || {}).map(([account, bucket]) => ({
       account,
       spend: bucket.cost || 0,
@@ -74,6 +75,11 @@ export function formatMarkdownReport(report) {
     `- Leaks: ${report.metrics.leakCount} (${money(report.metrics.leakTotal)})`,
     `- Budgets: daily ${budget(report.metrics.budgets.daily)}; monthly ${budget(report.metrics.budgets.monthly)}`,
   ];
+  if (report.comparison) {
+    lines.push(
+      `- Previous ${report.comparison.windowDays}d: ${money(report.comparison.previous.cost)}; change ${signedMoney(report.comparison.delta.cost)} (${signedPct(report.comparison.delta.costPct)}), ${signedNumber(report.comparison.delta.reqs)} requests`,
+    );
+  }
 
   if (report.actions.length) {
     lines.push("", "## Action Items", "");
@@ -131,6 +137,24 @@ function money(n) {
 
 function budget(value) {
   return value ? money(value) : "(unset)";
+}
+
+function signedMoney(value) {
+  if (value > 0) return `+${money(value)}`;
+  if (value < 0) return `-${money(Math.abs(value))}`;
+  return "$0.00";
+}
+
+function signedNumber(value) {
+  return value > 0 ? `+${value}` : String(value);
+}
+
+function signedPct(value) {
+  if (value == null) return "new";
+  const label = `${(Math.abs(value) * 100).toFixed(1)}%`;
+  if (value > 0) return `+${label}`;
+  if (value < 0) return `-${label}`;
+  return "0.0%";
 }
 
 function cell(value) {

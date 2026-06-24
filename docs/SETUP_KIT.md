@@ -58,7 +58,9 @@ mizan --report --check --window 7
 ```
 
 Read the report before sharing it. The report redacts home paths, but you still
-own the final privacy check.
+own the final privacy check. It also compares the selected window with the
+previous matching window, so a 7-day report shows whether spend and request
+count moved up or down from the prior 7 days.
 
 Use `mizan --report --check --window 7` when you want the command to fail if
 Mizan finds account leaks or budget overruns.

@@ -100,6 +100,31 @@ test("burn windows are independent of the display window", () => {
   assert.equal(d.burn.last30d, 50, "30d burn includes both");
 });
 
+test("comparison summarizes the previous matching display window", () => {
+  const cutoff = NOW - 7 * 86_400_000;
+  const previousWindow = NOW - 10 * 86_400_000;
+  const older = NOW - 16 * 86_400_000;
+  const units = [
+    unit("personal", `${HOME}/Desktop/Personal/Rihla`, "current", [
+      rec("c|1", "claude-opus-4-8", 1_000_000, today), // $25 current window
+      rec("c|2", "claude-opus-4-8", 1_000_000, NOW - 2 * 86_400_000), // $25 current window
+    ]),
+    unit("personal", `${HOME}/Desktop/Personal/Rihla`, "previous", [
+      rec("p|1", "claude-opus-4-8", 1_000_000, previousWindow), // $25 previous matching window
+      rec("o|1", "claude-opus-4-8", 1_000_000, older), // too old for comparison
+    ]),
+  ];
+
+  const d = aggregate(units, cutoff, NOW);
+
+  assert.equal(d.totals.cost, 50);
+  assert.deepEqual(d.comparison, {
+    windowDays: 7,
+    previous: { cost: 25, reqs: 1 },
+    delta: { cost: 25, reqs: 1, costPct: 1, reqsPct: 1 },
+  });
+});
+
 test("cache hit ratio reflects cheap cache reads vs fresh input", () => {
   const units = [
     unit("personal", `${HOME}/Desktop/Personal/Rihla`, "s", [

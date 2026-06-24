@@ -37,7 +37,7 @@ try {
   assertIncludes(help, "mizan --support-bundle", "--help should document support bundles");
 
   const version = run(bin, ["--version"]).stdout.trim();
-  if (version !== "@nasseralbusaidi/mizan 0.1.11") {
+  if (version !== "@nasseralbusaidi/mizan 0.1.12") {
     throw new Error(`installed --version printed ${JSON.stringify(version)}`);
   }
 
@@ -71,6 +71,9 @@ try {
   const summary = JSON.parse(run(bin, ["--summary", "--demo", "--json", "--window", "7"]).stdout);
   if (summary.status !== "fail" || !summary.issues.some((issue) => issue.type === "leak")) {
     throw new Error("installed --summary --demo did not report the expected demo leak failure");
+  }
+  if (!summary.comparison || summary.comparison.previous.reqs <= 0) {
+    throw new Error("installed --summary --demo did not include previous-window comparison");
   }
 
   const today = run(bin, ["--today", "--demo"]).stdout;
@@ -134,6 +137,7 @@ try {
 
   const report = run(bin, ["--report", "--demo", "--window", "7"]).stdout;
   assertIncludes(report, "# Mizan Spend Report", "--report should print Markdown");
+  assertIncludes(report, "Previous 7d", "--report should include previous-window comparison");
   assertIncludes(report, "Paths are redacted", "--report should document redaction");
   if (report.includes(process.env.HOME || "__never__")) {
     throw new Error("installed --report exposed the absolute home path");

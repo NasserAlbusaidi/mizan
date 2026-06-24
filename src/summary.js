@@ -5,6 +5,7 @@ export function buildSummary(data) {
   const issues = [];
   const warnings = [];
   const unpricedModels = findUnpricedModels(data.models || []);
+  const comparison = normalizeComparison(data.comparison);
   const leakTotal =
     (data.leaks?.totals?.work_pays_personal || 0) +
     (data.leaks?.totals?.personal_pays_work || 0);
@@ -72,6 +73,7 @@ export function buildSummary(data) {
     projected30d: data.burn.projected30d,
     requests: data.totals.reqs,
     budgets: { daily: budgets.daily || null, monthly: budgets.monthly || null },
+    comparison,
     leaks: {
       count: data.leaks.count,
       total: round(leakTotal),
@@ -102,6 +104,12 @@ export function formatSummary(summary) {
     `Requests: ${summary.requests}`,
     `Leaks: ${summary.leaks.count} (${money(summary.leaks.total)})`,
   ];
+  if (summary.comparison) {
+    lines.push(
+      `Previous ${summary.comparison.windowDays}d: ${money(summary.comparison.previous.cost)} · ${summary.comparison.previous.reqs} reqs`,
+      `Change: ${signedMoney(summary.comparison.delta.cost)} (${signedPct(summary.comparison.delta.costPct)}), ${signedNumber(summary.comparison.delta.reqs)} reqs`,
+    );
+  }
 
   if (summary.budgets.daily || summary.budgets.monthly) {
     lines.push(
@@ -133,6 +141,31 @@ const money = (n) => {
   if (a >= 100) return `$${n.toFixed(0)}`;
   return `$${n.toFixed(2)}`;
 };
+
+const signedMoney = (n) => (n > 0 ? `+${money(n)}` : n < 0 ? `-${money(Math.abs(n))}` : "$0.00");
+const signedNumber = (n) => (n > 0 ? `+${n}` : String(n));
+const signedPct = (n) => {
+  if (n == null) return "new";
+  const value = `${(Math.abs(n) * 100).toFixed(1)}%`;
+  return n > 0 ? `+${value}` : n < 0 ? `-${value}` : "0.0%";
+};
+
+function normalizeComparison(comparison) {
+  if (!comparison) return null;
+  return {
+    windowDays: comparison.windowDays,
+    previous: {
+      cost: comparison.previous?.cost || 0,
+      reqs: comparison.previous?.reqs || 0,
+    },
+    delta: {
+      cost: comparison.delta?.cost || 0,
+      reqs: comparison.delta?.reqs || 0,
+      costPct: comparison.delta?.costPct ?? null,
+      reqsPct: comparison.delta?.reqsPct ?? null,
+    },
+  };
+}
 
 function findUnpricedModels(models) {
   return models

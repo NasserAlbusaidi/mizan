@@ -63,6 +63,22 @@ test("markdown report is copyable and does not expose absolute home paths", () =
   assert.match(markdown, /Paths are redacted/);
 });
 
+test("markdown report compares spend to the previous matching window", () => {
+  const report = buildReport(
+    baseData({
+      comparison: {
+        windowDays: 7,
+        previous: { cost: 80, reqs: 40 },
+        delta: { cost: 45.5, reqs: 8, costPct: 0.56875, reqsPct: 0.2 },
+      },
+    }),
+  );
+  const markdown = formatMarkdownReport(report);
+
+  assert.deepEqual(report.comparison.previous, { cost: 80, reqs: 40 });
+  assert.match(markdown, /Previous 7d: \$80\.00; change \+\$45\.50 \(\+56\.9%\), \+8 requests/);
+});
+
 test("markdown report warns when no usage records are found", () => {
   const markdown = formatMarkdownReport(
     buildReport(

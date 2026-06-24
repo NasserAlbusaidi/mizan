@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.1.12
+
+- Adds previous-window spend and request comparison to terminal summaries and
+  Markdown reports.
+- Scans enough local history to compare the selected window against the matching
+  prior window while preserving existing burn-rate windows.
+
 ## 0.1.11
 
 - Adds a dashboard action queue item for `mizan --setup-kit`, making the weekly
