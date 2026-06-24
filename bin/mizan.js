@@ -23,6 +23,7 @@ import { buildSummary, formatSummary } from "../src/summary.js";
 import { buildReport, formatMarkdownReport } from "../src/report.js";
 import { buildSupportBundle, formatSupportBundle } from "../src/support-bundle.js";
 import { formatSetupKit } from "../src/setup-kit.js";
+import { formatFeedbackGuide } from "../src/feedback.js";
 
 const require = createRequire(import.meta.url);
 const packageJson = require("../package.json");
@@ -143,6 +144,11 @@ if (options.supportBundle) {
     console.error(`mizan: ${err.stack || err.message}`);
     process.exit(1);
   }
+  process.exit(0);
+}
+
+if (options.feedback) {
+  emitOutput(formatFeedbackGuide(), options.output, "feedback guide");
   process.exit(0);
 }
 

@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.18
+
+- Adds `mizan --feedback`, a safe issue-reporting guide that points users to
+  the GitHub issue chooser, redacted support bundle command, and privacy
+  checklist without starting the dashboard.
+
 ## 0.1.17
 
 - Adds a dashboard Project changes panel, so spend jumps identify the projects

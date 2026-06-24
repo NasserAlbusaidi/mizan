@@ -72,3 +72,34 @@ test("--setup-kit --output writes the recurring setup artifact", () => {
   assert.match(body, /Do not attach raw transcripts/);
   assert.doesNotMatch(result.stdout + result.stderr, /http:\/\/127\.0\.0\.1/);
 });
+
+test("--feedback prints safe issue guidance without starting the dashboard", () => {
+  const result = spawnSync(process.execPath, [bin, "--feedback"], {
+    encoding: "utf8",
+    timeout: 5000,
+  });
+
+  assert.equal(result.status, 0);
+  assert.match(result.stdout, /^# Mizan Feedback/m);
+  assert.match(result.stdout, /https:\/\/github\.com\/NasserAlbusaidi\/mizan\/issues\/new\/choose/);
+  assert.match(result.stdout, /mizan --support-bundle --output mizan-support\.md/);
+  assert.match(result.stdout, /Do not attach raw transcripts/);
+  assert.match(result.stdout, /what you expected/i);
+  assert.doesNotMatch(result.stdout + result.stderr, /http:\/\/127\.0\.0\.1/);
+});
+
+test("--feedback --output writes the safe issue guide", () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "mizan-feedback-"));
+  const output = path.join(dir, "feedback.md");
+  const result = spawnSync(process.execPath, [bin, "--feedback", "--output", output], {
+    encoding: "utf8",
+    timeout: 5000,
+  });
+
+  assert.equal(result.status, 0);
+  assert.match(result.stdout, /Wrote feedback guide to/);
+  const body = fs.readFileSync(output, "utf8");
+  assert.match(body, /^# Mizan Feedback/m);
+  assert.match(body, /mizan --support-bundle --output mizan-support\.md/);
+  assert.match(body, /Do not attach raw transcripts/);
+});

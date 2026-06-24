@@ -12,6 +12,7 @@ test("parseCliArgs defaults to dashboard mode", () => {
   assert.equal(opts.warm, true);
   assert.equal(opts.json, false);
   assert.equal(opts.supportBundle, false);
+  assert.equal(opts.feedback, false);
   assert.equal(opts.setupKit, false);
 });
 
@@ -82,6 +83,12 @@ test("parseCliArgs supports support bundle mode", () => {
   assert.equal(opts.open, false);
 });
 
+test("parseCliArgs supports feedback mode", () => {
+  const opts = parseCliArgs(["--feedback"]);
+  assert.equal(opts.feedback, true);
+  assert.equal(opts.open, false);
+});
+
 test("parseCliArgs supports setup mode", () => {
   const opts = parseCliArgs(["--setup"]);
   assert.equal(opts.setup, true);
@@ -122,6 +129,8 @@ test("helpText documents the scriptable JSON path", () => {
   assert.match(text, /mizan --add-work-marker \/Clients\//);
   assert.match(text, /mizan --set-transcripts personal=~\/\.claude\/projects/);
   assert.match(text, /mizan --support-bundle/);
+  assert.match(text, /mizan --feedback/);
+  assert.match(text, /safe feedback/i);
   assert.match(text, /mizan --pricing/);
   assert.match(text, /mizan --summary/);
   assert.match(text, /mizan --report/);
@@ -158,6 +167,7 @@ test("parseCliArgs supports output for one-shot commands", () => {
   assert.equal(parseCliArgs(["--try", "--output", "try.txt"]).output, "try.txt");
   assert.equal(parseCliArgs(["--pricing", "--output", "pricing.txt"]).output, "pricing.txt");
   assert.equal(parseCliArgs(["--support-bundle", "--output", "support.md"]).output, "support.md");
+  assert.equal(parseCliArgs(["--feedback", "--output", "feedback.md"]).output, "feedback.md");
 });
 
 test("parseCliArgs supports init-config mode", () => {

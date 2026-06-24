@@ -10,6 +10,7 @@ Run:
 ```bash
 mizan --version
 mizan --doctor
+mizan --feedback
 mizan --support-bundle
 mizan --summary --window 7
 ```
@@ -26,6 +27,7 @@ and the marker you expected to match.
 ## What To Include
 
 - Redacted setup diagnostics from `mizan --support-bundle`
+- The issue-reporting checklist from `mizan --feedback`
 - Mizan version from `mizan --version`
 - Node version from `node --version`
 - Operating system and install method

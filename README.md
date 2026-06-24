@@ -33,19 +33,19 @@ client, employer, or reimbursement log.
 Try a terminal demo without installing anything globally:
 
 ```bash
-npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.17 -- mizan --try
+npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.18 -- mizan --try
 ```
 
 Install the current GitHub release from its tag:
 
 ```bash
-npm install -g github:NasserAlbusaidi/mizan#v0.1.17
+npm install -g github:NasserAlbusaidi/mizan#v0.1.18
 ```
 
 If your npm client cannot install from GitHub tags, use the release tarball:
 
 ```bash
-npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.17/nasseralbusaidi-mizan-0.1.17.tgz
+npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.18/nasseralbusaidi-mizan-0.1.18.tgz
 ```
 
 Preview the dashboard without reading local transcripts:
@@ -143,6 +143,7 @@ mizan --set-budget daily=20 monthly=250
 mizan --add-work-marker /Clients/
 mizan --set-transcripts personal="$HOME/.claude/projects" work="$HOME/.claude-work/projects"
 mizan --support-bundle
+mizan --feedback
 mizan --pricing
 mizan --summary
 mizan --report
@@ -191,6 +192,9 @@ or `MIZAN_WORK_DIR`.
 and setup diagnostics. It is the safest thing to paste into an issue when setup
 looks wrong.
 
+`mizan --feedback` prints the GitHub issue link, the redacted support-bundle
+command, and a privacy checklist for safe bug reports or adoption feedback.
+
 `mizan --pricing` prints the static pricing table Mizan uses for estimates.
 
 `mizan --summary` prints a compact terminal report for the selected window.
@@ -220,6 +224,7 @@ mizan --set-budget daily=20 monthly=250
 mizan --add-work-marker /Clients/
 mizan --set-transcripts personal="$HOME/.claude/projects" work="$HOME/.claude-work/projects"
 mizan --support-bundle --output "$HOME/Documents/Mizan/support-bundle.md"
+mizan --feedback
 mizan --setup-kit --output "$HOME/Documents/Mizan/setup-kit.md"
 mizan --doctor --check
 MIZAN_DAILY_BUDGET=20 MIZAN_MONTHLY_BUDGET=250 mizan --check
@@ -230,8 +235,8 @@ Use `--report --check` in scheduled jobs when you want a Markdown report in the
 logs and a failing exit code whenever leaks or budget overruns need attention.
 Add `--output path/to/report.md` to save one-shot output from `--report`,
 `--summary`, `--today`, `--json`, `--setup`, `--doctor`, `--setup-kit`,
-`--pricing`, or `--support-bundle` without shell redirection; parent directories
-are created automatically.
+`--pricing`, `--support-bundle`, or `--feedback` without shell redirection;
+parent directories are created automatically.
 
 For recurring reviews, automation examples, and reimbursement note templates,
 see the [Setup Kit](docs/SETUP_KIT.md). For demo flow and public post copy, see
@@ -284,10 +289,10 @@ you intentionally want LAN access on a trusted network.
 
 ## Support
 
-When reporting an issue, include `mizan --version`, `mizan --doctor`, your OS,
-Node version, and the command you ran. Do not paste raw transcript lines or full
-local paths; use the redacted report from `mizan --report --window 7` when a
-spend summary helps explain the issue.
+When reporting an issue, run `mizan --feedback` first. It prints the GitHub issue
+link, the redacted support-bundle command, and the privacy checklist. Include
+`mizan --version`, your OS, Node version, install method, the command you ran,
+what you expected, and what happened.
 
 For setup problems, run `mizan --support-bundle` to generate a redacted support
 bundle without raw transcripts or full home paths.
@@ -441,6 +446,7 @@ src/pricing.js      cost computation, pricing metadata, pricing CLI report
 src/summary.js      terminal summary/check report model
 src/report.js       redacted Markdown/JSON report model
 src/support-bundle.js redacted support diagnostics
+src/feedback.js     safe issue-reporting guide
 src/parser.js       one transcript line -> usage record
 src/scanner.js      walk dirs + incremental mtime cache
 src/cache.js        ~/.mizan/cache.json

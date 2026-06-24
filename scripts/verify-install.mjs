@@ -41,9 +41,10 @@ try {
   assertIncludes(help, "mizan --set-transcripts", "--help should document transcript setup");
   assertIncludes(help, "mizan --setup-kit", "--help should document setup kit output");
   assertIncludes(help, "mizan --support-bundle", "--help should document support bundles");
+  assertIncludes(help, "mizan --feedback", "--help should document feedback guidance");
 
   const version = run(bin, ["--version"]).stdout.trim();
-  if (version !== "@nasseralbusaidi/mizan 0.1.17") {
+  if (version !== "@nasseralbusaidi/mizan 0.1.18") {
     throw new Error(`installed --version printed ${JSON.stringify(version)}`);
   }
 
@@ -173,6 +174,12 @@ try {
   if (supportBundle.includes(process.env.HOME || "__never__")) {
     throw new Error("installed --support-bundle exposed the absolute home path");
   }
+
+  const feedback = run(bin, ["--feedback"]).stdout;
+  assertIncludes(feedback, "# Mizan Feedback", "--feedback should print Markdown");
+  assertIncludes(feedback, "https://github.com/NasserAlbusaidi/mizan/issues/new/choose", "--feedback should include the issue chooser");
+  assertIncludes(feedback, "mizan --support-bundle --output mizan-support.md", "--feedback should point to the redacted bundle command");
+  assertIncludes(feedback, "Do not attach raw transcripts", "--feedback should include privacy guidance");
 
   const check = run(bin, ["--check", "--demo", "--window", "7"], { expectCode: 2 });
   assertIncludes(check.stdout, "Mizan summary [FAIL]", "--check should print a failing summary");

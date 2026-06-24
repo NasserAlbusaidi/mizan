@@ -16,6 +16,7 @@ export function parseCliArgs(argv, defaults = {}) {
     addWorkMarkers: null,
     setTranscripts: null,
     supportBundle: false,
+    feedback: false,
     summary: false,
     report: false,
     check: false,
@@ -136,6 +137,11 @@ export function parseCliArgs(argv, defaults = {}) {
       options.open = false;
       continue;
     }
+    if (arg === "--feedback") {
+      options.feedback = true;
+      options.open = false;
+      continue;
+    }
     if (arg === "--summary") {
       options.summary = true;
       options.open = false;
@@ -195,13 +201,14 @@ function validateOptions(options) {
     options.tryDemo ||
     options.pricing ||
     options.supportBundle ||
+    options.feedback ||
     options.report ||
     options.summary ||
     options.check ||
     options.json;
   if (!writesOneShotOutput) {
     throw new Error(
-      "--output requires a one-shot output mode: --report, --summary, --today, --json, --try, --setup, --doctor, --setup-kit, --pricing, or --support-bundle.",
+      "--output requires a one-shot output mode: --report, --summary, --today, --json, --try, --setup, --doctor, --setup-kit, --pricing, --support-bundle, or --feedback.",
     );
   }
 }
@@ -338,6 +345,7 @@ Usage:
   mizan --add-work-marker /Clients/
   mizan --set-transcripts personal=~/.claude/projects work=~/.claude-work/projects
   mizan --support-bundle        Print a redacted Markdown support bundle
+  mizan --feedback              Print safe feedback and issue-reporting steps
   mizan --pricing               Print pricing assumptions and exit
   mizan --summary               Print a compact spend/leak summary and exit
   mizan --report                Print a redacted Markdown spend report and exit
@@ -360,11 +368,12 @@ Options:
   --set-transcripts personal=PATH work=PATH
                                 Save persistent transcript project directories
   --support-bundle              Print redacted setup diagnostics for issues
+  --feedback                    Print safe feedback steps and GitHub issue link
   --pricing                     Print model pricing assumptions and exit
   --summary                     Print compact summary and exit
   --report                      Print redacted Markdown report; combine with --json for structured output
   --check                       Exit 2 on leaks/budgets, or unusable setup with --doctor
-  --output <file>               Save one-shot output from report/summary/json/try/setup/doctor/setup-kit/pricing/support
+  --output <file>               Save one-shot output from report/summary/json/try/setup/doctor/setup-kit/pricing/support/feedback
   --version                     Print package version and exit
   --no-warm                     Skip the startup cache warm-up
   --no-open                     Do not open the browser automatically
