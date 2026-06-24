@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.19
+
+- Refreshes the packaged dashboard screenshot so the README and launch materials
+  show the current Project changes panel.
+
 ## 0.1.18
 
 - Adds `mizan --feedback`, a safe issue-reporting guide that points users to

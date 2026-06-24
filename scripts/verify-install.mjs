@@ -44,7 +44,7 @@ try {
   assertIncludes(help, "mizan --feedback", "--help should document feedback guidance");
 
   const version = run(bin, ["--version"]).stdout.trim();
-  if (version !== "@nasseralbusaidi/mizan 0.1.18") {
+  if (version !== "@nasseralbusaidi/mizan 0.1.19") {
     throw new Error(`installed --version printed ${JSON.stringify(version)}`);
   }
 
