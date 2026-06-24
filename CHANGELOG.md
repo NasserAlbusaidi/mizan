@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.1
+
+- Adds the public launch kit to the packaged docs.
+- Updates the GitHub release install path so the release artifact matches the
+  current public README and launch materials.
+
 ## 0.1.0
 
 - Local Claude Code spend dashboard for personal/work usage.

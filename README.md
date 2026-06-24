@@ -28,7 +28,7 @@ client, employer, or reimbursement log.
 Install the current GitHub release:
 
 ```bash
-npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.0/nasseralbusaidi-mizan-0.1.0.tgz
+npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.1/nasseralbusaidi-mizan-0.1.1.tgz
 ```
 
 Create the local config if needed and check whether Mizan can see your

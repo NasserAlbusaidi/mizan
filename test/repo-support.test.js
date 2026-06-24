@@ -29,6 +29,7 @@ test("repo has public support and security docs", () => {
 test("package metadata points npm users to the public GitHub repo", () => {
   const pkg = JSON.parse(fs.readFileSync("package.json", "utf8"));
 
+  assert.equal(pkg.version, "0.1.1");
   assert.deepEqual(pkg.repository, {
     type: "git",
     url: "git+https://github.com/NasserAlbusaidi/mizan.git",
@@ -75,7 +76,7 @@ test("README documents the versioned GitHub release install path before npm publ
 
   assert.match(
     readme,
-    /npm install -g https:\/\/github\.com\/NasserAlbusaidi\/mizan\/releases\/download\/v0\.1\.0\/nasseralbusaidi-mizan-0\.1\.0\.tgz/,
+    /npm install -g https:\/\/github\.com\/NasserAlbusaidi\/mizan\/releases\/download\/v0\.1\.1\/nasseralbusaidi-mizan-0\.1\.1\.tgz/,
   );
   assert.match(readme, /npm package is prepared but not published yet/i);
   assert.match(readme, /npx @nasseralbusaidi\/mizan.*after npm publish/is);
@@ -104,7 +105,7 @@ test("launch kit gives a practical public launch script", () => {
   assert.match(kit, /Copy report/);
   assert.match(
     kit,
-    /npm install -g https:\/\/github\.com\/NasserAlbusaidi\/mizan\/releases\/download\/v0\.1\.0\/nasseralbusaidi-mizan-0\.1\.0\.tgz/,
+    /npm install -g https:\/\/github\.com\/NasserAlbusaidi\/mizan\/releases\/download\/v0\.1\.1\/nasseralbusaidi-mizan-0\.1\.1\.tgz/,
   );
   assert.match(kit, /Show HN/);
   assert.match(kit, /npm package is prepared but not published yet/i);
