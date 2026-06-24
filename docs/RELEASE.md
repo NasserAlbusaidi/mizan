@@ -107,3 +107,23 @@ npm publish --access public
 
 `prepublishOnly` runs `npm run release:check`, so publish should fail before
 uploading if tests, smoke, or package dry-run fail.
+
+## GitHub Release Assets
+
+Before creating a GitHub release, keep both install paths available:
+
+```bash
+npm pack --json
+cp "nasseralbusaidi-mizan-$(node -p 'require("./package.json").version').tgz" mizan-latest.tgz
+shasum -a 256 nasseralbusaidi-mizan-*.tgz mizan-latest.tgz
+gh release create "v$(node -p 'require("./package.json").version')" \
+  "nasseralbusaidi-mizan-$(node -p 'require("./package.json").version').tgz" \
+  mizan-latest.tgz
+```
+
+The versioned tarball gives reproducible installs. The `mizan-latest.tgz` asset
+keeps launch posts and README fallback installs stable:
+
+```bash
+npm install -g https://github.com/NasserAlbusaidi/mizan/releases/latest/download/mizan-latest.tgz
+```

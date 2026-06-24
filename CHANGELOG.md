@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.1.24
+
+- Uses a stable `releases/latest/download/mizan-latest.tgz` fallback install URL
+  in README, launch kit, and `mizan --share`.
+- Documents publishing a stable `mizan-latest.tgz` GitHub release asset alongside
+  each versioned tarball.
+
 ## 0.1.23
 
 - Expands `mizan --share` with ready-to-post short, long, and Show HN launch

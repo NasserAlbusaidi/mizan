@@ -4,8 +4,7 @@ export function formatShareGuide({ packageVersion }) {
   const tryCommand = `npm exec --yes --package github:NasserAlbusaidi/mizan#${tag} -- mizan --try`;
   const installCommand = `npm install -g github:NasserAlbusaidi/mizan#${tag}`;
   const tarballCommand =
-    `npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/${tag}/` +
-    `nasseralbusaidi-mizan-${packageVersion}.tgz`;
+    "npm install -g https://github.com/NasserAlbusaidi/mizan/releases/latest/download/mizan-latest.tgz";
 
   return `# Share Mizan
 
