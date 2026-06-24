@@ -29,7 +29,7 @@ test("repo has public support and security docs", () => {
 test("package metadata points npm users to the public GitHub repo", () => {
   const pkg = JSON.parse(fs.readFileSync("package.json", "utf8"));
 
-  assert.equal(pkg.version, "0.1.3");
+  assert.equal(pkg.version, "0.1.4");
   assert.deepEqual(pkg.repository, {
     type: "git",
     url: "git+https://github.com/NasserAlbusaidi/mizan.git",
@@ -52,6 +52,28 @@ test("README documents the support bundle command", () => {
 
   assert.match(readme, /mizan --support-bundle/);
   assert.match(readme, /redacted support bundle/);
+});
+
+test("README shows public trust signals before install", () => {
+  const readme = fs.readFileSync("README.md", "utf8");
+  const quickStartIndex = readme.indexOf("## Quick Start");
+
+  assert.ok(quickStartIndex > 0, "README should include Quick Start");
+  assert.ok(readme.indexOf("actions/workflows/ci.yml/badge.svg") < quickStartIndex);
+  assert.ok(readme.indexOf("releases/latest") < quickStartIndex);
+  assert.ok(readme.indexOf("license-MIT") < quickStartIndex);
+  assert.match(readme.slice(0, quickStartIndex), /No account/);
+  assert.match(readme.slice(0, quickStartIndex), /No upload/);
+  assert.match(readme.slice(0, quickStartIndex), /Local-only by default/);
+});
+
+test("README quick start previews value before setup", () => {
+  const readme = fs.readFileSync("README.md", "utf8");
+  const quickStart = section(readme, "## Quick Start", "## CLI");
+
+  assert.ok(quickStart.indexOf("mizan --demo") < quickStart.indexOf("mizan --setup"));
+  assert.match(quickStart, /Preview the product without reading local transcripts/);
+  assert.match(quickStart, /Then check whether Mizan can see your transcripts/);
 });
 
 test("README documents the guided setup command", () => {
@@ -78,7 +100,7 @@ test("README documents the versioned GitHub release install path before npm publ
 
   assert.match(
     readme,
-    /npm install -g https:\/\/github\.com\/NasserAlbusaidi\/mizan\/releases\/download\/v0\.1\.3\/nasseralbusaidi-mizan-0\.1\.3\.tgz/,
+    /npm install -g https:\/\/github\.com\/NasserAlbusaidi\/mizan\/releases\/download\/v0\.1\.4\/nasseralbusaidi-mizan-0\.1\.4\.tgz/,
   );
   assert.match(readme, /npm package is prepared but not published yet/i);
   assert.match(readme, /npx @nasseralbusaidi\/mizan.*after npm publish/is);
@@ -107,7 +129,7 @@ test("launch kit gives a practical public launch script", () => {
   assert.match(kit, /Copy report/);
   assert.match(
     kit,
-    /npm install -g https:\/\/github\.com\/NasserAlbusaidi\/mizan\/releases\/download\/v0\.1\.3\/nasseralbusaidi-mizan-0\.1\.3\.tgz/,
+    /npm install -g https:\/\/github\.com\/NasserAlbusaidi\/mizan\/releases\/download\/v0\.1\.4\/nasseralbusaidi-mizan-0\.1\.4\.tgz/,
   );
   assert.match(kit, /Show HN/);
   assert.match(kit, /npm package is prepared but not published yet/i);
@@ -135,3 +157,11 @@ test("repo has actionable GitHub issue templates", () => {
   assert.match(bug, /raw transcript/);
   assert.match(feature, /local-first/);
 });
+
+function section(markdown, start, end) {
+  const startIndex = markdown.indexOf(start);
+  const endIndex = markdown.indexOf(end, startIndex + start.length);
+  assert.notEqual(startIndex, -1, `${start} missing`);
+  assert.notEqual(endIndex, -1, `${end} missing after ${start}`);
+  return markdown.slice(startIndex, endIndex);
+}

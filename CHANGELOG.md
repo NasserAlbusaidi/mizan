@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.1.4
+
+- Adds visible README trust signals for CI, latest release, license, and
+  local-only-by-default operation.
+- Reorders Quick Start so new users can preview demo data before configuring
+  transcript folders.
+
 ## 0.1.3
 
 - Adds browser-facing zero-record action cards with copyable commands for demo

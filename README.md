@@ -1,5 +1,9 @@
 # Mizan (ميزان)
 
+[![CI](https://github.com/NasserAlbusaidi/mizan/actions/workflows/ci.yml/badge.svg)](https://github.com/NasserAlbusaidi/mizan/actions/workflows/ci.yml)
+[![Latest release](https://img.shields.io/github/v/release/NasserAlbusaidi/mizan?label=release)](https://github.com/NasserAlbusaidi/mizan/releases/latest)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+
 Local Claude Code spend dashboard with cross-account leak detection.
 
 Mizan turns the JSONL transcripts already on your machine into a private budget
@@ -7,7 +11,8 @@ dashboard: daily spend, burn rate, top projects, model mix, cache efficiency, an
 the mistake that actually hurts — work quota paying for personal projects, or the
 other way around.
 
-Zero runtime dependencies. No accounts. No upload. Node >= 20.
+Zero runtime dependencies. No accounts. No upload. Local-only by default.
+Node >= 20.
 
 ![Mizan dashboard demo](assets/mizan-dashboard-demo.png)
 
@@ -28,20 +33,19 @@ client, employer, or reimbursement log.
 Install the current GitHub release:
 
 ```bash
-npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.3/nasseralbusaidi-mizan-0.1.3.tgz
-```
-
-Create the local config if needed and check whether Mizan can see your
-transcripts:
-
-```bash
-mizan --setup
+npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.4/nasseralbusaidi-mizan-0.1.4.tgz
 ```
 
 Preview the product without reading local transcripts:
 
 ```bash
 mizan --demo
+```
+
+Then check whether Mizan can see your transcripts:
+
+```bash
+mizan --setup
 ```
 
 Start the private local dashboard:
