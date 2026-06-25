@@ -35,11 +35,11 @@ export function buildDoctorReport({ env = process.env, home = os.homedir() } = {
 
   if (!accountReports.some((item) => item.exists)) {
     recommendations.push(
-      "No transcript folders were found. Try `mizan --try` first, then run `mizan --set-transcripts personal=/path/to/personal/projects work=/path/to/work/projects`.",
+      `No transcript folders were found. Try \`mizan --try\`, save a sample report with \`${demoWeeklyReportCommand()}\`, then run \`mizan --set-transcripts personal=/path/to/personal/projects work=/path/to/work/projects\`.`,
     );
   } else if (totalTranscripts === 0) {
     recommendations.push(
-      "Transcript folders exist, but no .jsonl files were found. Run Claude Code once or update the saved folders with `mizan --set-transcripts personal=/path work=/path`.",
+      `Transcript folders exist, but no .jsonl files were found. Run Claude Code once, save a sample report with \`${demoWeeklyReportCommand()}\`, or update the saved folders with \`mizan --set-transcripts personal=/path work=/path\`.`,
     );
   } else if (totalUsageRecords === 0) {
     const sampleCount = accountReports.reduce((sum, item) => sum + item.sampled, 0);
@@ -222,6 +222,10 @@ function formatSetTranscriptCommand(account, dir) {
 
 function weeklyReportCommand() {
   return 'mizan --weekly --output "$HOME/Documents/Mizan/mizan-weekly-$(date +%F).md"';
+}
+
+function demoWeeklyReportCommand() {
+  return 'mizan --weekly --demo --output "$HOME/Documents/Mizan/mizan-demo-weekly.md"';
 }
 
 function shellQuote(value) {

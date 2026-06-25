@@ -33,20 +33,20 @@ client, employer, or reimbursement log.
 Try a terminal demo without installing anything globally:
 
 ```bash
-npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.40 -- mizan --try
+npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.41 -- mizan --try
 ```
 
 Install the current GitHub release from its pinned tag:
 
 ```bash
-npm install -g github:NasserAlbusaidi/mizan#v0.1.40
+npm install -g github:NasserAlbusaidi/mizan#v0.1.41
 ```
 
 If your npm client cannot install from GitHub tags, use the versioned release
 tarball:
 
 ```bash
-npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.40/nasseralbusaidi-mizan-0.1.40.tgz
+npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.41/nasseralbusaidi-mizan-0.1.41.tgz
 ```
 
 Preview the dashboard without reading local transcripts:
@@ -92,6 +92,11 @@ npx @nasseralbusaidi/mizan
 `mizan --setup` creates `~/.mizan/config.json` when it is missing, prints the
 same diagnostics as `mizan --doctor`, and exits with code `2` when no parseable
 Claude usage records are found.
+When setup cannot find transcripts yet, it points to the sample report artifact:
+
+```bash
+mizan --weekly --demo --output "$HOME/Documents/Mizan/mizan-demo-weekly.md"
+```
 
 Check without writing config:
 

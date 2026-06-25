@@ -49,7 +49,7 @@ try {
   assertIncludes(help, "mizan --share", "--help should document public sharing copy");
 
   const version = run(bin, ["--version"]).stdout.trim();
-  if (version !== "@nasseralbusaidi/mizan 0.1.40") {
+  if (version !== "@nasseralbusaidi/mizan 0.1.41") {
     throw new Error(`installed --version printed ${JSON.stringify(version)}`);
   }
 
@@ -63,12 +63,12 @@ try {
   assertIncludes(tryOutput, "Next:", "--try should print next steps");
   assertIncludes(
     tryOutput,
-    "Install Mizan: npm install -g github:NasserAlbusaidi/mizan#v0.1.40",
+    "Install Mizan: npm install -g github:NasserAlbusaidi/mizan#v0.1.41",
     "--try should print the current tagged install command",
   );
   assertIncludes(
     tryOutput,
-    "Fallback install: npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.40/nasseralbusaidi-mizan-0.1.40.tgz",
+    "Fallback install: npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.41/nasseralbusaidi-mizan-0.1.41.tgz",
     "--try should print the current versioned tarball fallback",
   );
   assertIncludes(
@@ -103,13 +103,13 @@ try {
   assertIncludes(shareGuide, "# Share Mizan", "--share should print Markdown");
   assertIncludes(
     shareGuide,
-    "npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.40 -- mizan --try",
+    "npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.41 -- mizan --try",
     "--share should include the pinned no-global demo path",
   );
-  assertIncludes(shareGuide, "github:NasserAlbusaidi/mizan#v0.1.40", "--share should include the tagged install path");
+  assertIncludes(shareGuide, "github:NasserAlbusaidi/mizan#v0.1.41", "--share should include the tagged install path");
   assertIncludes(
     shareGuide,
-    "releases/download/v0.1.40/nasseralbusaidi-mizan-0.1.40.tgz",
+    "releases/download/v0.1.41/nasseralbusaidi-mizan-0.1.41.tgz",
     "--share should include the versioned tarball path",
   );
   assertIncludes(shareGuide, "No account. No upload.", "--share should include the privacy claim");
@@ -167,6 +167,11 @@ try {
     },
   });
   assertIncludes(emptyDoctorCheck.stdout, "Mizan doctor", "--doctor --check should print diagnostics before failing");
+  assertIncludes(
+    emptyDoctorCheck.stdout,
+    'mizan --weekly --demo --output "$HOME/Documents/Mizan/mizan-demo-weekly.md"',
+    "--doctor --check should point empty setups to the sample report artifact",
+  );
 
   const emptySetupConfig = path.join(tempRoot, "empty-setup-config.json");
   const emptySetup = run(bin, ["--setup"], {
@@ -180,6 +185,11 @@ try {
   });
   assertIncludes(emptySetup.stdout, `Created ${emptySetupConfig}`, "--setup should create config before diagnostics");
   assertIncludes(emptySetup.stdout, "Mizan doctor", "--setup should print diagnostics");
+  assertIncludes(
+    emptySetup.stdout,
+    'mizan --weekly --demo --output "$HOME/Documents/Mizan/mizan-demo-weekly.md"',
+    "--setup should point empty setups to the sample report artifact",
+  );
   if (!fs.existsSync(emptySetupConfig)) {
     throw new Error("--setup did not create the requested config file for empty setup");
   }

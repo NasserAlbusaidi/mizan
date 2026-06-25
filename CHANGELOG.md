@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.1.41
+
+- Points failed `mizan --setup` / `mizan --doctor --check` onboarding at the
+  same demo weekly report command used by `mizan --try`, so users with empty
+  transcript setup can still save a redacted sample artifact before configuring
+  real folders.
+
 ## 0.1.40
 
 - Adds a "Save a sample report" next step to `mizan --try`, pointing to
