@@ -33,26 +33,26 @@ client, employer, or reimbursement log.
 Try a terminal demo without installing anything globally:
 
 ```bash
-npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.42 -- mizan --try
+npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.43 -- mizan --try
 ```
 
 Save a sample weekly report without installing globally:
 
 ```bash
-npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.42 -- mizan --weekly --demo --output "$HOME/Documents/Mizan/mizan-demo-weekly.md"
+npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.43 -- mizan --weekly --demo --output "$HOME/Documents/Mizan/mizan-demo-weekly.md"
 ```
 
 Install the current GitHub release from its pinned tag:
 
 ```bash
-npm install -g github:NasserAlbusaidi/mizan#v0.1.42
+npm install -g github:NasserAlbusaidi/mizan#v0.1.43
 ```
 
 If your npm client cannot install from GitHub tags, use the versioned release
 tarball:
 
 ```bash
-npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.42/nasseralbusaidi-mizan-0.1.42.tgz
+npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.43/nasseralbusaidi-mizan-0.1.43.tgz
 ```
 
 Preview the dashboard without reading local transcripts:
@@ -175,7 +175,8 @@ includes leaks, so a `[FAIL]` status means the detector is being shown.
 
 `mizan --weekly` prints the same redacted 7-day Markdown report as
 `mizan --report --window 7`. It is the shortest command for a recurring review
-or reimbursement note.
+or reimbursement note. Demo reports include next steps for installing Mizan,
+checking real transcript setup, and saving the first real weekly report.
 
 `mizan --csv` prints a redacted account/project/session CSV for reimbursement
 spreadsheets, client notes, or internal usage logs. It uses the same window

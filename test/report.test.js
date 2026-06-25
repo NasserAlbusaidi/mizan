@@ -67,6 +67,29 @@ test("markdown report is copyable and does not expose absolute home paths", () =
   assert.match(markdown, /Paths are redacted/);
 });
 
+test("demo markdown report includes next steps for real setup", () => {
+  const markdown = formatMarkdownReport(
+    buildReport(
+      baseData({
+        config: {
+          demo: true,
+          localOnly: true,
+          budgets: { daily: null, monthly: null },
+        },
+      }),
+      { packageVersion: "0.1.43" },
+    ),
+  );
+
+  assert.match(markdown, /## Next Steps/);
+  assert.match(markdown, /Demo data only; no local transcripts were read/);
+  assert.match(markdown, /npm install -g github:NasserAlbusaidi\/mizan#v0\.1\.43/);
+  assert.match(markdown, /mizan --setup/);
+  assert.match(markdown, /mizan --weekly --output "\$HOME\/Documents\/Mizan\/mizan-weekly-\$\(date \+%F\)\.md"/);
+  assert.ok(markdown.indexOf("## Action Items") < markdown.indexOf("## Next Steps"));
+  assert.doesNotMatch(markdown, /\/Users\/nasser/);
+});
+
 test("markdown report includes account split for reimbursement review", () => {
   const markdown = formatMarkdownReport(
     buildReport(

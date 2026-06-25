@@ -1,7 +1,7 @@
 import { HOME } from "./config.js";
 import { buildSummary } from "./summary.js";
 
-export function buildReport(data) {
+export function buildReport(data, { packageVersion = null } = {}) {
   const summary = buildSummary(data);
   const actions = [
     ...summary.issues.map((issue) => ({ level: "issue", ...issue })),
@@ -73,6 +73,7 @@ export function buildReport(data) {
       sourceUrl: data.pricing?.sourceUrl || null,
       checkedAt: data.pricing?.checkedAt || null,
     },
+    nextSteps: demoNextSteps(summary.demo, packageVersion),
     privacy: {
       redacted: true,
       note: "Paths are redacted to avoid exposing local usernames or full working directories.",
@@ -179,6 +180,11 @@ export function formatMarkdownReport(report) {
     }
   }
 
+  if (report.nextSteps?.length) {
+    lines.push("", "## Next Steps", "");
+    for (const step of report.nextSteps) lines.push(`- ${step}`);
+  }
+
   lines.push(
     "",
     "## Notes",
@@ -239,6 +245,21 @@ export function formatCsvReport(report) {
   }
 
   return rows.map((row) => row.map(csvCell).join(",")).join("\n");
+}
+
+function demoNextSteps(isDemo, packageVersion) {
+  if (!isDemo) return [];
+  const steps = ["Demo data only; no local transcripts were read."];
+  if (packageVersion) {
+    steps.push(`Install Mizan: npm install -g github:NasserAlbusaidi/mizan#v${packageVersion}`);
+  } else {
+    steps.push("Install Mizan from the current GitHub release.");
+  }
+  steps.push(
+    "Check real transcript setup: mizan --setup",
+    'Save your first real weekly report: mizan --weekly --output "$HOME/Documents/Mizan/mizan-weekly-$(date +%F).md"',
+  );
+  return steps;
 }
 
 export function redactPath(value) {

@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.1.43
+
+- Adds a `Next Steps` section to demo Markdown reports, so the saved sample
+  artifact explains that no local transcripts were read and points users to the
+  current install command, `mizan --setup`, and the first real saved weekly
+  report command.
+
 ## 0.1.42
 
 - Adds a no-global sample report command to `mizan --try`, `mizan --share`,

@@ -213,7 +213,7 @@ if (options.tryDemo) {
 if (options.csv) {
   try {
     const data = compute(options.windowDays, { useMemo: false, demo: options.demo, host, port });
-    const report = buildReport(data);
+    const report = buildReport(data, { packageVersion: packageJson.version });
     emitOutput(formatCsvReport(report), options.output, "CSV export");
     process.exit(options.check && report.status === "fail" ? 2 : 0);
   } catch (err) {
@@ -225,7 +225,7 @@ if (options.csv) {
 if (options.report) {
   try {
     const data = compute(options.windowDays, { useMemo: false, demo: options.demo, host, port });
-    const report = buildReport(data);
+    const report = buildReport(data, { packageVersion: packageJson.version });
     emitOutput(options.json ? JSON.stringify(report, null, 2) : formatMarkdownReport(report), options.output, "report");
     process.exit(options.check && report.status === "fail" ? 2 : 0);
   } catch (err) {
