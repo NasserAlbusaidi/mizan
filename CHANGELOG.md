@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.49
+
+- Makes the dashboard's monthly burn warning copyable by exposing the suggested
+  `mizan --set-budget monthly=...` command as an action button instead of only
+  mentioning it in prose.
+
 ## 0.1.48
 
 - Prioritizes dashboard action queue items by severity before applying the

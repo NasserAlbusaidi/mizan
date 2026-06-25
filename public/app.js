@@ -293,10 +293,12 @@
         body: `${money(d.burn.projected30d)} projected against ${money(monthlyBudget)}.`,
       });
     } else if (!monthlyBudget && d.burn.projected30d >= 100) {
+      const command = `mizan --set-budget monthly=${Math.ceil(d.burn.projected30d)}`;
       actions.push({
         tone: "warn",
         title: "Monthly burn is worth watching",
-        body: `Your current 7-day average projects to ${money(d.burn.projected30d)} over 30 days. Track it with mizan --set-budget monthly=${Math.ceil(d.burn.projected30d)}.`,
+        body: `Your current 7-day average projects to ${money(d.burn.projected30d)} over 30 days. Track it with ${command}.`,
+        command,
       });
     }
 

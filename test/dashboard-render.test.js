@@ -141,6 +141,15 @@ test("dashboard action queue keeps budget warnings above softer habit actions", 
   assert.match(actions, /projects to \$126/);
 });
 
+test("dashboard monthly burn warning exposes a copyable budget command", async () => {
+  const elements = await renderDashboard();
+
+  const actions = elements.get("actions").innerHTML;
+  assert.match(actions, /Monthly burn is worth watching/);
+  assert.match(actions, /Track it with mizan --set-budget monthly=126/);
+  assert.match(actions, /data-copy-command="mizan --set-budget monthly=126"/);
+});
+
 test("dashboard leak action explains marker fixes", async () => {
   const elements = await renderDashboard({
     leaks: {
