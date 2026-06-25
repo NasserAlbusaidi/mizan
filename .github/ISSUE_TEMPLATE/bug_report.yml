@@ -26,11 +26,11 @@ body:
     id: diagnostics
     attributes:
       label: Redacted diagnostics
-      description: Include redacted output from `mizan --version`, `node --version`, and `mizan --doctor`.
+      description: Run `mizan --support-bundle --output mizan-support.md`. Paste the relevant redacted sections from `mizan-support.md`.
       placeholder: |
-        mizan --version
-        node --version
-        mizan --doctor
+        mizan --support-bundle --output mizan-support.md
+
+        Paste the relevant redacted sections from `mizan-support.md` here.
     validations:
       required: true
   - type: textarea

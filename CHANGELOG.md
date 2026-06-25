@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.45
+
+- Aligns `mizan --feedback` with the GitHub bug report form so users are guided
+  to one redacted support bundle and the right issue template before sharing
+  setup, parsing, dashboard, or packaging problems.
+
 ## 0.1.44
 
 - Adds a "Prove Value First" section to the generated and packaged setup kit,

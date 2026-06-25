@@ -35,9 +35,9 @@ test("--try prints a demo summary and next steps without starting the dashboard"
   assert.match(result.stdout, /Leaks: 2/);
   assert.match(result.stdout, /Reviewable wrong-account spend: \$37\.98/);
   assert.match(result.stdout, /Next:/);
-  assert.match(result.stdout, /Install Mizan: npm install -g github:NasserAlbusaidi\/mizan#v0\.1\.44/);
-  assert.match(result.stdout, /Fallback install: npm install -g https:\/\/github\.com\/NasserAlbusaidi\/mizan\/releases\/download\/v0\.1\.44\/nasseralbusaidi-mizan-0\.1\.44\.tgz/);
-  assert.match(result.stdout, /npm exec --yes --package github:NasserAlbusaidi\/mizan#v0\.1\.44 -- mizan --weekly --demo --output "\$HOME\/Documents\/Mizan\/mizan-demo-weekly\.md"/);
+  assert.match(result.stdout, /Install Mizan: npm install -g github:NasserAlbusaidi\/mizan#v0\.1\.45/);
+  assert.match(result.stdout, /Fallback install: npm install -g https:\/\/github\.com\/NasserAlbusaidi\/mizan\/releases\/download\/v0\.1\.45\/nasseralbusaidi-mizan-0\.1\.45\.tgz/);
+  assert.match(result.stdout, /npm exec --yes --package github:NasserAlbusaidi\/mizan#v0\.1\.45 -- mizan --weekly --demo --output "\$HOME\/Documents\/Mizan\/mizan-demo-weekly\.md"/);
   assert.match(result.stdout, /mizan --demo/);
   assert.match(result.stdout, /mizan --weekly --demo --output "\$HOME\/Documents\/Mizan\/mizan-demo-weekly\.md"/);
   assert.match(result.stdout, /mizan --setup/);
@@ -129,6 +129,8 @@ test("--feedback prints safe issue guidance without starting the dashboard", () 
   assert.match(result.stdout, /^# Mizan Feedback/m);
   assert.match(result.stdout, /https:\/\/github\.com\/NasserAlbusaidi\/mizan\/issues\/new\/choose/);
   assert.match(result.stdout, /mizan --support-bundle --output mizan-support\.md/);
+  assert.match(result.stdout, /Choose Bug report for setup, parsing, dashboard, or packaging problems/);
+  assert.match(result.stdout, /Choose Feature request for workflow improvements that keep Mizan local-first/);
   assert.match(result.stdout, /Do not attach raw transcripts/);
   assert.match(result.stdout, /what you expected/i);
   assert.doesNotMatch(result.stdout + result.stderr, /http:\/\/127\.0\.0\.1/);
@@ -147,6 +149,8 @@ test("--feedback --output writes the safe issue guide", () => {
   const body = fs.readFileSync(output, "utf8");
   assert.match(body, /^# Mizan Feedback/m);
   assert.match(body, /mizan --support-bundle --output mizan-support\.md/);
+  assert.match(body, /Choose Bug report for setup, parsing, dashboard, or packaging problems/);
+  assert.match(body, /Choose Feature request for workflow improvements that keep Mizan local-first/);
   assert.match(body, /Do not attach raw transcripts/);
 });
 

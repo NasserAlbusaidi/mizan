@@ -7,6 +7,11 @@ Open an issue:
 
 ${FEEDBACK_ISSUE_URL}
 
+Choose the template that matches the work:
+
+- Choose Bug report for setup, parsing, dashboard, or packaging problems.
+- Choose Feature request for workflow improvements that keep Mizan local-first.
+
 Before posting:
 
 1. Run \`mizan --support-bundle --output mizan-support.md\`.
