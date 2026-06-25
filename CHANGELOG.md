@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.44
+
+- Adds a "Prove Value First" section to the generated and packaged setup kit,
+  pointing users to the demo weekly report command before real transcript setup
+  so the weekly habit starts from a safe sample artifact.
+
 ## 0.1.43
 
 - Adds a `Next Steps` section to demo Markdown reports, so the saved sample

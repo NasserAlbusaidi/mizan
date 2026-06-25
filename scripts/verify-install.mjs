@@ -49,7 +49,7 @@ try {
   assertIncludes(help, "mizan --share", "--help should document public sharing copy");
 
   const version = run(bin, ["--version"]).stdout.trim();
-  if (version !== "@nasseralbusaidi/mizan 0.1.43") {
+  if (version !== "@nasseralbusaidi/mizan 0.1.44") {
     throw new Error(`installed --version printed ${JSON.stringify(version)}`);
   }
 
@@ -63,17 +63,17 @@ try {
   assertIncludes(tryOutput, "Next:", "--try should print next steps");
   assertIncludes(
     tryOutput,
-    "Install Mizan: npm install -g github:NasserAlbusaidi/mizan#v0.1.43",
+    "Install Mizan: npm install -g github:NasserAlbusaidi/mizan#v0.1.44",
     "--try should print the current tagged install command",
   );
   assertIncludes(
     tryOutput,
-    "Fallback install: npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.43/nasseralbusaidi-mizan-0.1.43.tgz",
+    "Fallback install: npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.44/nasseralbusaidi-mizan-0.1.44.tgz",
     "--try should print the current versioned tarball fallback",
   );
   assertIncludes(
     tryOutput,
-    'Save a sample report now: npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.43 -- mizan --weekly --demo --output "$HOME/Documents/Mizan/mizan-demo-weekly.md"',
+    'Save a sample report now: npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.44 -- mizan --weekly --demo --output "$HOME/Documents/Mizan/mizan-demo-weekly.md"',
     "--try should point to the no-global sample report artifact",
   );
   assertIncludes(tryOutput, "mizan --setup", "--try should point to setup");
@@ -82,6 +82,16 @@ try {
   assertIncludes(setupKit, "# Mizan Setup Kit", "--setup-kit should print Markdown");
   assertIncludes(setupKit, "mizan --doctor --check", "--setup-kit should include setup checks");
   assertIncludes(setupKit, "parseable Claude usage record", "--setup-kit should explain the setup check");
+  assertIncludes(
+    setupKit,
+    'mizan --weekly --demo --output "$HOME/Documents/Mizan/mizan-demo-weekly.md"',
+    "--setup-kit should include the sample report proof step",
+  );
+  assertIncludes(
+    setupKit,
+    "Prove the report flow before connecting real transcripts",
+    "--setup-kit should explain why to run the sample report first",
+  );
   assertIncludes(setupKit, "saved-report command", "--setup-kit should document the setup success handoff");
   assertIncludes(setupKit, "mizan --csv --window 7", "--setup-kit should include CSV export guidance");
   assertIncludes(setupKit, "cron", "--setup-kit should include cron guidance");
@@ -95,6 +105,11 @@ try {
   assertIncludes(savedSetupKit, "# Mizan Setup Kit", "--setup-kit --output should write Markdown");
   assertIncludes(
     savedSetupKit,
+    'mizan --weekly --demo --output "$HOME/Documents/Mizan/mizan-demo-weekly.md"',
+    "--setup-kit --output should include the sample report command",
+  );
+  assertIncludes(
+    savedSetupKit,
     'mizan --weekly --output "$HOME/Documents/Mizan/mizan-weekly-$(date +%F).md"',
     "--setup-kit --output should include the saved weekly report command",
   );
@@ -103,18 +118,18 @@ try {
   assertIncludes(shareGuide, "# Share Mizan", "--share should print Markdown");
   assertIncludes(
     shareGuide,
-    "npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.43 -- mizan --try",
+    "npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.44 -- mizan --try",
     "--share should include the pinned no-global demo path",
   );
   assertIncludes(
     shareGuide,
-    'npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.43 -- mizan --weekly --demo --output "$HOME/Documents/Mizan/mizan-demo-weekly.md"',
+    'npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.44 -- mizan --weekly --demo --output "$HOME/Documents/Mizan/mizan-demo-weekly.md"',
     "--share should include the pinned no-global sample report path",
   );
-  assertIncludes(shareGuide, "github:NasserAlbusaidi/mizan#v0.1.43", "--share should include the tagged install path");
+  assertIncludes(shareGuide, "github:NasserAlbusaidi/mizan#v0.1.44", "--share should include the tagged install path");
   assertIncludes(
     shareGuide,
-    "releases/download/v0.1.43/nasseralbusaidi-mizan-0.1.43.tgz",
+    "releases/download/v0.1.44/nasseralbusaidi-mizan-0.1.44.tgz",
     "--share should include the versioned tarball path",
   );
   assertIncludes(shareGuide, "No account. No upload.", "--share should include the privacy claim");
@@ -141,7 +156,7 @@ try {
   assertIncludes(weekly, "## Next Steps", "--weekly --demo should include next steps inside the artifact");
   assertIncludes(
     weekly,
-    "Install Mizan: npm install -g github:NasserAlbusaidi/mizan#v0.1.43",
+    "Install Mizan: npm install -g github:NasserAlbusaidi/mizan#v0.1.44",
     "--weekly --demo should include the current tagged install command",
   );
   assertIncludes(

@@ -9,6 +9,18 @@ You can print this workflow from an installed CLI with:
 mizan --setup-kit
 ```
 
+## Prove Value First
+
+Save a sample report before connecting real transcripts:
+
+```bash
+mizan --weekly --demo --output "$HOME/Documents/Mizan/mizan-demo-weekly.md"
+```
+
+Prove the report flow before connecting real transcripts. The demo report uses
+sample data only and includes next steps for installing, setup, and the first
+real saved weekly report.
+
 ## One-Time Setup
 
 Create a local config and check what Mizan can see:

@@ -18,6 +18,8 @@ test("setup kit documents recurring report workflows safely", () => {
 
   assert.match(kit, /mizan --doctor --check/);
   assert.match(kit, /mizan --setup/);
+  assert.match(kit, /mizan --weekly --demo --output "\$HOME\/Documents\/Mizan\/mizan-demo-weekly\.md"/);
+  assert.match(kit, /Prove the report flow before connecting real transcripts/);
   assert.match(kit, /saved-report command/);
   assert.match(kit, /mizan --weekly/);
   assert.match(kit, /--output "\$HOME\/Documents\/Mizan\/mizan-weekly-\$\(date \+%F\)\.md"/);
@@ -37,5 +39,6 @@ test("generated setup kit matches the setup success saved-report handoff", () =>
   const kit = formatSetupKit();
 
   assert.match(kit, /saved-report command/);
+  assert.match(kit, /mizan --weekly --demo --output "\$HOME\/Documents\/Mizan\/mizan-demo-weekly\.md"/);
   assert.match(kit, /mizan --weekly --output "\$HOME\/Documents\/Mizan\/mizan-weekly-\$\(date \+%F\)\.md"/);
 });

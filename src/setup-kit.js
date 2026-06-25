@@ -3,6 +3,16 @@ export function formatSetupKit() {
 
 Use this after installing Mizan to turn it into a weekly local habit.
 
+## Prove Value First
+
+\`\`\`bash
+mizan --weekly --demo --output "$HOME/Documents/Mizan/mizan-demo-weekly.md"
+\`\`\`
+
+Prove the report flow before connecting real transcripts. The demo report uses
+sample data only and includes next steps for installing, setup, and the first
+real saved weekly report.
+
 ## One-Time Setup
 
 \`\`\`bash
