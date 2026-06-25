@@ -34,6 +34,8 @@ test("--try prints a demo summary and next steps without starting the dashboard"
   assert.match(result.stdout, /^Mizan summary \[FAIL\] \(demo\)/m);
   assert.match(result.stdout, /Leaks: 2/);
   assert.match(result.stdout, /Next:/);
+  assert.match(result.stdout, /Install Mizan: npm install -g github:NasserAlbusaidi\/mizan#v0\.1\.36/);
+  assert.match(result.stdout, /Fallback install: npm install -g https:\/\/github\.com\/NasserAlbusaidi\/mizan\/releases\/latest\/download\/mizan-latest\.tgz/);
   assert.match(result.stdout, /mizan --demo/);
   assert.match(result.stdout, /mizan --setup/);
   assert.match(result.stdout, /mizan --set-transcripts personal=\/path work=\/path/);

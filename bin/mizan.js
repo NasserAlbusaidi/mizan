@@ -187,7 +187,10 @@ if (options.tryDemo) {
   try {
     const data = compute(options.windowDays, { useMemo: false, demo: true, host, port });
     const summary = buildSummary(data);
+    const tag = `v${packageJson.version}`;
     const next = [
+      `npm install -g github:NasserAlbusaidi/mizan#${tag}`,
+      "npm install -g https://github.com/NasserAlbusaidi/mizan/releases/latest/download/mizan-latest.tgz",
       "mizan --demo",
       "mizan --setup",
       "mizan --set-transcripts personal=/path work=/path",
@@ -326,9 +329,11 @@ The sample intentionally includes wrong-account leaks so you can see what Mizan 
 
 ${formatSummary(summary)}
 Next:
-  - Open the sample dashboard: ${next[0]}
-  - Check real transcript setup: ${next[1]}
-  - Save custom folders: ${next[2]}`;
+  - Install Mizan: ${next[0]}
+  - Fallback install: ${next[1]}
+  - Open the sample dashboard: ${next[2]}
+  - Check real transcript setup: ${next[3]}
+  - Save custom folders: ${next[4]}`;
 }
 
 function printWithNextSteps(message, steps) {

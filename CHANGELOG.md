@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.36
+
+- Makes `mizan --try` print the current GitHub install command and stable
+  tarball fallback before local `mizan` next steps, so no-global first runs have
+  a clear path to continue.
+
 ## 0.1.35
 
 - Adds dashboard `Save CSV` and `/api/report?format=csv`, making the redacted
