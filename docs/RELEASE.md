@@ -116,7 +116,7 @@ Actions. Use the tag or branch you want to publish as the `ref` input.
 
 The workflow is manual and guarded:
 
-- Without `NPM_TOKEN`, it prints a skip message and does not publish.
+- Without `NPM_TOKEN`, it fails clearly instead of reporting a successful publish.
 - With `NPM_TOKEN`, it checks out the selected ref, runs
   `npm run release:check`, and then runs `npm publish --access public`.
 

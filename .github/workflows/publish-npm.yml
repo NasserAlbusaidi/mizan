@@ -18,9 +18,11 @@ jobs:
     env:
       NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
     steps:
-      - name: Skip without NPM_TOKEN
+      - name: Require NPM_TOKEN
         if: env.NPM_TOKEN == ''
-        run: echo "NPM_TOKEN is not configured; skipping npm publish."
+        run: |
+          echo "NPM_TOKEN is not configured; add the repository secret before publishing."
+          exit 1
 
       - name: Checkout
         if: env.NPM_TOKEN != ''

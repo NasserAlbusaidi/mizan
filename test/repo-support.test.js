@@ -213,9 +213,13 @@ test("repo can publish to npm from GitHub Actions after NPM_TOKEN is configured"
   assert.match(workflow, /npm run release:check/);
   assert.match(workflow, /npm publish --access public/);
   assert.match(workflow, /if: env\.NPM_TOKEN != ''/);
+  assert.match(workflow, /NPM_TOKEN is not configured; add the repository secret before publishing\./);
+  assert.match(workflow, /exit 1/);
+  assert.doesNotMatch(workflow, /skipping npm publish/i);
   assert.match(release, /GitHub Actions npm publish/);
   assert.match(release, /NPM_TOKEN/);
   assert.match(release, /Publish npm/);
+  assert.match(release, /fails clearly instead of reporting a successful publish/);
   assert.match(coffee, /Publish npm/);
   assert.match(coffee, /NPM_TOKEN/);
 });
