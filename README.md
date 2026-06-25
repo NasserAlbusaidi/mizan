@@ -33,20 +33,20 @@ client, employer, or reimbursement log.
 Try a terminal demo without installing anything globally:
 
 ```bash
-npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.37 -- mizan --try
+npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.38 -- mizan --try
 ```
 
 Install the current GitHub release from its pinned tag:
 
 ```bash
-npm install -g github:NasserAlbusaidi/mizan#v0.1.37
+npm install -g github:NasserAlbusaidi/mizan#v0.1.38
 ```
 
 If your npm client cannot install from GitHub tags, use the versioned release
 tarball:
 
 ```bash
-npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.37/nasseralbusaidi-mizan-0.1.37.tgz
+npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.38/nasseralbusaidi-mizan-0.1.38.tgz
 ```
 
 Preview the dashboard without reading local transcripts:
@@ -223,6 +223,8 @@ logs, or copy/pasting into a note without exposing absolute local paths.
 For finite windows, both commands compare spend and request count against the
 previous matching window. Markdown reports also list project-level spend movers,
 so a 7-day report shows which projects changed since the prior 7 days.
+When cross-account leaks are found, summaries and reports call out the
+reviewable wrong-account spend as a plain dollar amount.
 `mizan --check` prints the same report and exits with code `2` when Mizan finds
 cross-account leaks or spend that exceeds configured budgets.
 If a summary finds zero usage records, Mizan reports `WARN` and points you to
@@ -285,7 +287,8 @@ the [Launch Kit](docs/LAUNCH_KIT.md).
 - **Leak detection** — sessions billed to one account whose project belongs to the
   other. This is the thing that silently burned ~$978 of work quota when a forgotten
   pane ran the personal Rihla project on work credentials for 14 hours. It also catches
-  the reverse: personal quota spent on `~/Desktop/Work/` projects.
+  the reverse: personal quota spent on `~/Desktop/Work/` projects. Summaries
+  and reports show the reviewable wrong-account spend as a dollar amount.
 - **Model mix**, **top projects**, **cache efficiency**, and costliest sessions.
 - **Redacted Markdown reports** — copyable weekly spend snapshots that omit full
   home paths while preserving the useful project/account breakdown,

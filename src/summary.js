@@ -104,6 +104,9 @@ export function formatSummary(summary) {
     `Requests: ${summary.requests}`,
     `Leaks: ${summary.leaks.count} (${money(summary.leaks.total)})`,
   ];
+  if (summary.leaks.total > 0) {
+    lines.push(`Reviewable wrong-account spend: ${money(summary.leaks.total)}`);
+  }
   if (summary.comparison) {
     lines.push(
       `Previous ${summary.comparison.windowDays}d: ${money(summary.comparison.previous.cost)} · ${summary.comparison.previous.reqs} reqs`,

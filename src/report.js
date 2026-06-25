@@ -23,6 +23,7 @@ export function buildReport(data) {
       requests: summary.requests,
       leakCount: summary.leaks.count,
       leakTotal: summary.leaks.total,
+      reviewableWrongAccountSpend: summary.leaks.total,
       budgets: summary.budgets,
     },
     comparison: redactComparison(summary.comparison),
@@ -97,8 +98,11 @@ export function formatMarkdownReport(report) {
     `- Projected 30d: ${money(report.metrics.projected30d)}`,
     `- Requests: ${report.metrics.requests}`,
     `- Leaks: ${report.metrics.leakCount} (${money(report.metrics.leakTotal)})`,
-    `- Budgets: daily ${budget(report.metrics.budgets.daily)}; monthly ${budget(report.metrics.budgets.monthly)}`,
   ];
+  if (report.metrics.reviewableWrongAccountSpend > 0) {
+    lines.push(`- Reviewable wrong-account spend: ${money(report.metrics.reviewableWrongAccountSpend)}`);
+  }
+  lines.push(`- Budgets: daily ${budget(report.metrics.budgets.daily)}; monthly ${budget(report.metrics.budgets.monthly)}`);
   if (report.comparison) {
     lines.push(
       `- Previous ${report.comparison.windowDays}d: ${money(report.comparison.previous.cost)}; change ${signedMoney(report.comparison.delta.cost)} (${signedPct(report.comparison.delta.costPct)}), ${signedNumber(report.comparison.delta.reqs)} requests`,

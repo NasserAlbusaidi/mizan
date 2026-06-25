@@ -42,6 +42,7 @@ test("--weekly prints a redacted seven-day report", () => {
   assert.equal(result.status, 0, result.stderr);
   assert.match(result.stdout, /^# Mizan Spend Report/m);
   assert.match(result.stdout, /Window: last 7d/);
+  assert.match(result.stdout, /Reviewable wrong-account spend: \$37\.98/);
   assert.doesNotMatch(result.stdout, /^Mizan summary/m);
 });
 
@@ -57,6 +58,7 @@ test("--weekly --output writes the seven-day report", () => {
   const report = fs.readFileSync(output, "utf8");
   assert.match(report, /^# Mizan Spend Report/m);
   assert.match(report, /Window: last 7d/);
+  assert.match(report, /Reviewable wrong-account spend: \$37\.98/);
 });
 
 function escapeRegExp(value) {

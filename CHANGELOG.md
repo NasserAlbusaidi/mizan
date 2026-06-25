@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.38
+
+- Adds an explicit "Reviewable wrong-account spend" line to terminal summaries
+  and Markdown reports when leaks are found, making Mizan's saved-money moment
+  easier to spot in first-run demos, weekly reports, and shared review notes.
+
 ## 0.1.37
 
 - Replaces mutable `releases/latest/download/mizan-latest.tgz` install guidance

@@ -20,6 +20,7 @@ test("summary is ok when there are no leaks or budget overruns", () => {
   assert.equal(summary.spend, 12.5);
   assert.equal(summary.issues.length, 0);
   assert.match(formatSummary(summary), /Mizan summary \[OK\]/);
+  assert.doesNotMatch(formatSummary(summary), /Reviewable wrong-account spend/);
 });
 
 test("summary compares spend to the previous matching window", () => {
@@ -67,6 +68,7 @@ test("summary fails on cross-account leaks", () => {
   assert.equal(summary.leaks.total, 12);
   assert.match(summary.issues[0].message, /2 cross-account leaks/);
   assert.match(summary.issues[0].message, /mizan --add-work-marker/);
+  assert.match(formatSummary(summary), /Reviewable wrong-account spend: \$12\.00/);
   assert.match(formatSummary(summary), /If a flagged path is really work/);
 });
 

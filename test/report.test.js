@@ -43,6 +43,7 @@ test("report builds a redacted automation-friendly snapshot", () => {
   assert.equal(report.windowLabel, "last 7d");
   assert.equal(report.metrics.spend, 125.5);
   assert.equal(report.metrics.leakTotal, 23.5);
+  assert.equal(report.metrics.reviewableWrongAccountSpend, 23.5);
   assert.equal(report.privacy.redacted, true);
   assert.deepEqual(
     report.actions.map((action) => action.type),
@@ -57,6 +58,7 @@ test("markdown report is copyable and does not expose absolute home paths", () =
 
   assert.match(markdown, /^# Mizan Spend Report/m);
   assert.match(markdown, /Status: \*\*FAIL\*\*/);
+  assert.match(markdown, /Reviewable wrong-account spend: \$23\.50/);
   assert.match(markdown, /mizan --add-work-marker/);
   assert.match(markdown, /If a flagged path is really work/);
   assert.match(markdown, /\| Project \| Account \| Spend \| Requests \|/);
@@ -171,6 +173,7 @@ test("markdown report warns when no usage records are found", () => {
   );
 
   assert.match(markdown, /Status: \*\*WARN\*\*/);
+  assert.doesNotMatch(markdown, /Reviewable wrong-account spend/);
   assert.match(markdown, /No Claude Code usage records/);
   assert.match(markdown, /mizan --doctor/);
   assert.match(markdown, /mizan --set-transcripts/);

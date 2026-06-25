@@ -49,7 +49,7 @@ try {
   assertIncludes(help, "mizan --share", "--help should document public sharing copy");
 
   const version = run(bin, ["--version"]).stdout.trim();
-  if (version !== "@nasseralbusaidi/mizan 0.1.37") {
+  if (version !== "@nasseralbusaidi/mizan 0.1.38") {
     throw new Error(`installed --version printed ${JSON.stringify(version)}`);
   }
 
@@ -59,15 +59,16 @@ try {
   assertIncludes(tryOutput, "No local transcripts are read", "--try should explain privacy");
   assertIncludes(tryOutput, "sample intentionally includes wrong-account leaks", "--try should explain intentional leaks");
   assertIncludes(tryOutput, "Mizan summary [FAIL] (demo)", "--try should print a demo summary");
+  assertIncludes(tryOutput, "Reviewable wrong-account spend: $37.98", "--try should print the reviewable spend value");
   assertIncludes(tryOutput, "Next:", "--try should print next steps");
   assertIncludes(
     tryOutput,
-    "Install Mizan: npm install -g github:NasserAlbusaidi/mizan#v0.1.37",
+    "Install Mizan: npm install -g github:NasserAlbusaidi/mizan#v0.1.38",
     "--try should print the current tagged install command",
   );
   assertIncludes(
     tryOutput,
-    "Fallback install: npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.37/nasseralbusaidi-mizan-0.1.37.tgz",
+    "Fallback install: npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.38/nasseralbusaidi-mizan-0.1.38.tgz",
     "--try should print the current versioned tarball fallback",
   );
   assertIncludes(tryOutput, "mizan --setup", "--try should point to setup");
@@ -91,13 +92,13 @@ try {
   assertIncludes(shareGuide, "# Share Mizan", "--share should print Markdown");
   assertIncludes(
     shareGuide,
-    "npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.37 -- mizan --try",
+    "npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.38 -- mizan --try",
     "--share should include the pinned no-global demo path",
   );
-  assertIncludes(shareGuide, "github:NasserAlbusaidi/mizan#v0.1.37", "--share should include the tagged install path");
+  assertIncludes(shareGuide, "github:NasserAlbusaidi/mizan#v0.1.38", "--share should include the tagged install path");
   assertIncludes(
     shareGuide,
-    "releases/download/v0.1.37/nasseralbusaidi-mizan-0.1.37.tgz",
+    "releases/download/v0.1.38/nasseralbusaidi-mizan-0.1.38.tgz",
     "--share should include the versioned tarball path",
   );
   assertIncludes(shareGuide, "No account. No upload.", "--share should include the privacy claim");
