@@ -207,10 +207,12 @@ if (options.tryDemo) {
     const sampleReportCommand = `npm exec --yes --package ${tarballUrl} -- mizan --weekly --demo --output "$HOME/Documents/Mizan/mizan-demo-weekly.md"`;
     const demoDashboardCommand = `npm exec --yes --package ${tarballUrl} -- mizan --demo`;
     const fallbackTryCommand = `npm exec --yes --package github:NasserAlbusaidi/mizan#${tag} -- mizan --try`;
+    const installerCommand = `MIZAN_INSTALL_VERSION=${version} bash -c "$(curl -fsSL https://raw.githubusercontent.com/NasserAlbusaidi/mizan/${tag}/scripts/install.sh)"`;
     const next = [
       sampleReportCommand,
       demoDashboardCommand,
       fallbackTryCommand,
+      installerCommand,
       `npm install -g ${tarballUrl}`,
       `npm install -g github:NasserAlbusaidi/mizan#${tag}`,
       'mizan --weekly --demo --output "$HOME/Documents/Mizan/mizan-demo-weekly.md"',
@@ -384,11 +386,12 @@ Next:
   - Save a sample report now: ${next[0]}
   - Open the sample dashboard without install: ${next[1]}
   - Fallback GitHub tag demo: ${next[2]}
-  - Install Mizan: ${next[3]}
-  - Fallback GitHub tag install: ${next[4]}
-  - Save a sample report after install: ${next[5]}
-  - Check real transcript setup: ${next[6]}
-  - Save custom folders: ${next[7]}`;
+  - Install Mizan with helper: ${next[3]}
+  - Install Mizan: ${next[4]}
+  - Fallback GitHub tag install: ${next[5]}
+  - Save a sample report after install: ${next[6]}
+  - Check real transcript setup: ${next[7]}
+  - Save custom folders: ${next[8]}`;
 }
 
 function printWithNextSteps(message, steps) {

@@ -154,6 +154,11 @@ try {
   );
   assertIncludes(
     shareGuide,
+    `MIZAN_INSTALL_VERSION=${packageJson.version} bash -c "$(curl -fsSL https://raw.githubusercontent.com/NasserAlbusaidi/mizan/${releaseTag}/scripts/install.sh)"`,
+    "--share should include the versioned installer helper path",
+  );
+  assertIncludes(
+    shareGuide,
     `npm install -g ${releaseTarballUrl}`,
     "--share should include the versioned tarball install path",
   );
@@ -163,16 +168,16 @@ try {
   const updateCheck = run(bin, ["--update-check"], {
     env: {
       ...process.env,
-      MIZAN_RELEASES_URL: "data:application/json,%7B%22tag_name%22%3A%22v0.1.68%22%7D",
+      MIZAN_RELEASES_URL: "data:application/json,%7B%22tag_name%22%3A%22v0.1.69%22%7D",
     },
   }).stdout;
   assertIncludes(updateCheck, "Mizan update check", "--update-check should print its heading");
-  assertIncludes(updateCheck, "Current: 0.1.67", "--update-check should print the installed version");
-  assertIncludes(updateCheck, "Latest: 0.1.68", "--update-check should print the latest release version");
+  assertIncludes(updateCheck, "Current: 0.1.68", "--update-check should print the installed version");
+  assertIncludes(updateCheck, "Latest: 0.1.69", "--update-check should print the latest release version");
   assertIncludes(updateCheck, "Status: update available", "--update-check should flag newer releases");
   assertIncludes(
     updateCheck,
-    "npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.68/nasseralbusaidi-mizan-0.1.68.tgz",
+    "npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.69/nasseralbusaidi-mizan-0.1.69.tgz",
     "--update-check should print the next versioned tarball install command",
   );
 

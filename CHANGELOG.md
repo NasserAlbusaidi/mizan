@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.68
+
+- Adds the versioned installer helper to generated `mizan --try` next steps and
+  `mizan --share` launch copy, while keeping the direct tarball and GitHub tag
+  fallback commands visible.
+
 ## 0.1.67
 
 - Adds `scripts/install.sh`, a small GitHub-release installer that resolves the

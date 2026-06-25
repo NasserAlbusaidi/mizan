@@ -40,11 +40,12 @@ test("--try prints a demo summary and next steps without starting the dashboard"
   assert.match(result.stdout, /Leaks: 2/);
   assert.match(result.stdout, /Reviewable wrong-account spend: \$37\.98/);
   assert.match(result.stdout, /Next:/);
-  assert.match(result.stdout, /Install Mizan: npm install -g https:\/\/github\.com\/NasserAlbusaidi\/mizan\/releases\/download\/v0\.1\.67\/nasseralbusaidi-mizan-0\.1\.67\.tgz/);
-  assert.match(result.stdout, /Fallback GitHub tag install: npm install -g github:NasserAlbusaidi\/mizan#v0\.1\.67/);
-  assert.match(result.stdout, /Save a sample report now: npm exec --yes --package https:\/\/github\.com\/NasserAlbusaidi\/mizan\/releases\/download\/v0\.1\.67\/nasseralbusaidi-mizan-0\.1\.67\.tgz -- mizan --weekly --demo --output "\$HOME\/Documents\/Mizan\/mizan-demo-weekly\.md"/);
-  assert.match(result.stdout, /Open the sample dashboard without install: npm exec --yes --package https:\/\/github\.com\/NasserAlbusaidi\/mizan\/releases\/download\/v0\.1\.67\/nasseralbusaidi-mizan-0\.1\.67\.tgz -- mizan --demo/);
-  assert.match(result.stdout, /Fallback GitHub tag demo: npm exec --yes --package github:NasserAlbusaidi\/mizan#v0\.1\.67 -- mizan --try/);
+  assert.match(result.stdout, /Install Mizan with helper: MIZAN_INSTALL_VERSION=0\.1\.68 bash -c "\$\(curl -fsSL https:\/\/raw\.githubusercontent\.com\/NasserAlbusaidi\/mizan\/v0\.1\.68\/scripts\/install\.sh\)"/);
+  assert.match(result.stdout, /Install Mizan: npm install -g https:\/\/github\.com\/NasserAlbusaidi\/mizan\/releases\/download\/v0\.1\.68\/nasseralbusaidi-mizan-0\.1\.68\.tgz/);
+  assert.match(result.stdout, /Fallback GitHub tag install: npm install -g github:NasserAlbusaidi\/mizan#v0\.1\.68/);
+  assert.match(result.stdout, /Save a sample report now: npm exec --yes --package https:\/\/github\.com\/NasserAlbusaidi\/mizan\/releases\/download\/v0\.1\.68\/nasseralbusaidi-mizan-0\.1\.68\.tgz -- mizan --weekly --demo --output "\$HOME\/Documents\/Mizan\/mizan-demo-weekly\.md"/);
+  assert.match(result.stdout, /Open the sample dashboard without install: npm exec --yes --package https:\/\/github\.com\/NasserAlbusaidi\/mizan\/releases\/download\/v0\.1\.68\/nasseralbusaidi-mizan-0\.1\.68\.tgz -- mizan --demo/);
+  assert.match(result.stdout, /Fallback GitHub tag demo: npm exec --yes --package github:NasserAlbusaidi\/mizan#v0\.1\.68 -- mizan --try/);
   assert.match(result.stdout, /mizan --weekly --demo --output "\$HOME\/Documents\/Mizan\/mizan-demo-weekly\.md"/);
   assert.match(result.stdout, /mizan --setup/);
   assert.match(result.stdout, /mizan --set-transcripts personal=\/path work=\/path/);
@@ -56,7 +57,8 @@ test("--try prints a demo summary and next steps without starting the dashboard"
     result.stdout.indexOf("Open the sample dashboard without install:") <
       result.stdout.indexOf("Fallback GitHub tag demo:"),
   );
-  assert.ok(result.stdout.indexOf("Fallback GitHub tag demo:") < result.stdout.indexOf("Install Mizan:"));
+  assert.ok(result.stdout.indexOf("Fallback GitHub tag demo:") < result.stdout.indexOf("Install Mizan with helper:"));
+  assert.ok(result.stdout.indexOf("Install Mizan with helper:") < result.stdout.indexOf("Install Mizan:"));
   assert.ok(result.stdout.indexOf("Install Mizan:") < result.stdout.indexOf("Fallback GitHub tag install:"));
   assert.doesNotMatch(result.stdout + result.stderr, /http:\/\/127\.0\.0\.1/);
 });
@@ -187,7 +189,7 @@ test("--update-check reports the latest release install command without starting
   const server = createServer((req, res) => {
     assert.equal(req.url, "/latest");
     res.writeHead(200, { "content-type": "application/json" });
-    res.end(JSON.stringify({ tag_name: "v0.1.68" }));
+    res.end(JSON.stringify({ tag_name: "v0.1.69" }));
   });
   await listen(server);
 
@@ -198,14 +200,14 @@ test("--update-check reports the latest release install command without starting
 
     assert.equal(result.status, 0, result.stderr);
     assert.match(result.stdout, /^Mizan update check/m);
-    assert.match(result.stdout, /Current: 0\.1\.67/);
-    assert.match(result.stdout, /Latest: 0\.1\.68/);
+    assert.match(result.stdout, /Current: 0\.1\.68/);
+    assert.match(result.stdout, /Latest: 0\.1\.69/);
     assert.match(result.stdout, /Status: update available/);
     assert.match(
       result.stdout,
-      /Install: npm install -g https:\/\/github\.com\/NasserAlbusaidi\/mizan\/releases\/download\/v0\.1\.68\/nasseralbusaidi-mizan-0\.1\.68\.tgz/,
+      /Install: npm install -g https:\/\/github\.com\/NasserAlbusaidi\/mizan\/releases\/download\/v0\.1\.69\/nasseralbusaidi-mizan-0\.1\.69\.tgz/,
     );
-    assert.match(result.stdout, /Fallback: npm install -g github:NasserAlbusaidi\/mizan#v0\.1\.68/);
+    assert.match(result.stdout, /Fallback: npm install -g github:NasserAlbusaidi\/mizan#v0\.1\.69/);
     assert.doesNotMatch(result.stdout + result.stderr, /http:\/\/127\.0\.0\.1:7777/);
   } finally {
     await close(server);
@@ -227,7 +229,7 @@ test("--update-check keeps a zero exit when the release check is unavailable", a
 
     assert.equal(result.status, 0, result.stderr);
     assert.match(result.stdout, /^Mizan update check/m);
-    assert.match(result.stdout, /Current: 0\.1\.67/);
+    assert.match(result.stdout, /Current: 0\.1\.68/);
     assert.match(result.stdout, /Status: could not check latest release/);
     assert.match(result.stdout, /Reason: latest release request failed with HTTP 503/);
     assert.match(result.stdout, /Latest release: https:\/\/github\.com\/NasserAlbusaidi\/mizan\/releases\/latest/);

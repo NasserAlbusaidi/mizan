@@ -6,6 +6,7 @@ export function formatShareGuide({ packageVersion }) {
   const sampleReportCommand = `npm exec --yes --package ${tarballUrl} -- mizan --weekly --demo --output "$HOME/Documents/Mizan/mizan-demo-weekly.md"`;
   const demoDashboardCommand = `npm exec --yes --package ${tarballUrl} -- mizan --demo`;
   const fallbackTryCommand = `npm exec --yes --package github:NasserAlbusaidi/mizan#${tag} -- mizan --try`;
+  const installerCommand = `MIZAN_INSTALL_VERSION=${packageVersion} bash -c "$(curl -fsSL https://raw.githubusercontent.com/NasserAlbusaidi/mizan/${tag}/scripts/install.sh)"`;
   const installCommand = `npm install -g ${tarballUrl}`;
   const fallbackInstallCommand = `npm install -g github:NasserAlbusaidi/mizan#${tag}`;
 
@@ -34,6 +35,7 @@ ${fallbackTryCommand}
 ## Install
 
 \`\`\`bash
+${installerCommand}
 ${installCommand}
 \`\`\`
 

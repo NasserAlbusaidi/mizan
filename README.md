@@ -33,37 +33,37 @@ client, employer, or reimbursement log.
 Try a terminal demo without installing anything globally:
 
 ```bash
-npm exec --yes --package https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.67/nasseralbusaidi-mizan-0.1.67.tgz -- mizan --try
+npm exec --yes --package https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.68/nasseralbusaidi-mizan-0.1.68.tgz -- mizan --try
 ```
 
 Save a sample weekly report without installing globally:
 
 ```bash
-npm exec --yes --package https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.67/nasseralbusaidi-mizan-0.1.67.tgz -- mizan --weekly --demo --output "$HOME/Documents/Mizan/mizan-demo-weekly.md"
+npm exec --yes --package https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.68/nasseralbusaidi-mizan-0.1.68.tgz -- mizan --weekly --demo --output "$HOME/Documents/Mizan/mizan-demo-weekly.md"
 ```
 
 Preview the dashboard without installing globally or reading local transcripts:
 
 ```bash
-npm exec --yes --package https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.67/nasseralbusaidi-mizan-0.1.67.tgz -- mizan --demo
+npm exec --yes --package https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.68/nasseralbusaidi-mizan-0.1.68.tgz -- mizan --demo
 ```
 
 GitHub tag fallback:
 
 ```bash
-npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.67 -- mizan --try
+npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.68 -- mizan --try
 ```
 
 Install the current GitHub release from its versioned tarball:
 
 ```bash
-MIZAN_INSTALL_VERSION=0.1.67 bash -c "$(curl -fsSL https://raw.githubusercontent.com/NasserAlbusaidi/mizan/v0.1.67/scripts/install.sh)"
+MIZAN_INSTALL_VERSION=0.1.68 bash -c "$(curl -fsSL https://raw.githubusercontent.com/NasserAlbusaidi/mizan/v0.1.68/scripts/install.sh)"
 ```
 
 Transparent fallback if you prefer to run npm directly:
 
 ```bash
-npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.67/nasseralbusaidi-mizan-0.1.67.tgz
+npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.68/nasseralbusaidi-mizan-0.1.68.tgz
 ```
 
 Check whether your installed copy matches the latest GitHub release:
@@ -75,7 +75,7 @@ mizan --update-check
 GitHub tag fallback:
 
 ```bash
-npm install -g github:NasserAlbusaidi/mizan#v0.1.67
+npm install -g github:NasserAlbusaidi/mizan#v0.1.68
 ```
 
 Preview the dashboard without reading local transcripts:
