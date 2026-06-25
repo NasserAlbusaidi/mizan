@@ -44,7 +44,7 @@ test("--weekly prints a redacted seven-day report", () => {
   assert.match(result.stdout, /Window: last 7d/);
   assert.match(result.stdout, /Reviewable wrong-account spend: \$37\.98/);
   assert.match(result.stdout, /## Next Steps/);
-  assert.match(result.stdout, /npm install -g github:NasserAlbusaidi\/mizan#v0\.1\.49/);
+  assert.match(result.stdout, /npm install -g github:NasserAlbusaidi\/mizan#v0\.1\.50/);
   assert.match(result.stdout, /mizan --setup/);
   assert.doesNotMatch(result.stdout, /^Mizan summary/m);
 });

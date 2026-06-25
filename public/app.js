@@ -311,17 +311,21 @@
     }
 
     for (const account of missingAccounts) {
+      const command = `mizan --set-transcripts ${account.account}=/path/to/projects`;
       actions.push({
         tone: "neutral",
         title: `${account.account} account folder was not found`,
-        body: `${account.dir} does not exist. That is fine for one-account users; otherwise run mizan --set-transcripts ${account.account}=/path/to/projects.`,
+        body: `${account.dir} does not exist. That is fine for one-account users; otherwise run ${command}.`,
+        command,
       });
     }
 
+    const scriptableCommand = `mizan --json --window ${state.window}`;
     actions.push({
       tone: "neutral",
       title: "Need a scriptable snapshot?",
-      body: `Run mizan --json --window ${state.window} to export the same rollup without opening the dashboard.`,
+      body: `Run ${scriptableCommand} to export the same rollup without opening the dashboard.`,
+      command: scriptableCommand,
     });
 
     return prioritizedActions(actions).slice(0, 5);

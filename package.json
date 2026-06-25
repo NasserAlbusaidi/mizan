@@ -1,6 +1,6 @@
 {
   "name": "@nasseralbusaidi/mizan",
-  "version": "0.1.49",
+  "version": "0.1.50",
   "description": "Local Claude Code spend dashboard with dual-account leak detection and zero runtime dependencies.",
   "type": "module",
   "repository": {

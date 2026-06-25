@@ -150,6 +150,26 @@ test("dashboard monthly burn warning exposes a copyable budget command", async (
   assert.match(actions, /data-copy-command="mizan --set-budget monthly=126"/);
 });
 
+test("dashboard setup and scriptable snapshot guidance expose copyable commands", async () => {
+  const elements = await renderDashboard({
+    config: {
+      ...dashboardData().config,
+      demo: false,
+      accounts: [{ account: "work", dir: "/missing/work", exists: false }],
+    },
+    totals: { cost: 12, reqs: 3, output: 1_000 },
+    burn: { today: 1, perDay: 0.5, projected30d: 15 },
+    comparison: null,
+    projects: [],
+  });
+
+  const actions = elements.get("actions").innerHTML;
+  assert.match(actions, /work account folder was not found/);
+  assert.match(actions, /data-copy-command="mizan --set-transcripts work=\/path\/to\/projects"/);
+  assert.match(actions, /Need a scriptable snapshot\?/);
+  assert.match(actions, /data-copy-command="mizan --json --window 30"/);
+});
+
 test("dashboard leak action explains marker fixes", async () => {
   const elements = await renderDashboard({
     leaks: {

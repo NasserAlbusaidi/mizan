@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.50
+
+- Adds copy buttons for the dashboard's missing transcript-folder guidance and
+  scriptable JSON snapshot action, so more action queue recommendations can be
+  run directly instead of copied from prose.
+
 ## 0.1.49
 
 - Makes the dashboard's monthly burn warning copyable by exposing the suggested
