@@ -115,6 +115,34 @@ test("doctor suggests discovered transcript folders when configured paths are wr
   assert.match(text, new RegExp(escapeRegExp(path.join(home, ".claude", "projects"))));
 });
 
+test("doctor combines discovered personal and work folders into one save command", () => {
+  const home = fs.mkdtempSync(path.join(os.tmpdir(), "mizan-doctor-combined-suggest-"));
+  const personal = path.join(home, ".claude", "projects", "project-a");
+  const work = path.join(home, ".claude-work", "projects", "project-b");
+  fs.mkdirSync(personal, { recursive: true });
+  fs.mkdirSync(work, { recursive: true });
+  fs.writeFileSync(path.join(personal, "usage.jsonl"), `${usageLine("combined-personal")}\n`);
+  fs.writeFileSync(path.join(work, "usage.jsonl"), `${usageLine("combined-work")}\n`);
+
+  const report = buildDoctorReport({
+    home,
+    env: {
+      MIZAN_PERSONAL_DIR: path.join(home, "wrong-personal"),
+      MIZAN_WORK_DIR: path.join(home, "wrong-work"),
+    },
+  });
+  const text = formatDoctorReport(report);
+
+  assert.equal(report.ok, false);
+  assert.deepEqual(report.suggestedTranscriptFolders.map((item) => item.account), ["personal", "work"]);
+  const command = `Save discovered transcript folders with \`mizan --set-transcripts personal='${path.join(
+    home,
+    ".claude",
+    "projects",
+  )}' work='${path.join(home, ".claude-work", "projects")}'\`.`;
+  assert.match(text, new RegExp(escapeRegExp(command)));
+});
+
 test("doctor recommends fixing invalid budget values", () => {
   const home = fs.mkdtempSync(path.join(os.tmpdir(), "mizan-doctor-budget-"));
   const report = buildDoctorReport({

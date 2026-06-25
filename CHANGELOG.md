@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.58
+
+- Adds a combined `mizan --set-transcripts personal=... work=...` doctor
+  recommendation when both default transcript folders are discovered, so users
+  can fix wrong saved paths with one copyable command.
+
 ## 0.1.57
 
 - Adds the versioned release-tarball fallback to demo Markdown report next

@@ -81,6 +81,11 @@ export function buildDoctorReport({ env = process.env, home = os.homedir() } = {
   if (user.error) {
     recommendations.push(`Config file could not be read: ${user.error}`);
   }
+  if (suggestedTranscriptFolders.length > 1) {
+    recommendations.push(
+      `Save discovered transcript folders with \`${formatSetTranscriptsCommand(suggestedTranscriptFolders)}\`.`,
+    );
+  }
   for (const suggestion of suggestedTranscriptFolders) {
     recommendations.push(
       `Found parseable ${suggestion.account} usage records at ${suggestion.dir}. Save it with \`${formatSetTranscriptCommand(suggestion.account, suggestion.dir)}\`.`,
@@ -218,6 +223,12 @@ function countUsageRecords(file) {
 
 function formatSetTranscriptCommand(account, dir) {
   return `mizan --set-transcripts ${account}=${shellQuote(dir)}`;
+}
+
+function formatSetTranscriptsCommand(suggestions) {
+  return `mizan --set-transcripts ${suggestions
+    .map((suggestion) => `${suggestion.account}=${shellQuote(suggestion.dir)}`)
+    .join(" ")}`;
 }
 
 function weeklyReportCommand() {
