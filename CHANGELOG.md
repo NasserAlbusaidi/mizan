@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.53
+
+- Reorders `mizan --try` next steps so users can save a sample report and open
+  the no-install demo dashboard before seeing global install commands.
+
 ## 0.1.52
 
 - Keeps the dashboard's demo-mode warning visible in the capped action queue and

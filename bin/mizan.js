@@ -193,9 +193,9 @@ if (options.tryDemo) {
     const demoDashboardCommand = `npm exec --yes --package github:NasserAlbusaidi/mizan#${tag} -- mizan --demo`;
     const next = [
       sampleReportCommand,
+      demoDashboardCommand,
       `npm install -g github:NasserAlbusaidi/mizan#${tag}`,
       `npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/${tag}/nasseralbusaidi-mizan-${version}.tgz`,
-      demoDashboardCommand,
       'mizan --weekly --demo --output "$HOME/Documents/Mizan/mizan-demo-weekly.md"',
       "mizan --setup",
       "mizan --set-transcripts personal=/path work=/path",
@@ -335,9 +335,9 @@ The sample intentionally includes wrong-account leaks so you can see what Mizan 
 ${formatSummary(summary)}
 Next:
   - Save a sample report now: ${next[0]}
-  - Install Mizan: ${next[1]}
-  - Fallback install: ${next[2]}
-  - Open the sample dashboard without install: ${next[3]}
+  - Open the sample dashboard without install: ${next[1]}
+  - Install Mizan: ${next[2]}
+  - Fallback install: ${next[3]}
   - Save a sample report after install: ${next[4]}
   - Check real transcript setup: ${next[5]}
   - Save custom folders: ${next[6]}`;
