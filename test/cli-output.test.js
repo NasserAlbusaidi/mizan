@@ -35,10 +35,11 @@ test("--try prints a demo summary and next steps without starting the dashboard"
   assert.match(result.stdout, /Leaks: 2/);
   assert.match(result.stdout, /Reviewable wrong-account spend: \$37\.98/);
   assert.match(result.stdout, /Next:/);
-  assert.match(result.stdout, /Install Mizan: npm install -g github:NasserAlbusaidi\/mizan#v0\.1\.53/);
-  assert.match(result.stdout, /Fallback install: npm install -g https:\/\/github\.com\/NasserAlbusaidi\/mizan\/releases\/download\/v0\.1\.53\/nasseralbusaidi-mizan-0\.1\.53\.tgz/);
-  assert.match(result.stdout, /npm exec --yes --package github:NasserAlbusaidi\/mizan#v0\.1\.53 -- mizan --weekly --demo --output "\$HOME\/Documents\/Mizan\/mizan-demo-weekly\.md"/);
-  assert.match(result.stdout, /Open the sample dashboard without install: npm exec --yes --package github:NasserAlbusaidi\/mizan#v0\.1\.53 -- mizan --demo/);
+  assert.match(result.stdout, /Install Mizan: npm install -g github:NasserAlbusaidi\/mizan#v0\.1\.54/);
+  assert.match(result.stdout, /Fallback install: npm install -g https:\/\/github\.com\/NasserAlbusaidi\/mizan\/releases\/download\/v0\.1\.54\/nasseralbusaidi-mizan-0\.1\.54\.tgz/);
+  assert.match(result.stdout, /npm exec --yes --package github:NasserAlbusaidi\/mizan#v0\.1\.54 -- mizan --weekly --demo --output "\$HOME\/Documents\/Mizan\/mizan-demo-weekly\.md"/);
+  assert.match(result.stdout, /Open the sample dashboard without install: npm exec --yes --package github:NasserAlbusaidi\/mizan#v0\.1\.54 -- mizan --demo/);
+  assert.match(result.stdout, /Fallback no-install demo: npm exec --yes --package https:\/\/github\.com\/NasserAlbusaidi\/mizan\/releases\/download\/v0\.1\.54\/nasseralbusaidi-mizan-0\.1\.54\.tgz -- mizan --try/);
   assert.match(result.stdout, /mizan --weekly --demo --output "\$HOME\/Documents\/Mizan\/mizan-demo-weekly\.md"/);
   assert.match(result.stdout, /mizan --setup/);
   assert.match(result.stdout, /mizan --set-transcripts personal=\/path work=\/path/);
@@ -47,8 +48,10 @@ test("--try prints a demo summary and next steps without starting the dashboard"
       result.stdout.indexOf("Open the sample dashboard without install:"),
   );
   assert.ok(
-    result.stdout.indexOf("Open the sample dashboard without install:") < result.stdout.indexOf("Install Mizan:"),
+    result.stdout.indexOf("Open the sample dashboard without install:") <
+      result.stdout.indexOf("Fallback no-install demo:"),
   );
+  assert.ok(result.stdout.indexOf("Fallback no-install demo:") < result.stdout.indexOf("Install Mizan:"));
   assert.ok(result.stdout.indexOf("Install Mizan:") < result.stdout.indexOf("Fallback install:"));
   assert.doesNotMatch(result.stdout + result.stderr, /http:\/\/127\.0\.0\.1/);
 });

@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.54
+
+- Adds a versioned release-tarball `npm exec` fallback to `mizan --try`,
+  generated share copy, README Quick Start, and the launch kit so users can try
+  Mizan without global install even when GitHub tag package installs fail.
+
 ## 0.1.53
 
 - Reorders `mizan --try` next steps so users can save a sample report and open

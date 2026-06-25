@@ -4,6 +4,7 @@ export function formatShareGuide({ packageVersion }) {
   const tryCommand = `npm exec --yes --package github:NasserAlbusaidi/mizan#${tag} -- mizan --try`;
   const sampleReportCommand = `npm exec --yes --package github:NasserAlbusaidi/mizan#${tag} -- mizan --weekly --demo --output "$HOME/Documents/Mizan/mizan-demo-weekly.md"`;
   const demoDashboardCommand = `npm exec --yes --package github:NasserAlbusaidi/mizan#${tag} -- mizan --demo`;
+  const fallbackTryCommand = `npm exec --yes --package https://github.com/NasserAlbusaidi/mizan/releases/download/${tag}/nasseralbusaidi-mizan-${packageVersion}.tgz -- mizan --try`;
   const installCommand = `npm install -g github:NasserAlbusaidi/mizan#${tag}`;
   const tarballCommand = `npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/${tag}/nasseralbusaidi-mizan-${packageVersion}.tgz`;
 
@@ -21,6 +22,12 @@ No account. No upload. Local-only by default.
 ${tryCommand}
 ${sampleReportCommand}
 ${demoDashboardCommand}
+\`\`\`
+
+No-install release tarball demo if GitHub tag package install fails:
+
+\`\`\`bash
+${fallbackTryCommand}
 \`\`\`
 
 ## Install
