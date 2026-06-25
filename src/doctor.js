@@ -59,6 +59,10 @@ export function buildDoctorReport({ env = process.env, home = os.homedir() } = {
     recommendations.push(
       "Claude Code CLI was not found on PATH. Install Claude Code or add `claude` to PATH, then run Claude Code once and recheck with `mizan --setup --fix`.",
     );
+  } else if (claudeCli.error && !hasAnyUsageRecords) {
+    recommendations.push(
+      `Claude Code CLI was found, but \`claude --version\` failed: ${claudeCli.error}. Run \`claude\` to finish setup, then recheck with \`mizan --setup --fix\`.`,
+    );
   }
 
   for (const item of accountReports) {
@@ -167,18 +171,19 @@ function inspectClaudeCli(env) {
   const output = `${result.stdout || ""}${result.stderr || ""}`.trim();
   const firstLine = output.split(/\r?\n/).find(Boolean) || null;
   if (result.error) {
+    const isMissing = result.error.code === "ENOENT";
     return {
       command: "claude",
-      found: false,
+      found: !isMissing,
       version: null,
-      error: result.error.code === "ENOENT" ? "not found" : result.error.message,
+      error: isMissing ? "not found" : result.error.message,
     };
   }
   if (result.status !== 0) {
     return {
       command: "claude",
-      found: false,
-      version: firstLine,
+      found: true,
+      version: null,
       error: firstLine || `exited ${result.status}`,
     };
   }
@@ -187,6 +192,7 @@ function inspectClaudeCli(env) {
 
 function formatClaudeCli(claudeCli) {
   if (!claudeCli) return "not checked";
+  if (claudeCli.found && claudeCli.error) return `found, but version check failed (${claudeCli.error})`;
   if (claudeCli.found) return claudeCli.version ? `found (${claudeCli.version})` : "found";
   return "not found";
 }

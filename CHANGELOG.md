@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.64
+
+- Distinguishes a missing `claude` command from a present-but-failing Claude
+  Code CLI in setup diagnostics, so broken local installs get clearer repair
+  guidance.
+
 ## 0.1.63
 
 - Adds Claude Code CLI availability to setup diagnostics, so first-run users can

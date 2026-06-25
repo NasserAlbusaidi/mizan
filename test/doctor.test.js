@@ -37,6 +37,23 @@ test("doctor reports Claude Code CLI version when available", () => {
   assert.doesNotMatch(report.recommendations.join("\n"), /not found on PATH/);
 });
 
+test("doctor distinguishes a failing Claude Code CLI from a missing command", () => {
+  const home = fs.mkdtempSync(path.join(os.tmpdir(), "mizan-doctor-claude-cli-error-"));
+  const binDir = path.join(home, "bin");
+  fs.mkdirSync(binDir, { recursive: true });
+  writeFakeClaude(binDir, "claude: login required", { exitCode: 1, stream: "stderr" });
+
+  const report = buildDoctorReport({ home, env: { PATH: binDir } });
+  const text = formatDoctorReport(report);
+
+  assert.equal(report.claudeCli.found, true);
+  assert.equal(report.claudeCli.version, null);
+  assert.equal(report.claudeCli.error, "claude: login required");
+  assert.match(text, /Claude Code CLI: found, but version check failed \(claude: login required\)/);
+  assert.match(report.recommendations.join("\n"), /Claude Code CLI was found, but `claude --version` failed/);
+  assert.doesNotMatch(report.recommendations.join("\n"), /not found on PATH/);
+});
+
 test("doctor counts transcripts from explicit personal and work dirs", () => {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), "mizan-doctor-dirs-"));
   const personal = path.join(root, "personal");
@@ -201,8 +218,9 @@ function escapeRegExp(value) {
   return String(value).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
-function writeFakeClaude(binDir, output) {
+function writeFakeClaude(binDir, output, { exitCode = 0, stream = "stdout" } = {}) {
   const command = path.join(binDir, "claude");
-  fs.writeFileSync(command, `#!/bin/sh\nprintf '%s\\n' ${JSON.stringify(output)}\n`);
+  const redirect = stream === "stderr" ? " >&2" : "";
+  fs.writeFileSync(command, `#!/bin/sh\nprintf '%s\\n' ${JSON.stringify(output)}${redirect}\nexit ${exitCode}\n`);
   fs.chmodSync(command, 0o755);
 }
