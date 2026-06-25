@@ -125,6 +125,22 @@ test("dashboard action queue warns when spend jumps versus the previous window",
   assert.match(actions, /mizan --weekly --output &quot;\$HOME\/Documents\/Mizan\/mizan-weekly-\$\(date \+%F\)\.md&quot;/);
 });
 
+test("dashboard action queue keeps budget warnings above softer habit actions", async () => {
+  const elements = await renderDashboard({
+    config: {
+      ...dashboardData().config,
+      budgets: { daily: 5, monthly: 100 },
+    },
+    burn: { today: 11, perDay: 4.2, projected30d: 126 },
+  });
+
+  const actions = elements.get("actions").innerHTML;
+  assert.match(actions, /Daily budget crossed/);
+  assert.match(actions, /\$11\.00 spent today against a \$5\.00 daily budget/);
+  assert.match(actions, /Monthly projection is over budget/);
+  assert.match(actions, /projects to \$126/);
+});
+
 test("dashboard leak action explains marker fixes", async () => {
   const elements = await renderDashboard({
     leaks: {

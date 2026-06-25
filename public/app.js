@@ -30,6 +30,7 @@
   const list = (items, fallback = "none") => (items && items.length ? items.join(", ") : fallback);
   const budgetLabel = (value) => (value == null ? "unset" : money(value));
   const weeklyReviewCommand = () => 'mizan --weekly --output "$HOME/Documents/Mizan/mizan-weekly-$(date +%F).md"';
+  const actionPriority = { danger: 0, warn: 1, neutral: 2, good: 3 };
   const PRICED_MODEL_FAMILIES = ["fable", "mythos", "opus", "sonnet", "haiku"];
   const setCopyState = (label) => {
     const btn = document.getElementById("copy-report");
@@ -321,7 +322,17 @@
       body: `Run mizan --json --window ${state.window} to export the same rollup without opening the dashboard.`,
     });
 
-    return actions.slice(0, 5);
+    return prioritizedActions(actions).slice(0, 5);
+  }
+
+  function prioritizedActions(actions) {
+    return actions
+      .map((action, index) => ({ action, index }))
+      .sort(
+        (a, b) =>
+          (actionPriority[a.action.tone] ?? 2) - (actionPriority[b.action.tone] ?? 2) || a.index - b.index,
+      )
+      .map((item) => item.action);
   }
 
   function spendJumpAction(comparison) {

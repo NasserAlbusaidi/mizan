@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.48
+
+- Prioritizes dashboard action queue items by severity before applying the
+  five-item cap, so daily and monthly budget warnings do not disappear behind
+  softer weekly-habit actions.
+
 ## 0.1.47
 
 - Changes the dashboard's copyable weekly review action from a terminal-only
