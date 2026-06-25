@@ -51,6 +51,7 @@ test("doctor counts transcripts from explicit personal and work dirs", () => {
   assert.equal(report.localOnly, false);
   assert.match(formatDoctorReport(report), /Setup looks usable/);
   assert.match(formatDoctorReport(report), /mizan --weekly/);
+  assert.match(formatDoctorReport(report), /mizan --weekly --output "\$HOME\/Documents\/Mizan\/mizan-weekly-\$\(date \+%F\)\.md"/);
   assert.match(formatDoctorReport(report), /Host: 0\.0\.0\.0 \(network-accessible\)/);
   assert.match(formatDoctorReport(report), /daily \$20, monthly \$250/);
 });

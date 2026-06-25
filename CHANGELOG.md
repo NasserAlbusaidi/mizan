@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.39
+
+- Makes successful `mizan --setup` / `mizan --doctor` output point directly to a
+  copyable saved weekly report command, so first-time users have a concrete next
+  artifact to create after Mizan finds their transcripts.
+
 ## 0.1.38
 
 - Adds an explicit "Reviewable wrong-account spend" line to terminal summaries

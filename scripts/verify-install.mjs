@@ -49,7 +49,7 @@ try {
   assertIncludes(help, "mizan --share", "--help should document public sharing copy");
 
   const version = run(bin, ["--version"]).stdout.trim();
-  if (version !== "@nasseralbusaidi/mizan 0.1.38") {
+  if (version !== "@nasseralbusaidi/mizan 0.1.39") {
     throw new Error(`installed --version printed ${JSON.stringify(version)}`);
   }
 
@@ -63,12 +63,12 @@ try {
   assertIncludes(tryOutput, "Next:", "--try should print next steps");
   assertIncludes(
     tryOutput,
-    "Install Mizan: npm install -g github:NasserAlbusaidi/mizan#v0.1.38",
+    "Install Mizan: npm install -g github:NasserAlbusaidi/mizan#v0.1.39",
     "--try should print the current tagged install command",
   );
   assertIncludes(
     tryOutput,
-    "Fallback install: npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.38/nasseralbusaidi-mizan-0.1.38.tgz",
+    "Fallback install: npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.39/nasseralbusaidi-mizan-0.1.39.tgz",
     "--try should print the current versioned tarball fallback",
   );
   assertIncludes(tryOutput, "mizan --setup", "--try should point to setup");
@@ -77,6 +77,7 @@ try {
   assertIncludes(setupKit, "# Mizan Setup Kit", "--setup-kit should print Markdown");
   assertIncludes(setupKit, "mizan --doctor --check", "--setup-kit should include setup checks");
   assertIncludes(setupKit, "parseable Claude usage record", "--setup-kit should explain the setup check");
+  assertIncludes(setupKit, "saved-report command", "--setup-kit should document the setup success handoff");
   assertIncludes(setupKit, "mizan --csv --window 7", "--setup-kit should include CSV export guidance");
   assertIncludes(setupKit, "cron", "--setup-kit should include cron guidance");
   assertIncludes(setupKit, "launchd", "--setup-kit should include launchd guidance");
@@ -87,18 +88,23 @@ try {
   assertIncludes(setupKitOutput, `Wrote setup kit to ${setupKitPath}`, "--setup-kit --output should print the saved path");
   const savedSetupKit = fs.readFileSync(setupKitPath, "utf8");
   assertIncludes(savedSetupKit, "# Mizan Setup Kit", "--setup-kit --output should write Markdown");
+  assertIncludes(
+    savedSetupKit,
+    'mizan --weekly --output "$HOME/Documents/Mizan/mizan-weekly-$(date +%F).md"',
+    "--setup-kit --output should include the saved weekly report command",
+  );
 
   const shareGuide = run(bin, ["--share"]).stdout;
   assertIncludes(shareGuide, "# Share Mizan", "--share should print Markdown");
   assertIncludes(
     shareGuide,
-    "npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.38 -- mizan --try",
+    "npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.39 -- mizan --try",
     "--share should include the pinned no-global demo path",
   );
-  assertIncludes(shareGuide, "github:NasserAlbusaidi/mizan#v0.1.38", "--share should include the tagged install path");
+  assertIncludes(shareGuide, "github:NasserAlbusaidi/mizan#v0.1.39", "--share should include the tagged install path");
   assertIncludes(
     shareGuide,
-    "releases/download/v0.1.38/nasseralbusaidi-mizan-0.1.38.tgz",
+    "releases/download/v0.1.39/nasseralbusaidi-mizan-0.1.39.tgz",
     "--share should include the versioned tarball path",
   );
   assertIncludes(shareGuide, "No account. No upload.", "--share should include the privacy claim");

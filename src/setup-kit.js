@@ -12,6 +12,8 @@ mizan --doctor --check
 
 \`mizan --setup\` creates local config if needed and exits with code \`2\` until
 Mizan can see at least one parseable Claude usage record.
+When setup looks usable, the diagnostics point you to the dashboard, the weekly
+saved-report command, and the scriptable JSON path.
 
 If the defaults miss your transcript folders, save them once:
 

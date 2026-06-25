@@ -30,7 +30,7 @@ test("repo has public support and security docs", () => {
 test("package metadata points npm users to the public GitHub repo", () => {
   const pkg = JSON.parse(fs.readFileSync("package.json", "utf8"));
 
-  assert.equal(pkg.version, "0.1.38");
+  assert.equal(pkg.version, "0.1.39");
   assert.deepEqual(pkg.repository, {
     type: "git",
     url: "git+https://github.com/NasserAlbusaidi/mizan.git",
@@ -105,11 +105,11 @@ test("README quick start previews value before setup", () => {
 
   assert.match(
     quickStart,
-    /npm exec --yes --package github:NasserAlbusaidi\/mizan#v0\.1\.38 -- mizan --try/,
+    /npm exec --yes --package github:NasserAlbusaidi\/mizan#v0\.1\.39 -- mizan --try/,
   );
   assert.ok(
-    quickStart.indexOf("npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.38") <
-      quickStart.indexOf("npm install -g github:NasserAlbusaidi/mizan#v0.1.38"),
+    quickStart.indexOf("npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.39") <
+      quickStart.indexOf("npm install -g github:NasserAlbusaidi/mizan#v0.1.39"),
   );
   assert.ok(quickStart.indexOf("mizan --demo") < quickStart.indexOf("mizan --setup"));
   assert.match(quickStart, /Try a terminal demo without installing anything globally/);
@@ -123,6 +123,8 @@ test("README documents the guided setup command", () => {
   assert.match(readme, /mizan --setup/);
   assert.match(readme, /creates .*config/i);
   assert.match(readme, /exits with code `2`/);
+  assert.match(readme, /saved-report command/);
+  assert.match(readme, /mizan --weekly --output "\$HOME\/Documents\/Mizan\/mizan-weekly-\$\(date \+%F\)\.md"/);
   assert.match(readme, /parseable Claude usage records/);
   assert.match(readme, /suggests a copyable/);
   assert.match(readme, /zero records/);
@@ -144,16 +146,16 @@ test("README documents the versioned GitHub install paths before npm publish", (
   const readme = fs.readFileSync("README.md", "utf8");
   const quickStart = section(readme, "## Quick Start", "## CLI");
 
-  assert.match(quickStart, /npm install -g github:NasserAlbusaidi\/mizan#v0\.1\.38/);
+  assert.match(quickStart, /npm install -g github:NasserAlbusaidi\/mizan#v0\.1\.39/);
   assert.ok(
-    quickStart.indexOf("npm install -g github:NasserAlbusaidi/mizan#v0.1.38") <
+    quickStart.indexOf("npm install -g github:NasserAlbusaidi/mizan#v0.1.39") <
       quickStart.indexOf(
-        "npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.38/nasseralbusaidi-mizan-0.1.38.tgz",
+        "npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.39/nasseralbusaidi-mizan-0.1.39.tgz",
       ),
   );
   assert.match(
     readme,
-    /npm install -g https:\/\/github\.com\/NasserAlbusaidi\/mizan\/releases\/download\/v0\.1\.38\/nasseralbusaidi-mizan-0\.1\.38\.tgz/,
+    /npm install -g https:\/\/github\.com\/NasserAlbusaidi\/mizan\/releases\/download\/v0\.1\.39\/nasseralbusaidi-mizan-0\.1\.39\.tgz/,
   );
   assert.match(readme, /npm package is prepared but not published yet/i);
   assert.match(readme, /npx @nasseralbusaidi\/mizan.*after npm publish/is);
@@ -189,13 +191,13 @@ test("launch kit gives a practical public launch script", () => {
   assert.match(kit, /Save report/);
   assert.match(
     kit,
-    /npm exec --yes --package github:NasserAlbusaidi\/mizan#v0\.1\.38 -- mizan --try/,
+    /npm exec --yes --package github:NasserAlbusaidi\/mizan#v0\.1\.39 -- mizan --try/,
   );
-  assert.match(kit, /npm install -g github:NasserAlbusaidi\/mizan#v0\.1\.38/);
+  assert.match(kit, /npm install -g github:NasserAlbusaidi\/mizan#v0\.1\.39/);
   assert.match(kit, /Do not use a mutable latest tarball URL for install copy/);
   assert.match(
     kit,
-    /npm install -g https:\/\/github\.com\/NasserAlbusaidi\/mizan\/releases\/download\/v0\.1\.38\/nasseralbusaidi-mizan-0\.1\.38\.tgz/,
+    /npm install -g https:\/\/github\.com\/NasserAlbusaidi\/mizan\/releases\/download\/v0\.1\.39\/nasseralbusaidi-mizan-0\.1\.39\.tgz/,
   );
   assert.match(kit, /versioned tarball fallback/i);
   assert.match(kit, /Show HN/);

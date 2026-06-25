@@ -23,7 +23,7 @@ diagnostics as `mizan --doctor`, and exits with code `2` when Mizan still cannot
 see at least one parseable Claude usage record.
 
 When setup looks usable, the diagnostics point you to the dashboard, the weekly
-report command, and the scriptable JSON path.
+saved-report command, and the scriptable JSON path.
 Use `mizan --doctor --check` in scripts when you want setup to fail fast unless
 Mizan can see at least one parseable Claude usage record.
 

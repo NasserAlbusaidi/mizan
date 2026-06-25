@@ -152,6 +152,7 @@ test("--setup keeps an existing config and exits zero when transcripts are usabl
   assert.equal(result.status, 0, result.stderr);
   assert.match(result.stdout, new RegExp(`Config already exists at ${escapeRegExp(configPath)}`));
   assert.match(result.stdout, /Setup looks usable/);
+  assert.match(result.stdout, /mizan --weekly --output "\$HOME\/Documents\/Mizan\/mizan-weekly-\$\(date \+%F\)\.md"/);
 
   const saved = JSON.parse(fs.readFileSync(configPath, "utf8"));
   assert.equal(saved.dailyBudget, 12);

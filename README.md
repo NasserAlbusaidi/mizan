@@ -33,20 +33,20 @@ client, employer, or reimbursement log.
 Try a terminal demo without installing anything globally:
 
 ```bash
-npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.38 -- mizan --try
+npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.39 -- mizan --try
 ```
 
 Install the current GitHub release from its pinned tag:
 
 ```bash
-npm install -g github:NasserAlbusaidi/mizan#v0.1.38
+npm install -g github:NasserAlbusaidi/mizan#v0.1.39
 ```
 
 If your npm client cannot install from GitHub tags, use the versioned release
 tarball:
 
 ```bash
-npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.38/nasseralbusaidi-mizan-0.1.38.tgz
+npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.39/nasseralbusaidi-mizan-0.1.39.tgz
 ```
 
 Preview the dashboard without reading local transcripts:
@@ -173,7 +173,12 @@ window.
 
 `mizan --setup` is the one-command first run. It creates the local config if
 needed, prints setup diagnostics, and exits with code `2` when Mizan still
-cannot see any parseable Claude usage records.
+cannot see any parseable Claude usage records. When setup is usable, it prints
+the copyable saved-report command:
+
+```bash
+mizan --weekly --output "$HOME/Documents/Mizan/mizan-weekly-$(date +%F).md"
+```
 
 `mizan --doctor` is the first thing to run when the dashboard looks empty. It
 prints the transcript folders Mizan can see, how many `.jsonl` files and

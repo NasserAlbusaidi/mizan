@@ -1,6 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs";
+import { formatSetupKit } from "../src/setup-kit.js";
 
 test("README links to the packaged setup kit", () => {
   const readme = fs.readFileSync("README.md", "utf8");
@@ -17,6 +18,7 @@ test("setup kit documents recurring report workflows safely", () => {
 
   assert.match(kit, /mizan --doctor --check/);
   assert.match(kit, /mizan --setup/);
+  assert.match(kit, /saved-report command/);
   assert.match(kit, /mizan --weekly/);
   assert.match(kit, /--output "\$HOME\/Documents\/Mizan\/mizan-weekly-\$\(date \+%F\)\.md"/);
   assert.match(kit, /mizan --csv --window 7/);
@@ -29,4 +31,11 @@ test("setup kit documents recurring report workflows safely", () => {
   assert.match(kit, /launchd/);
   assert.match(kit, /Reimbursement note/);
   assert.match(kit, /Do not attach raw transcripts/);
+});
+
+test("generated setup kit matches the setup success saved-report handoff", () => {
+  const kit = formatSetupKit();
+
+  assert.match(kit, /saved-report command/);
+  assert.match(kit, /mizan --weekly --output "\$HOME\/Documents\/Mizan\/mizan-weekly-\$\(date \+%F\)\.md"/);
 });

@@ -37,13 +37,13 @@ Keep the recording tight. The promise is not "analytics platform"; it is
 No-global-install terminal demo:
 
 ```bash
-npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.38 -- mizan --try
+npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.39 -- mizan --try
 ```
 
 Current pinned install path before npm publish:
 
 ```bash
-npm install -g github:NasserAlbusaidi/mizan#v0.1.38
+npm install -g github:NasserAlbusaidi/mizan#v0.1.39
 mizan --demo
 mizan --setup
 mizan
@@ -53,13 +53,13 @@ mizan --feedback
 Versioned tarball fallback:
 
 ```bash
-npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.38/nasseralbusaidi-mizan-0.1.38.tgz
+npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.39/nasseralbusaidi-mizan-0.1.39.tgz
 ```
 
 The npm package is prepared but not published yet. The no-global demo uses a
 pinned GitHub tag because npm can cache package URLs by URL; do not claim `npx
 @nasseralbusaidi/mizan` works from the npm registry until `npm view
-@nasseralbusaidi/mizan version` returns `0.1.38`.
+@nasseralbusaidi/mizan version` returns `0.1.39`.
 Use a versioned release tarball URL for fallback install copy. Do not use
 `releases/latest/download/...` for install instructions; GitHub latest
 redirects can lag, and npm can reuse cached package URLs.
@@ -75,7 +75,7 @@ projects, or personal quota spent on work.
 
 No account. No upload. Local-only dashboard.
 
-Release: https://github.com/NasserAlbusaidi/mizan/releases/tag/v0.1.38
+Release: https://github.com/NasserAlbusaidi/mizan/releases/tag/v0.1.39
 
 ## Longer post
 
@@ -93,7 +93,7 @@ It is a local-first CLI/dashboard for Claude Code usage:
 - Runs without runtime dependencies or uploads
 
 The first version is a GitHub release while npm publish waits on auth:
-https://github.com/NasserAlbusaidi/mizan/releases/tag/v0.1.38
+https://github.com/NasserAlbusaidi/mizan/releases/tag/v0.1.39
 
 If you run separate Claude configs or need a weekly usage note, try it. If
 anything is confusing, `mizan --feedback` prints the issue link and the redacted
@@ -121,7 +121,7 @@ It is intentionally local: no account, no upload, no hosted dashboard. The repor
 output redacts home paths for weekly notes or reimbursement logs.
 
 The first release is on GitHub while npm publishing waits on auth:
-https://github.com/NasserAlbusaidi/mizan/releases/tag/v0.1.38
+https://github.com/NasserAlbusaidi/mizan/releases/tag/v0.1.39
 ```
 
 Do not post to Show HN until the README, screenshot, release asset, and install

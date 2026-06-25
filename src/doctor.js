@@ -48,7 +48,7 @@ export function buildDoctorReport({ env = process.env, home = os.homedir() } = {
     );
   } else {
     recommendations.push(
-      "Setup looks usable. Run `mizan` for the dashboard, `mizan --weekly` for a weekly report, or `mizan --json --window 7` for a scriptable snapshot.",
+      `Setup looks usable. Run \`mizan\` for the dashboard, \`${weeklyReportCommand()}\` to save a weekly report, or \`mizan --json --window 7\` for a scriptable snapshot.`,
     );
   }
 
@@ -89,7 +89,7 @@ export function buildDoctorReport({ env = process.env, home = os.homedir() } = {
 
   if (recommendations.length === 0) {
     recommendations.push(
-      "Setup looks usable. Run `mizan` for the dashboard, `mizan --weekly` for a weekly report, or `mizan --json --window 7` for a scriptable snapshot.",
+      `Setup looks usable. Run \`mizan\` for the dashboard, \`${weeklyReportCommand()}\` to save a weekly report, or \`mizan --json --window 7\` for a scriptable snapshot.`,
     );
   }
 
@@ -218,6 +218,10 @@ function countUsageRecords(file) {
 
 function formatSetTranscriptCommand(account, dir) {
   return `mizan --set-transcripts ${account}=${shellQuote(dir)}`;
+}
+
+function weeklyReportCommand() {
+  return 'mizan --weekly --output "$HOME/Documents/Mizan/mizan-weekly-$(date +%F).md"';
 }
 
 function shellQuote(value) {
