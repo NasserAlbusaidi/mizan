@@ -161,6 +161,7 @@ test("helpText documents the scriptable JSON path", () => {
   assert.match(text, /mizan --doctor/);
   assert.match(text, /mizan --doctor --check/);
   assert.match(text, /mizan --doctor --fix/);
+  assert.match(text, /mizan --setup --fix/);
   assert.match(text, /Save discovered transcript folders/);
   assert.match(text, /mizan --setup-kit/);
   assert.match(text, /mizan --setup/);

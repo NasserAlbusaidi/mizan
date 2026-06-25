@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.60
+
+- Documents `mizan --setup --fix` in CLI help, README, and the setup kit so the
+  first-run repair flow is discoverable from the command users already run.
+
 ## 0.1.59
 
 - Adds `mizan --doctor --fix`, which saves discovered default transcript

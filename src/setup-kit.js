@@ -17,6 +17,7 @@ real saved weekly report.
 
 \`\`\`bash
 mizan --setup
+mizan --setup --fix
 mizan --doctor --check
 mizan --doctor --fix
 \`\`\`
@@ -28,6 +29,7 @@ saved-report command, and the scriptable JSON path.
 If the doctor discovers parseable usage in common default folders while saved
 paths are wrong, \`mizan --doctor --fix\` saves those folders and re-runs the
 diagnostics.
+Use \`mizan --setup --fix\` for the same repair during first-run setup.
 
 If the defaults miss your transcript folders, save them once:
 

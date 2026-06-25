@@ -33,38 +33,38 @@ client, employer, or reimbursement log.
 Try a terminal demo without installing anything globally:
 
 ```bash
-npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.59 -- mizan --try
+npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.60 -- mizan --try
 ```
 
 Save a sample weekly report without installing globally:
 
 ```bash
-npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.59 -- mizan --weekly --demo --output "$HOME/Documents/Mizan/mizan-demo-weekly.md"
+npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.60 -- mizan --weekly --demo --output "$HOME/Documents/Mizan/mizan-demo-weekly.md"
 ```
 
 Preview the dashboard without installing globally or reading local transcripts:
 
 ```bash
-npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.59 -- mizan --demo
+npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.60 -- mizan --demo
 ```
 
 If GitHub tag package install fails, use the no-install release tarball demo:
 
 ```bash
-npm exec --yes --package https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.59/nasseralbusaidi-mizan-0.1.59.tgz -- mizan --try
+npm exec --yes --package https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.60/nasseralbusaidi-mizan-0.1.60.tgz -- mizan --try
 ```
 
 Install the current GitHub release from its pinned tag:
 
 ```bash
-npm install -g github:NasserAlbusaidi/mizan#v0.1.59
+npm install -g github:NasserAlbusaidi/mizan#v0.1.60
 ```
 
 If your npm client cannot install from GitHub tags, use the versioned release
 tarball:
 
 ```bash
-npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.59/nasseralbusaidi-mizan-0.1.59.tgz
+npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.60/nasseralbusaidi-mizan-0.1.60.tgz
 ```
 
 Preview the dashboard without reading local transcripts:
@@ -161,6 +161,7 @@ mizan --json --window 7
 mizan --csv --window 7
 mizan --demo
 mizan --setup
+mizan --setup --fix
 mizan --doctor
 mizan --doctor --check
 mizan --doctor --fix
@@ -218,6 +219,7 @@ Use `mizan --doctor --check` in scripts when setup should fail with exit code
 If `mizan --doctor` finds parseable usage records in common default folders
 while your saved paths are wrong, run `mizan --doctor --fix` to save those
 folders and re-run diagnostics in one step.
+You can use the same repair during first-run setup with `mizan --setup --fix`.
 
 `mizan --setup-kit` prints a copyable weekly review setup kit: first-run checks,
 report commands, cron, launchd, and privacy reminders. Use

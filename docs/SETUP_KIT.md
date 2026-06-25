@@ -27,6 +27,7 @@ Create a local config and check what Mizan can see:
 
 ```bash
 mizan --setup
+mizan --setup --fix
 mizan --doctor --check
 mizan --doctor --fix
 ```
@@ -42,6 +43,7 @@ Mizan can see at least one parseable Claude usage record.
 If the doctor discovers parseable usage in common default folders while saved
 paths are wrong, `mizan --doctor --fix` saves those folders and re-runs the
 diagnostics.
+Use `mizan --setup --fix` for the same repair during first-run setup.
 
 Save transcript folders if the defaults are wrong:
 

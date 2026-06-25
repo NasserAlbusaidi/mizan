@@ -370,6 +370,7 @@ Usage:
   mizan --try                   Run the first-minute demo summary and next steps
   mizan --demo                  Run with realistic sample data
   mizan --setup                 Create config if needed, diagnose setup, and exit
+  mizan --setup --fix           Save discovered transcript folders during setup
   mizan --doctor                Check transcript folders and setup
   mizan --doctor --check        Exit nonzero when transcript setup is unusable
   mizan --doctor --fix          Save discovered transcript folders, then re-check
