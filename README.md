@@ -33,38 +33,38 @@ client, employer, or reimbursement log.
 Try a terminal demo without installing anything globally:
 
 ```bash
-npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.55 -- mizan --try
+npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.56 -- mizan --try
 ```
 
 Save a sample weekly report without installing globally:
 
 ```bash
-npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.55 -- mizan --weekly --demo --output "$HOME/Documents/Mizan/mizan-demo-weekly.md"
+npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.56 -- mizan --weekly --demo --output "$HOME/Documents/Mizan/mizan-demo-weekly.md"
 ```
 
 Preview the dashboard without installing globally or reading local transcripts:
 
 ```bash
-npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.55 -- mizan --demo
+npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.56 -- mizan --demo
 ```
 
 If GitHub tag package install fails, use the no-install release tarball demo:
 
 ```bash
-npm exec --yes --package https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.55/nasseralbusaidi-mizan-0.1.55.tgz -- mizan --try
+npm exec --yes --package https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.56/nasseralbusaidi-mizan-0.1.56.tgz -- mizan --try
 ```
 
 Install the current GitHub release from its pinned tag:
 
 ```bash
-npm install -g github:NasserAlbusaidi/mizan#v0.1.55
+npm install -g github:NasserAlbusaidi/mizan#v0.1.56
 ```
 
 If your npm client cannot install from GitHub tags, use the versioned release
 tarball:
 
 ```bash
-npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.55/nasseralbusaidi-mizan-0.1.55.tgz
+npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.56/nasseralbusaidi-mizan-0.1.56.tgz
 ```
 
 Preview the dashboard without reading local transcripts:

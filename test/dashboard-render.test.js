@@ -65,7 +65,7 @@ function dashboardData(overrides = {}) {
       demo: true,
       localOnly: true,
       packageName: "@nasseralbusaidi/mizan",
-      packageVersion: "0.1.55",
+      packageVersion: "0.1.56",
       host: "127.0.0.1",
       accounts: [],
       workMarkers: [],
@@ -134,8 +134,17 @@ test("dashboard keeps demo mode visible with a copyable install-and-setup comman
   assert.match(actions, /Demo mode is active/);
   assert.match(actions, /No local transcripts are being read/);
   assert.match(actions, /Install Mizan, then check real setup/);
-  assert.match(actions, /npm install -g github:NasserAlbusaidi\/mizan#v0\.1\.55 &amp;&amp; mizan --setup/);
-  assert.match(actions, /data-copy-command="npm install -g github:NasserAlbusaidi\/mizan#v0\.1\.55 &amp;&amp; mizan --setup"/);
+  assert.match(actions, /npm install -g github:NasserAlbusaidi\/mizan#v0\.1\.56 &amp;&amp; mizan --setup/);
+  assert.match(actions, /data-copy-command="npm install -g github:NasserAlbusaidi\/mizan#v0\.1\.56 &amp;&amp; mizan --setup"/);
+  assert.match(actions, /Fallback install if GitHub tags fail/);
+  assert.match(
+    actions,
+    /npm install -g https:\/\/github\.com\/NasserAlbusaidi\/mizan\/releases\/download\/v0\.1\.56\/nasseralbusaidi-mizan-0\.1\.56\.tgz &amp;&amp; mizan --setup/,
+  );
+  assert.match(
+    actions,
+    /data-copy-command="npm install -g https:\/\/github\.com\/NasserAlbusaidi\/mizan\/releases\/download\/v0\.1\.56\/nasseralbusaidi-mizan-0\.1\.56\.tgz &amp;&amp; mizan --setup"/,
+  );
 });
 
 test("dashboard action queue keeps budget warnings above softer habit actions", async () => {

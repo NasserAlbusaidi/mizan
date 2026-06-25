@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.56
+
+- Adds a copyable versioned release-tarball install-and-setup fallback to the
+  demo dashboard, so users who preview sample data still have a path forward
+  when npm cannot install directly from the GitHub tag.
+
 ## 0.1.55
 
 - Adds package metadata to runtime config and changes the demo dashboard's first
