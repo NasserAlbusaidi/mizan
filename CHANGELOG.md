@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.46
+
+- Adds a guarded manual **Publish npm** GitHub Actions workflow, so npm
+  publishing can run from the repository after an `NPM_TOKEN` secret is
+  configured instead of depending only on a locally authenticated machine.
+
 ## 0.1.45
 
 - Aligns `mizan --feedback` with the GitHub bug report form so users are guided

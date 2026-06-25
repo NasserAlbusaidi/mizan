@@ -108,6 +108,18 @@ npm publish --access public
 `prepublishOnly` runs `npm run release:check`, so publish should fail before
 uploading if tests, smoke, or package dry-run fail.
 
+## GitHub Actions npm publish
+
+If the local machine is not logged into npm, add an npm automation token as the
+repository secret `NPM_TOKEN`, then run the **Publish npm** workflow from GitHub
+Actions. Use the tag or branch you want to publish as the `ref` input.
+
+The workflow is manual and guarded:
+
+- Without `NPM_TOKEN`, it prints a skip message and does not publish.
+- With `NPM_TOKEN`, it checks out the selected ref, runs
+  `npm run release:check`, and then runs `npm publish --access public`.
+
 ## GitHub Release Assets
 
 Before creating a GitHub release, keep both install paths available:

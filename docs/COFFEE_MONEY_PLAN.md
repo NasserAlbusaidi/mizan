@@ -44,7 +44,9 @@ uploads.
 
 ## Launch Checklist
 
-1. Publish `@nasseralbusaidi/mizan` publicly on npm.
+1. Publish `@nasseralbusaidi/mizan` publicly on npm. If the local machine is
+   not logged into npm, add the repository secret `NPM_TOKEN` and run the
+   **Publish npm** GitHub Actions workflow after the release gate passes.
 2. Keep `package.json` pointed at the public repo:
    - `repository`: https://github.com/NasserAlbusaidi/mizan
    - `homepage`: https://github.com/NasserAlbusaidi/mizan#readme
@@ -68,7 +70,8 @@ uploads.
 
 Highest-leverage polish before launch:
 
-- Publish the npm package from a machine logged into npm.
+- Publish the npm package from a machine logged into npm, or configure
+  `NPM_TOKEN` and run the **Publish npm** GitHub Actions workflow.
 - Add a verified `funding` field after a real sponsorship or support URL exists.
 
 Do not build accounts, cloud sync, payments, or teams until strangers are using

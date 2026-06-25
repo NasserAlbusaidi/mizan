@@ -1,0 +1,46 @@
+name: Publish npm
+
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: Git ref to publish
+        required: false
+        default: main
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    name: Publish npm package
+    runs-on: ubuntu-latest
+    env:
+      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+    steps:
+      - name: Skip without NPM_TOKEN
+        if: env.NPM_TOKEN == ''
+        run: echo "NPM_TOKEN is not configured; skipping npm publish."
+
+      - name: Checkout
+        if: env.NPM_TOKEN != ''
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref }}
+
+      - name: Setup Node
+        if: env.NPM_TOKEN != ''
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: https://registry.npmjs.org
+
+      - name: Release check
+        if: env.NPM_TOKEN != ''
+        run: npm run release:check
+
+      - name: Publish
+        if: env.NPM_TOKEN != ''
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm publish --access public
