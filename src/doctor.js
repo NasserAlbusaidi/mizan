@@ -35,7 +35,7 @@ export function buildDoctorReport({ env = process.env, home = os.homedir() } = {
 
   if (!accountReports.some((item) => item.exists)) {
     recommendations.push(
-      `No transcript folders were found. Try \`mizan --try\`, save a sample report with \`${demoWeeklyReportCommand()}\`, then run \`mizan --set-transcripts personal=/path/to/personal/projects work=/path/to/work/projects\`.`,
+      `No transcript folders were found. Try \`mizan --try\` or save a sample report with \`${demoWeeklyReportCommand()}\`. Run Claude Code once, then recheck with \`mizan --setup --fix\`. If your transcripts live elsewhere, run \`mizan --set-transcripts personal=/path/to/personal/projects work=/path/to/work/projects\`.`,
     );
   } else if (totalTranscripts === 0) {
     recommendations.push(

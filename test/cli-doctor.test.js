@@ -21,6 +21,8 @@ test("--doctor --check exits nonzero when no transcript folders are usable", () 
   assert.equal(result.status, 2);
   assert.match(result.stdout, /^Mizan doctor/m);
   assert.match(result.stdout, /No transcript folders were found/);
+  assert.match(result.stdout, /Run Claude Code once/);
+  assert.match(result.stdout, /mizan --setup --fix/);
   assert.match(result.stdout, /mizan --weekly --demo --output "\$HOME\/Documents\/Mizan\/mizan-demo-weekly\.md"/);
 });
 
@@ -157,6 +159,8 @@ test("--setup creates a config and exits nonzero when setup is still unusable", 
   assert.match(result.stdout, new RegExp(`Created ${escapeRegExp(configPath)}`));
   assert.match(result.stdout, /^Mizan doctor/m);
   assert.match(result.stdout, /No transcript folders were found/);
+  assert.match(result.stdout, /Run Claude Code once/);
+  assert.match(result.stdout, /mizan --setup --fix/);
   assert.match(result.stdout, /mizan --weekly --demo --output "\$HOME\/Documents\/Mizan\/mizan-demo-weekly\.md"/);
 
   const saved = JSON.parse(fs.readFileSync(configPath, "utf8"));

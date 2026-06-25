@@ -33,38 +33,38 @@ client, employer, or reimbursement log.
 Try a terminal demo without installing anything globally:
 
 ```bash
-npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.61 -- mizan --try
+npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.62 -- mizan --try
 ```
 
 Save a sample weekly report without installing globally:
 
 ```bash
-npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.61 -- mizan --weekly --demo --output "$HOME/Documents/Mizan/mizan-demo-weekly.md"
+npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.62 -- mizan --weekly --demo --output "$HOME/Documents/Mizan/mizan-demo-weekly.md"
 ```
 
 Preview the dashboard without installing globally or reading local transcripts:
 
 ```bash
-npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.61 -- mizan --demo
+npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.62 -- mizan --demo
 ```
 
 If GitHub tag package install fails, use the no-install release tarball demo:
 
 ```bash
-npm exec --yes --package https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.61/nasseralbusaidi-mizan-0.1.61.tgz -- mizan --try
+npm exec --yes --package https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.62/nasseralbusaidi-mizan-0.1.62.tgz -- mizan --try
 ```
 
 Install the current GitHub release from its pinned tag:
 
 ```bash
-npm install -g github:NasserAlbusaidi/mizan#v0.1.61
+npm install -g github:NasserAlbusaidi/mizan#v0.1.62
 ```
 
 If your npm client cannot install from GitHub tags, use the versioned release
 tarball:
 
 ```bash
-npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.61/nasseralbusaidi-mizan-0.1.61.tgz
+npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.62/nasseralbusaidi-mizan-0.1.62.tgz
 ```
 
 Preview the dashboard without reading local transcripts:
@@ -115,6 +115,14 @@ When setup cannot find transcripts yet, it points to the sample report artifact:
 ```bash
 mizan --weekly --demo --output "$HOME/Documents/Mizan/mizan-demo-weekly.md"
 ```
+
+If this is the first time you have used Claude Code on the machine, run:
+
+```bash
+claude
+```
+
+Run Claude Code once, then recheck with `mizan --setup --fix`.
 
 Check without writing config:
 

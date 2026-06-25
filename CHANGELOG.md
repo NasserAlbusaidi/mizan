@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.62
+
+- Improves empty first-run setup guidance so users who have not generated Claude
+  Code transcripts yet are told to run Claude Code once, then recheck with
+  `mizan --setup --fix`, before falling back to custom transcript paths.
+
 ## 0.1.61
 
 - Changes `mizan --try` to label intentional demo leaks as sample findings

@@ -11,6 +11,8 @@ test("doctor reports missing transcript folders with actionable guidance", () =>
   assert.equal(report.ok, false);
   assert.equal(report.accounts[0].exists, false);
   assert.match(report.recommendations.join("\n"), /mizan --try/);
+  assert.match(report.recommendations.join("\n"), /Run Claude Code once/);
+  assert.match(report.recommendations.join("\n"), /mizan --setup --fix/);
   assert.match(report.recommendations.join("\n"), /mizan --set-transcripts/);
   assert.doesNotMatch(report.recommendations.join("\n"), /MIZAN_PERSONAL_DIR/);
 });
