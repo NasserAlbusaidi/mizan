@@ -33,37 +33,43 @@ client, employer, or reimbursement log.
 Try a terminal demo without installing anything globally:
 
 ```bash
-npm exec --yes --package https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.65/nasseralbusaidi-mizan-0.1.65.tgz -- mizan --try
+npm exec --yes --package https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.66/nasseralbusaidi-mizan-0.1.66.tgz -- mizan --try
 ```
 
 Save a sample weekly report without installing globally:
 
 ```bash
-npm exec --yes --package https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.65/nasseralbusaidi-mizan-0.1.65.tgz -- mizan --weekly --demo --output "$HOME/Documents/Mizan/mizan-demo-weekly.md"
+npm exec --yes --package https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.66/nasseralbusaidi-mizan-0.1.66.tgz -- mizan --weekly --demo --output "$HOME/Documents/Mizan/mizan-demo-weekly.md"
 ```
 
 Preview the dashboard without installing globally or reading local transcripts:
 
 ```bash
-npm exec --yes --package https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.65/nasseralbusaidi-mizan-0.1.65.tgz -- mizan --demo
+npm exec --yes --package https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.66/nasseralbusaidi-mizan-0.1.66.tgz -- mizan --demo
 ```
 
 GitHub tag fallback:
 
 ```bash
-npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.65 -- mizan --try
+npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.66 -- mizan --try
 ```
 
 Install the current GitHub release from its versioned tarball:
 
 ```bash
-npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.65/nasseralbusaidi-mizan-0.1.65.tgz
+npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.66/nasseralbusaidi-mizan-0.1.66.tgz
+```
+
+Check whether your installed copy matches the latest GitHub release:
+
+```bash
+mizan --update-check
 ```
 
 GitHub tag fallback:
 
 ```bash
-npm install -g github:NasserAlbusaidi/mizan#v0.1.65
+npm install -g github:NasserAlbusaidi/mizan#v0.1.66
 ```
 
 Preview the dashboard without reading local transcripts:
@@ -181,6 +187,7 @@ mizan --set-transcripts personal="$HOME/.claude/projects" work="$HOME/.claude-wo
 mizan --support-bundle
 mizan --feedback
 mizan --share
+mizan --update-check
 mizan --pricing
 mizan --summary
 mizan --report
@@ -261,6 +268,12 @@ command, and a privacy checklist for safe bug reports or adoption feedback.
 `mizan --share` prints safe public launch copy with the current GitHub-tag demo
 and install commands. It does not scan transcripts or start the dashboard.
 
+`mizan --update-check` asks the latest GitHub release endpoint whether your
+installed version is current. If an update is available, it prints the exact
+versioned release tarball install command and the GitHub tag fallback. If the
+release check is unavailable, it exits cleanly and points to the latest release
+page instead of blocking local use.
+
 `mizan --pricing` prints the static pricing table Mizan uses for estimates.
 
 `mizan --summary` prints a compact terminal report for the selected window.
@@ -296,6 +309,7 @@ mizan --add-work-marker /Clients/
 mizan --set-transcripts personal="$HOME/.claude/projects" work="$HOME/.claude-work/projects"
 mizan --support-bundle --output "$HOME/Documents/Mizan/support-bundle.md"
 mizan --feedback
+mizan --update-check
 mizan --setup-kit --output "$HOME/Documents/Mizan/setup-kit.md"
 mizan --doctor --check
 MIZAN_DAILY_BUDGET=20 MIZAN_MONTHLY_BUDGET=250 mizan --check
@@ -306,8 +320,9 @@ Use `--report --check` in scheduled jobs when you want a Markdown report in the
 logs and a failing exit code whenever leaks or budget overruns need attention.
 Add `--output path/to/report.md` to save one-shot output from `--report`,
 `--csv`, `--summary`, `--today`, `--weekly`, `--json`, `--setup`, `--doctor`,
-`--setup-kit`, `--pricing`, `--support-bundle`, `--feedback`, or `--share`
-without shell redirection; parent directories are created automatically.
+`--setup-kit`, `--pricing`, `--support-bundle`, `--feedback`, `--share`, or
+`--update-check` without shell redirection; parent directories are created
+automatically.
 
 For recurring reviews, automation examples, and reimbursement note templates,
 see the [Setup Kit](docs/SETUP_KIT.md). For demo flow and public post copy, see

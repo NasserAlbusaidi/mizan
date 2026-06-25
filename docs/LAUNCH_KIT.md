@@ -37,23 +37,24 @@ Keep the recording tight. The promise is not "analytics platform"; it is
 No-global-install terminal demo:
 
 ```bash
-npm exec --yes --package https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.65/nasseralbusaidi-mizan-0.1.65.tgz -- mizan --try
-npm exec --yes --package https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.65/nasseralbusaidi-mizan-0.1.65.tgz -- mizan --weekly --demo --output "$HOME/Documents/Mizan/mizan-demo-weekly.md"
-npm exec --yes --package https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.65/nasseralbusaidi-mizan-0.1.65.tgz -- mizan --demo
+npm exec --yes --package https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.66/nasseralbusaidi-mizan-0.1.66.tgz -- mizan --try
+npm exec --yes --package https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.66/nasseralbusaidi-mizan-0.1.66.tgz -- mizan --weekly --demo --output "$HOME/Documents/Mizan/mizan-demo-weekly.md"
+npm exec --yes --package https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.66/nasseralbusaidi-mizan-0.1.66.tgz -- mizan --demo
 ```
 
 GitHub tag fallback:
 
 ```bash
-npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.65 -- mizan --try
+npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.66 -- mizan --try
 ```
 
 Current versioned release tarball install before npm publish:
 
 ```bash
-npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.65/nasseralbusaidi-mizan-0.1.65.tgz
+npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.66/nasseralbusaidi-mizan-0.1.66.tgz
 mizan --demo
 mizan --setup
+mizan --update-check
 mizan
 mizan --feedback
 ```
@@ -61,16 +62,18 @@ mizan --feedback
 GitHub tag fallback:
 
 ```bash
-npm install -g github:NasserAlbusaidi/mizan#v0.1.65
+npm install -g github:NasserAlbusaidi/mizan#v0.1.66
 ```
 
 The npm package is prepared but not published yet. The no-global demo uses the
 versioned release tarball because it is reproducible and avoids GitHub tag
 package resolution; do not claim `npx
 @nasseralbusaidi/mizan` works from the npm registry until `npm view
-@nasseralbusaidi/mizan version` returns `0.1.65`.
+@nasseralbusaidi/mizan version` returns `0.1.66`.
 Do not use a mutable latest tarball URL for install copy. GitHub latest
 redirects can lag, and npm can reuse cached package URLs.
+After install, `mizan --update-check` can confirm the installed version against
+the latest GitHub release and print the next versioned tarball install command.
 
 ## Short post
 
@@ -83,7 +86,7 @@ projects, or personal quota spent on work.
 
 No account. No upload. Local-only dashboard.
 
-Release: https://github.com/NasserAlbusaidi/mizan/releases/tag/v0.1.65
+Release: https://github.com/NasserAlbusaidi/mizan/releases/tag/v0.1.66
 
 ## Longer post
 
@@ -101,11 +104,12 @@ It is a local-first CLI/dashboard for Claude Code usage:
 - Runs without runtime dependencies or uploads
 
 The first version is a GitHub release while npm publish waits on auth:
-https://github.com/NasserAlbusaidi/mizan/releases/tag/v0.1.65
+https://github.com/NasserAlbusaidi/mizan/releases/tag/v0.1.66
 
 If you run separate Claude configs or need a weekly usage note, try it. If
 anything is confusing, `mizan --feedback` prints the issue link and the redacted
-support-bundle command.
+support-bundle command. `mizan --update-check` confirms whether you are on the
+latest GitHub release.
 
 ## Show HN draft
 
@@ -129,7 +133,7 @@ It is intentionally local: no account, no upload, no hosted dashboard. The repor
 output redacts home paths for weekly notes or reimbursement logs.
 
 The first release is on GitHub while npm publishing waits on auth:
-https://github.com/NasserAlbusaidi/mizan/releases/tag/v0.1.65
+https://github.com/NasserAlbusaidi/mizan/releases/tag/v0.1.66
 ```
 
 Do not post to Show HN until the README, screenshot, release asset, and install

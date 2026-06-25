@@ -25,6 +25,7 @@ import { buildSupportBundle, formatSupportBundle } from "../src/support-bundle.j
 import { formatSetupKit } from "../src/setup-kit.js";
 import { formatFeedbackGuide } from "../src/feedback.js";
 import { formatShareGuide } from "../src/share.js";
+import { buildUpdateCheck, formatUpdateCheck } from "../src/update-check.js";
 
 const require = createRequire(import.meta.url);
 const packageJson = require("../package.json");
@@ -176,6 +177,12 @@ if (options.feedback) {
 
 if (options.share) {
   emitOutput(formatShareGuide({ packageVersion: packageJson.version }), options.output, "share guide");
+  process.exit(0);
+}
+
+if (options.updateCheck) {
+  const check = await buildUpdateCheck({ currentVersion: packageJson.version });
+  emitOutput(options.json ? JSON.stringify(check, null, 2) : formatUpdateCheck(check), options.output, "update check");
   process.exit(0);
 }
 

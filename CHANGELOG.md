@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.66
+
+- Adds `mizan --update-check`, an explicit latest-release check that prints the
+  current version, latest GitHub release, versioned tarball install command, and
+  GitHub tag fallback without scanning transcripts or starting the dashboard.
+
 ## 0.1.65
 
 - Promotes the versioned release tarball as the primary pre-npm install and

@@ -115,6 +115,13 @@ test("parseCliArgs supports share mode", () => {
   assert.equal(opts.open, false);
 });
 
+test("parseCliArgs supports update-check mode", () => {
+  const opts = parseCliArgs(["--update-check", "--output", "update.txt"]);
+  assert.equal(opts.updateCheck, true);
+  assert.equal(opts.open, false);
+  assert.equal(opts.output, "update.txt");
+});
+
 test("parseCliArgs supports setup mode", () => {
   const opts = parseCliArgs(["--setup"]);
   assert.equal(opts.setup, true);
@@ -174,6 +181,8 @@ test("helpText documents the scriptable JSON path", () => {
   assert.match(text, /safe feedback/i);
   assert.match(text, /mizan --share/);
   assert.match(text, /safe public launch copy/i);
+  assert.match(text, /mizan --update-check/);
+  assert.match(text, /latest GitHub release/i);
   assert.match(text, /mizan --pricing/);
   assert.match(text, /mizan --summary/);
   assert.match(text, /mizan --report/);
@@ -216,6 +225,7 @@ test("parseCliArgs supports output for one-shot commands", () => {
   assert.equal(parseCliArgs(["--support-bundle", "--output", "support.md"]).output, "support.md");
   assert.equal(parseCliArgs(["--feedback", "--output", "feedback.md"]).output, "feedback.md");
   assert.equal(parseCliArgs(["--share", "--output", "share.md"]).output, "share.md");
+  assert.equal(parseCliArgs(["--update-check", "--output", "update.txt"]).output, "update.txt");
 });
 
 test("parseCliArgs supports init-config mode", () => {

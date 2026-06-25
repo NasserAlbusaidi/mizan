@@ -19,6 +19,7 @@ export function parseCliArgs(argv, defaults = {}) {
     supportBundle: false,
     feedback: false,
     share: false,
+    updateCheck: false,
     summary: false,
     report: false,
     csv: false,
@@ -162,6 +163,11 @@ export function parseCliArgs(argv, defaults = {}) {
       options.open = false;
       continue;
     }
+    if (arg === "--update-check") {
+      options.updateCheck = true;
+      options.open = false;
+      continue;
+    }
     if (arg === "--summary") {
       options.summary = true;
       options.open = false;
@@ -231,6 +237,7 @@ function validateOptions(options) {
     options.supportBundle ||
     options.feedback ||
     options.share ||
+    options.updateCheck ||
     options.report ||
     options.csv ||
     options.summary ||
@@ -382,6 +389,7 @@ Usage:
   mizan --support-bundle        Print a redacted Markdown support bundle
   mizan --feedback              Print safe feedback and issue-reporting steps
   mizan --share                 Print safe public launch copy
+  mizan --update-check          Check the latest GitHub release and install command
   mizan --pricing               Print pricing assumptions and exit
   mizan --summary               Print a compact spend/leak summary and exit
   mizan --report                Print a redacted Markdown spend report and exit
@@ -409,12 +417,13 @@ Options:
   --support-bundle              Print redacted setup diagnostics for issues
   --feedback                    Print safe feedback steps and GitHub issue link
   --share                       Print safe public launch copy and install commands
+  --update-check                Check the latest GitHub release and install command
   --pricing                     Print model pricing assumptions and exit
   --summary                     Print compact summary and exit
   --report                      Print redacted Markdown report; combine with --json for structured output
   --csv                         Print redacted account/project/session rows for spreadsheets
   --check                       Exit 2 on leaks/budgets, or unusable setup with --doctor
-  --output <file>               Save one-shot output from report/csv/summary/today/weekly/json/try/setup/doctor/setup-kit/pricing/support/feedback/share
+  --output <file>               Save one-shot output from report/csv/summary/today/weekly/json/try/setup/doctor/setup-kit/pricing/support/feedback/share/update-check
   --version                     Print package version and exit
   --no-warm                     Skip the startup cache warm-up
   --no-open                     Do not open the browser automatically

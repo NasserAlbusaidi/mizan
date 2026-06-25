@@ -25,6 +25,7 @@ node bin/mizan.js --version
 node bin/mizan.js --doctor
 node bin/mizan.js --try
 node bin/mizan.js --share
+node bin/mizan.js --update-check
 node bin/mizan.js --pricing
 node bin/mizan.js --summary --demo --window 7
 node bin/mizan.js --weekly --demo
@@ -45,6 +46,8 @@ Expected:
 - `--try` should print a demo summary and next setup commands without opening a
   browser.
 - `--share` should print safe public launch copy and current install commands.
+- `--update-check` should compare the installed version with the latest GitHub release
+  and print the versioned release tarball install command when needed.
 - `--summary --demo` should print a compact report without opening a browser.
 - `--weekly --demo` should print a redacted seven-day Markdown report without
   opening a browser.
@@ -85,7 +88,7 @@ npm run install:check
 
 This packs the current checkout, installs the tarball into a temporary empty npm
 project, and runs the installed `mizan` binary through help, setup, pricing,
-summary, check, and config-init flows.
+summary, update-check, check, and config-init flows.
 
 ## Publish
 

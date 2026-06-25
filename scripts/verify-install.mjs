@@ -51,6 +51,7 @@ try {
   assertIncludes(help, "mizan --support-bundle", "--help should document support bundles");
   assertIncludes(help, "mizan --feedback", "--help should document feedback guidance");
   assertIncludes(help, "mizan --share", "--help should document public sharing copy");
+  assertIncludes(help, "mizan --update-check", "--help should document update checks");
 
   const version = run(bin, ["--version"]).stdout.trim();
   if (version !== expectedVersion) {
@@ -158,6 +159,22 @@ try {
   );
   assertIncludes(shareGuide, `github:NasserAlbusaidi/mizan#${releaseTag}`, "--share should include the tagged install fallback");
   assertIncludes(shareGuide, "No account. No upload.", "--share should include the privacy claim");
+
+  const updateCheck = run(bin, ["--update-check"], {
+    env: {
+      ...process.env,
+      MIZAN_RELEASES_URL: "data:application/json,%7B%22tag_name%22%3A%22v0.1.67%22%7D",
+    },
+  }).stdout;
+  assertIncludes(updateCheck, "Mizan update check", "--update-check should print its heading");
+  assertIncludes(updateCheck, "Current: 0.1.66", "--update-check should print the installed version");
+  assertIncludes(updateCheck, "Latest: 0.1.67", "--update-check should print the latest release version");
+  assertIncludes(updateCheck, "Status: update available", "--update-check should flag newer releases");
+  assertIncludes(
+    updateCheck,
+    "npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.67/nasseralbusaidi-mizan-0.1.67.tgz",
+    "--update-check should print the next versioned tarball install command",
+  );
 
   const pricing = JSON.parse(run(bin, ["--pricing", "--json"]).stdout);
   if (!pricing.rows.some((row) => row.family === "mythos")) {

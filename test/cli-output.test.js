@@ -1,5 +1,6 @@
-import { spawnSync } from "node:child_process";
+import { spawn, spawnSync } from "node:child_process";
 import fs from "node:fs";
+import { createServer } from "node:http";
 import os from "node:os";
 import path from "node:path";
 import { test } from "node:test";
@@ -39,11 +40,11 @@ test("--try prints a demo summary and next steps without starting the dashboard"
   assert.match(result.stdout, /Leaks: 2/);
   assert.match(result.stdout, /Reviewable wrong-account spend: \$37\.98/);
   assert.match(result.stdout, /Next:/);
-  assert.match(result.stdout, /Install Mizan: npm install -g https:\/\/github\.com\/NasserAlbusaidi\/mizan\/releases\/download\/v0\.1\.65\/nasseralbusaidi-mizan-0\.1\.65\.tgz/);
-  assert.match(result.stdout, /Fallback GitHub tag install: npm install -g github:NasserAlbusaidi\/mizan#v0\.1\.65/);
-  assert.match(result.stdout, /Save a sample report now: npm exec --yes --package https:\/\/github\.com\/NasserAlbusaidi\/mizan\/releases\/download\/v0\.1\.65\/nasseralbusaidi-mizan-0\.1\.65\.tgz -- mizan --weekly --demo --output "\$HOME\/Documents\/Mizan\/mizan-demo-weekly\.md"/);
-  assert.match(result.stdout, /Open the sample dashboard without install: npm exec --yes --package https:\/\/github\.com\/NasserAlbusaidi\/mizan\/releases\/download\/v0\.1\.65\/nasseralbusaidi-mizan-0\.1\.65\.tgz -- mizan --demo/);
-  assert.match(result.stdout, /Fallback GitHub tag demo: npm exec --yes --package github:NasserAlbusaidi\/mizan#v0\.1\.65 -- mizan --try/);
+  assert.match(result.stdout, /Install Mizan: npm install -g https:\/\/github\.com\/NasserAlbusaidi\/mizan\/releases\/download\/v0\.1\.66\/nasseralbusaidi-mizan-0\.1\.66\.tgz/);
+  assert.match(result.stdout, /Fallback GitHub tag install: npm install -g github:NasserAlbusaidi\/mizan#v0\.1\.66/);
+  assert.match(result.stdout, /Save a sample report now: npm exec --yes --package https:\/\/github\.com\/NasserAlbusaidi\/mizan\/releases\/download\/v0\.1\.66\/nasseralbusaidi-mizan-0\.1\.66\.tgz -- mizan --weekly --demo --output "\$HOME\/Documents\/Mizan\/mizan-demo-weekly\.md"/);
+  assert.match(result.stdout, /Open the sample dashboard without install: npm exec --yes --package https:\/\/github\.com\/NasserAlbusaidi\/mizan\/releases\/download\/v0\.1\.66\/nasseralbusaidi-mizan-0\.1\.66\.tgz -- mizan --demo/);
+  assert.match(result.stdout, /Fallback GitHub tag demo: npm exec --yes --package github:NasserAlbusaidi\/mizan#v0\.1\.66 -- mizan --try/);
   assert.match(result.stdout, /mizan --weekly --demo --output "\$HOME\/Documents\/Mizan\/mizan-demo-weekly\.md"/);
   assert.match(result.stdout, /mizan --setup/);
   assert.match(result.stdout, /mizan --set-transcripts personal=\/path work=\/path/);
@@ -182,6 +183,60 @@ test("--feedback --output writes the safe issue guide", () => {
   assert.match(body, /Do not attach raw transcripts/);
 });
 
+test("--update-check reports the latest release install command without starting the dashboard", async () => {
+  const server = createServer((req, res) => {
+    assert.equal(req.url, "/latest");
+    res.writeHead(200, { "content-type": "application/json" });
+    res.end(JSON.stringify({ tag_name: "v0.1.67" }));
+  });
+  await listen(server);
+
+  try {
+    const result = await runCli(["--update-check"], {
+      MIZAN_RELEASES_URL: `http://127.0.0.1:${server.address().port}/latest`,
+    });
+
+    assert.equal(result.status, 0, result.stderr);
+    assert.match(result.stdout, /^Mizan update check/m);
+    assert.match(result.stdout, /Current: 0\.1\.66/);
+    assert.match(result.stdout, /Latest: 0\.1\.67/);
+    assert.match(result.stdout, /Status: update available/);
+    assert.match(
+      result.stdout,
+      /Install: npm install -g https:\/\/github\.com\/NasserAlbusaidi\/mizan\/releases\/download\/v0\.1\.67\/nasseralbusaidi-mizan-0\.1\.67\.tgz/,
+    );
+    assert.match(result.stdout, /Fallback: npm install -g github:NasserAlbusaidi\/mizan#v0\.1\.67/);
+    assert.doesNotMatch(result.stdout + result.stderr, /http:\/\/127\.0\.0\.1:7777/);
+  } finally {
+    await close(server);
+  }
+});
+
+test("--update-check keeps a zero exit when the release check is unavailable", async () => {
+  const server = createServer((req, res) => {
+    assert.equal(req.url, "/latest");
+    res.writeHead(503, { "content-type": "application/json" });
+    res.end(JSON.stringify({ message: "maintenance" }));
+  });
+  await listen(server);
+
+  try {
+    const result = await runCli(["--update-check"], {
+      MIZAN_RELEASES_URL: `http://127.0.0.1:${server.address().port}/latest`,
+    });
+
+    assert.equal(result.status, 0, result.stderr);
+    assert.match(result.stdout, /^Mizan update check/m);
+    assert.match(result.stdout, /Current: 0\.1\.66/);
+    assert.match(result.stdout, /Status: could not check latest release/);
+    assert.match(result.stdout, /Reason: latest release request failed with HTTP 503/);
+    assert.match(result.stdout, /Latest release: https:\/\/github\.com\/NasserAlbusaidi\/mizan\/releases\/latest/);
+    assert.doesNotMatch(result.stdout + result.stderr, /http:\/\/127\.0\.0\.1:7777/);
+  } finally {
+    await close(server);
+  }
+});
+
 test("--csv prints a redacted reimbursement export without starting the dashboard", () => {
   const result = spawnSync(process.execPath, [bin, "--csv", "--demo", "--window", "7"], {
     encoding: "utf8",
@@ -222,4 +277,57 @@ test("--csv --output writes the reimbursement export", () => {
 
 function escapeRegExp(value) {
   return String(value).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function listen(server) {
+  return new Promise((resolve, reject) => {
+    server.once("error", reject);
+    server.listen(0, "127.0.0.1", () => {
+      server.off("error", reject);
+      resolve();
+    });
+  });
+}
+
+function close(server) {
+  return new Promise((resolve, reject) => {
+    server.close((err) => {
+      if (err) reject(err);
+      else resolve();
+    });
+  });
+}
+
+function runCli(args, env = {}) {
+  return new Promise((resolve, reject) => {
+    const child = spawn(process.execPath, [bin, ...args], {
+      encoding: "utf8",
+      env: {
+        ...process.env,
+        ...env,
+      },
+    });
+    let stdout = "";
+    let stderr = "";
+    const timer = setTimeout(() => {
+      child.kill("SIGKILL");
+      reject(new Error(`mizan ${args.join(" ")} timed out`));
+    }, 5000);
+    child.stdout.setEncoding("utf8");
+    child.stderr.setEncoding("utf8");
+    child.stdout.on("data", (chunk) => {
+      stdout += chunk;
+    });
+    child.stderr.on("data", (chunk) => {
+      stderr += chunk;
+    });
+    child.on("error", (err) => {
+      clearTimeout(timer);
+      reject(err);
+    });
+    child.on("close", (status) => {
+      clearTimeout(timer);
+      resolve({ status, stdout, stderr });
+    });
+  });
 }
