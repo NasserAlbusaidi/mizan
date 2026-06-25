@@ -18,12 +18,16 @@ real saved weekly report.
 \`\`\`bash
 mizan --setup
 mizan --doctor --check
+mizan --doctor --fix
 \`\`\`
 
 \`mizan --setup\` creates local config if needed and exits with code \`2\` until
 Mizan can see at least one parseable Claude usage record.
 When setup looks usable, the diagnostics point you to the dashboard, the weekly
 saved-report command, and the scriptable JSON path.
+If the doctor discovers parseable usage in common default folders while saved
+paths are wrong, \`mizan --doctor --fix\` saves those folders and re-runs the
+diagnostics.
 
 If the defaults miss your transcript folders, save them once:
 

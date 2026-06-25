@@ -119,10 +119,12 @@ if (options.setTranscripts) {
 if (options.setup) {
   try {
     const config = writeDefaultConfig();
-    const report = buildDoctorReport();
+    let report = buildDoctorReport();
+    const fix = options.fix ? saveSuggestedTranscriptFolders(report) : null;
+    if (fix?.saved) report = buildDoctorReport();
     const content = options.json
-      ? JSON.stringify({ ok: report.ok, config, doctor: report }, null, 2)
-      : formatSetupReport(config, report);
+      ? JSON.stringify({ ok: report.ok, config, fix, doctor: report }, null, 2)
+      : formatSetupReport(config, report, fix);
     emitOutput(content, options.output, "setup report");
     process.exit(report.ok ? 0 : 2);
   } catch (err) {
@@ -133,8 +135,13 @@ if (options.setup) {
 
 if (options.doctor) {
   try {
-    const report = buildDoctorReport();
-    emitOutput(options.json ? JSON.stringify(report, null, 2) : formatDoctorReport(report), options.output, "doctor report");
+    let report = buildDoctorReport();
+    const fix = options.fix ? saveSuggestedTranscriptFolders(report) : null;
+    if (fix?.saved) report = buildDoctorReport();
+    const content = options.json
+      ? JSON.stringify({ fix, doctor: report }, null, 2)
+      : formatDoctorReportWithFix(report, fix);
+    emitOutput(content, options.output, "doctor report");
     process.exit(options.check && !report.ok ? 2 : 0);
   } catch (err) {
     console.error(`mizan: ${err.stack || err.message}`);
@@ -325,9 +332,34 @@ function formatBudget(value) {
   return value == null ? "(unset)" : `$${value}`;
 }
 
-function formatSetupReport(config, report) {
+function formatSetupReport(config, report, fix = null) {
   const header = config.created ? `Created ${config.path}` : `Config already exists at ${config.path}`;
-  return `${header}\n\n${formatDoctorReport(report)}`;
+  return `${header}\n\n${formatDoctorReportWithFix(report, fix)}`;
+}
+
+function formatDoctorReportWithFix(report, fix) {
+  const prefix = formatFixResult(fix);
+  return prefix ? `${prefix}\n\n${formatDoctorReport(report)}` : formatDoctorReport(report);
+}
+
+function saveSuggestedTranscriptFolders(report) {
+  const accounts = Object.fromEntries(
+    (report.suggestedTranscriptFolders || []).map((suggestion) => [suggestion.account, suggestion.dir]),
+  );
+  if (!Object.keys(accounts).length) {
+    return { saved: false, message: "No discovered transcript folders to save." };
+  }
+  const result = writeTranscriptConfig(accounts);
+  return { saved: true, path: result.path, accounts };
+}
+
+function formatFixResult(fix) {
+  if (!fix) return "";
+  if (!fix.saved) return fix.message;
+  const saved = Object.entries(fix.accounts)
+    .map(([account, dir]) => `${account} ${dir}`)
+    .join(", ");
+  return `Saved discovered transcript folders to ${fix.path}: ${saved}`;
 }
 
 function formatTryReport(summary, next) {

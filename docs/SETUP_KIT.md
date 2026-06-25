@@ -28,6 +28,7 @@ Create a local config and check what Mizan can see:
 ```bash
 mizan --setup
 mizan --doctor --check
+mizan --doctor --fix
 ```
 
 `mizan --setup` creates `~/.mizan/config.json` if it is missing, prints the same
@@ -38,6 +39,9 @@ When setup looks usable, the diagnostics point you to the dashboard, the weekly
 saved-report command, and the scriptable JSON path.
 Use `mizan --doctor --check` in scripts when you want setup to fail fast unless
 Mizan can see at least one parseable Claude usage record.
+If the doctor discovers parseable usage in common default folders while saved
+paths are wrong, `mizan --doctor --fix` saves those folders and re-runs the
+diagnostics.
 
 Save transcript folders if the defaults are wrong:
 

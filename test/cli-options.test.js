@@ -15,6 +15,7 @@ test("parseCliArgs defaults to dashboard mode", () => {
   assert.equal(opts.feedback, false);
   assert.equal(opts.share, false);
   assert.equal(opts.setupKit, false);
+  assert.equal(opts.fix, false);
   assert.equal(opts.csv, false);
 });
 
@@ -120,6 +121,15 @@ test("parseCliArgs supports setup mode", () => {
   assert.equal(opts.open, false);
 });
 
+test("parseCliArgs supports fixing discovered setup paths", () => {
+  const opts = parseCliArgs(["--doctor", "--fix"]);
+  assert.equal(opts.doctor, true);
+  assert.equal(opts.fix, true);
+  assert.equal(opts.open, false);
+
+  assert.throws(() => parseCliArgs(["--fix"]), /--fix requires --doctor or --setup/);
+});
+
 test("parseCliArgs supports setup kit mode", () => {
   const opts = parseCliArgs(["--setup-kit", "--output", "setup-kit.md"]);
   assert.equal(opts.setupKit, true);
@@ -150,6 +160,8 @@ test("helpText documents the scriptable JSON path", () => {
   assert.match(text, /mizan --demo/);
   assert.match(text, /mizan --doctor/);
   assert.match(text, /mizan --doctor --check/);
+  assert.match(text, /mizan --doctor --fix/);
+  assert.match(text, /Save discovered transcript folders/);
   assert.match(text, /mizan --setup-kit/);
   assert.match(text, /mizan --setup/);
   assert.match(text, /mizan --init-config/);

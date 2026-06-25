@@ -8,6 +8,7 @@ export function parseCliArgs(argv, defaults = {}) {
     tryDemo: false,
     demo: false,
     setup: false,
+    fix: false,
     doctor: false,
     setupKit: false,
     pricing: false,
@@ -82,6 +83,11 @@ export function parseCliArgs(argv, defaults = {}) {
     }
     if (arg === "--setup") {
       options.setup = true;
+      options.open = false;
+      continue;
+    }
+    if (arg === "--fix") {
+      options.fix = true;
       options.open = false;
       continue;
     }
@@ -212,6 +218,9 @@ export function parseCliArgs(argv, defaults = {}) {
 }
 
 function validateOptions(options) {
+  if (options.fix && !options.doctor && !options.setup) {
+    throw new Error("--fix requires --doctor or --setup.");
+  }
   if (!options.output) return;
   const writesOneShotOutput =
     options.doctor ||
@@ -363,6 +372,7 @@ Usage:
   mizan --setup                 Create config if needed, diagnose setup, and exit
   mizan --doctor                Check transcript folders and setup
   mizan --doctor --check        Exit nonzero when transcript setup is unusable
+  mizan --doctor --fix          Save discovered transcript folders, then re-check
   mizan --setup-kit             Print weekly review, cron, and launchd commands
   mizan --init-config           Create ~/.mizan/config.json template and exit
   mizan --set-budget daily=20 monthly=250
@@ -387,6 +397,7 @@ Options:
   --demo                        Use anonymized sample data instead of transcripts
   --setup                       Create config if needed, then run setup diagnostics
   --doctor                      Print setup diagnostics and exit
+  --fix                         Save discovered transcript folders with --doctor/--setup
   --setup-kit                   Print a local weekly-review setup kit and exit
   --init-config                 Write a config template if one does not exist
   --set-budget daily=N monthly=N

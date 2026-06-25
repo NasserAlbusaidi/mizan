@@ -92,6 +92,55 @@ test("--doctor suggests a discovered default transcript folder when saved paths 
   assert.match(result.stdout, new RegExp(escapeRegExp(path.join(home, ".claude", "projects"))));
 });
 
+test("--doctor --fix saves discovered transcript folders and rechecks setup", () => {
+  const home = fs.mkdtempSync(path.join(os.tmpdir(), "mizan-doctor-fix-cli-"));
+  const configPath = path.join(home, ".mizan", "config.json");
+  const personal = path.join(home, ".claude", "projects", "project-a");
+  const work = path.join(home, ".claude-work", "projects", "project-b");
+  fs.mkdirSync(personal, { recursive: true });
+  fs.mkdirSync(work, { recursive: true });
+  fs.mkdirSync(path.dirname(configPath), { recursive: true });
+  fs.writeFileSync(path.join(personal, "usage.jsonl"), `${usageLine("fix-personal")}\n`);
+  fs.writeFileSync(path.join(work, "usage.jsonl"), `${usageLine("fix-work")}\n`);
+  fs.writeFileSync(
+    configPath,
+    `${JSON.stringify(
+      {
+        personalDir: path.join(home, "wrong-personal"),
+        workDir: path.join(home, "wrong-work"),
+        workMarkers: ["/Clients/"],
+        dailyBudget: 12,
+        monthlyBudget: 120,
+        port: 7777,
+        host: "127.0.0.1",
+      },
+      null,
+      2,
+    )}\n`,
+  );
+
+  const result = spawnSync(process.execPath, [bin, "--doctor", "--fix", "--check"], {
+    encoding: "utf8",
+    env: {
+      ...process.env,
+      HOME: home,
+      MIZAN_CONFIG: configPath,
+    },
+  });
+
+  assert.equal(result.status, 0, result.stderr);
+  assert.match(result.stdout, new RegExp(`Saved discovered transcript folders to ${escapeRegExp(configPath)}`));
+  assert.match(result.stdout, /Setup looks usable/);
+  assert.match(result.stdout, /personal\s+1 transcript/);
+  assert.match(result.stdout, /work\s+1 transcript/);
+
+  const saved = JSON.parse(fs.readFileSync(configPath, "utf8"));
+  assert.equal(saved.personalDir, path.join(home, ".claude", "projects"));
+  assert.equal(saved.workDir, path.join(home, ".claude-work", "projects"));
+  assert.equal(saved.dailyBudget, 12);
+  assert.deepEqual(saved.workMarkers, ["/Clients/"]);
+});
+
 test("--setup creates a config and exits nonzero when setup is still unusable", () => {
   const home = fs.mkdtempSync(path.join(os.tmpdir(), "mizan-setup-missing-"));
   const configPath = path.join(home, ".mizan", "config.json");

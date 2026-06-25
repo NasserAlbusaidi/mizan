@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.59
+
+- Adds `mizan --doctor --fix`, which saves discovered default transcript
+  folders to the local config and re-runs setup diagnostics, reducing wrong-path
+  onboarding from copy/paste guidance to a guarded one-command repair.
+
 ## 0.1.58
 
 - Adds a combined `mizan --set-transcripts personal=... work=...` doctor

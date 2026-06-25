@@ -77,16 +77,16 @@ test("demo markdown report includes next steps for real setup", () => {
           budgets: { daily: null, monthly: null },
         },
       }),
-      { packageVersion: "0.1.58" },
+      { packageVersion: "0.1.59" },
     ),
   );
 
   assert.match(markdown, /## Next Steps/);
   assert.match(markdown, /Demo data only; no local transcripts were read/);
-  assert.match(markdown, /npm install -g github:NasserAlbusaidi\/mizan#v0\.1\.58/);
+  assert.match(markdown, /npm install -g github:NasserAlbusaidi\/mizan#v0\.1\.59/);
   assert.match(
     markdown,
-    /npm install -g https:\/\/github\.com\/NasserAlbusaidi\/mizan\/releases\/download\/v0\.1\.58\/nasseralbusaidi-mizan-0\.1\.58\.tgz/,
+    /npm install -g https:\/\/github\.com\/NasserAlbusaidi\/mizan\/releases\/download\/v0\.1\.59\/nasseralbusaidi-mizan-0\.1\.59\.tgz/,
   );
   assert.match(markdown, /mizan --setup/);
   assert.match(markdown, /mizan --weekly --output "\$HOME\/Documents\/Mizan\/mizan-weekly-\$\(date \+%F\)\.md"/);

@@ -33,38 +33,38 @@ client, employer, or reimbursement log.
 Try a terminal demo without installing anything globally:
 
 ```bash
-npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.58 -- mizan --try
+npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.59 -- mizan --try
 ```
 
 Save a sample weekly report without installing globally:
 
 ```bash
-npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.58 -- mizan --weekly --demo --output "$HOME/Documents/Mizan/mizan-demo-weekly.md"
+npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.59 -- mizan --weekly --demo --output "$HOME/Documents/Mizan/mizan-demo-weekly.md"
 ```
 
 Preview the dashboard without installing globally or reading local transcripts:
 
 ```bash
-npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.58 -- mizan --demo
+npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.59 -- mizan --demo
 ```
 
 If GitHub tag package install fails, use the no-install release tarball demo:
 
 ```bash
-npm exec --yes --package https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.58/nasseralbusaidi-mizan-0.1.58.tgz -- mizan --try
+npm exec --yes --package https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.59/nasseralbusaidi-mizan-0.1.59.tgz -- mizan --try
 ```
 
 Install the current GitHub release from its pinned tag:
 
 ```bash
-npm install -g github:NasserAlbusaidi/mizan#v0.1.58
+npm install -g github:NasserAlbusaidi/mizan#v0.1.59
 ```
 
 If your npm client cannot install from GitHub tags, use the versioned release
 tarball:
 
 ```bash
-npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.58/nasseralbusaidi-mizan-0.1.58.tgz
+npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.59/nasseralbusaidi-mizan-0.1.59.tgz
 ```
 
 Preview the dashboard without reading local transcripts:
@@ -163,6 +163,7 @@ mizan --demo
 mizan --setup
 mizan --doctor
 mizan --doctor --check
+mizan --doctor --fix
 mizan --setup-kit
 mizan --init-config
 mizan --set-budget daily=20 monthly=250
@@ -214,6 +215,9 @@ For one-account users, one transcript folder is enough; the second account is
 optional unless you split personal and work Claude configs.
 Use `mizan --doctor --check` in scripts when setup should fail with exit code
 `2` unless at least one transcript folder has parseable usage records.
+If `mizan --doctor` finds parseable usage records in common default folders
+while your saved paths are wrong, run `mizan --doctor --fix` to save those
+folders and re-run diagnostics in one step.
 
 `mizan --setup-kit` prints a copyable weekly review setup kit: first-run checks,
 report commands, cron, launchd, and privacy reminders. Use
