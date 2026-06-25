@@ -92,18 +92,24 @@ export function buildSummary(data) {
   };
 }
 
-export function formatSummary(summary) {
+export function formatSummary(summary, options = {}) {
   const statusLabel =
     summary.status === "fail" ? "FAIL" : summary.status === "warn" ? "WARN" : "OK";
   const windowLabel = summary.window.days ? `last ${summary.window.days}d` : "all-time";
+  const heading = options.heading || "Mizan summary";
+  const statusText = options.showStatus === false ? "" : ` [${statusLabel}]`;
+  const demoText = summary.demo ? " (demo)" : "";
   const lines = [
-    `Mizan summary [${statusLabel}] ${summary.demo ? "(demo)" : ""}`.trim(),
+    `${heading}${statusText}${demoText}`.trim(),
+  ];
+  if (options.note) lines.push(options.note);
+  lines.push(
     "",
     `Window: ${windowLabel}`,
     `Spend: ${money(summary.spend)} · today ${money(summary.today)} · projected 30d ${money(summary.projected30d)}`,
     `Requests: ${summary.requests}`,
     `Leaks: ${summary.leaks.count} (${money(summary.leaks.total)})`,
-  ];
+  );
   if (summary.leaks.total > 0) {
     lines.push(`Reviewable wrong-account spend: ${money(summary.leaks.total)}`);
   }
@@ -121,7 +127,7 @@ export function formatSummary(summary) {
   }
 
   if (summary.issues.length) {
-    lines.push("", "Issues:");
+    lines.push("", `${options.issuesLabel || "Issues"}:`);
     for (const issue of summary.issues) lines.push(`  - ${issue.message}`);
   }
   if (summary.warnings.length) {

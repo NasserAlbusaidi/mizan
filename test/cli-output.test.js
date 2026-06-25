@@ -31,15 +31,19 @@ test("--try prints a demo summary and next steps without starting the dashboard"
   assert.match(result.stdout, /Demo data only/);
   assert.match(result.stdout, /No local transcripts are read/);
   assert.match(result.stdout, /sample intentionally includes wrong-account leaks/);
-  assert.match(result.stdout, /^Mizan summary \[FAIL\] \(demo\)/m);
+  assert.match(result.stdout, /^Mizan sample findings \(demo\)/m);
+  assert.match(result.stdout, /Preview only\. Real `mizan --check` still exits nonzero when leaks are present\./);
+  assert.match(result.stdout, /^Sample findings:/m);
+  assert.doesNotMatch(result.stdout, /^Mizan summary \[FAIL\] \(demo\)/m);
+  assert.doesNotMatch(result.stdout, /^Issues:/m);
   assert.match(result.stdout, /Leaks: 2/);
   assert.match(result.stdout, /Reviewable wrong-account spend: \$37\.98/);
   assert.match(result.stdout, /Next:/);
-  assert.match(result.stdout, /Install Mizan: npm install -g github:NasserAlbusaidi\/mizan#v0\.1\.60/);
-  assert.match(result.stdout, /Fallback install: npm install -g https:\/\/github\.com\/NasserAlbusaidi\/mizan\/releases\/download\/v0\.1\.60\/nasseralbusaidi-mizan-0\.1\.60\.tgz/);
-  assert.match(result.stdout, /npm exec --yes --package github:NasserAlbusaidi\/mizan#v0\.1\.60 -- mizan --weekly --demo --output "\$HOME\/Documents\/Mizan\/mizan-demo-weekly\.md"/);
-  assert.match(result.stdout, /Open the sample dashboard without install: npm exec --yes --package github:NasserAlbusaidi\/mizan#v0\.1\.60 -- mizan --demo/);
-  assert.match(result.stdout, /Fallback no-install demo: npm exec --yes --package https:\/\/github\.com\/NasserAlbusaidi\/mizan\/releases\/download\/v0\.1\.60\/nasseralbusaidi-mizan-0\.1\.60\.tgz -- mizan --try/);
+  assert.match(result.stdout, /Install Mizan: npm install -g github:NasserAlbusaidi\/mizan#v0\.1\.61/);
+  assert.match(result.stdout, /Fallback install: npm install -g https:\/\/github\.com\/NasserAlbusaidi\/mizan\/releases\/download\/v0\.1\.61\/nasseralbusaidi-mizan-0\.1\.61\.tgz/);
+  assert.match(result.stdout, /npm exec --yes --package github:NasserAlbusaidi\/mizan#v0\.1\.61 -- mizan --weekly --demo --output "\$HOME\/Documents\/Mizan\/mizan-demo-weekly\.md"/);
+  assert.match(result.stdout, /Open the sample dashboard without install: npm exec --yes --package github:NasserAlbusaidi\/mizan#v0\.1\.61 -- mizan --demo/);
+  assert.match(result.stdout, /Fallback no-install demo: npm exec --yes --package https:\/\/github\.com\/NasserAlbusaidi\/mizan\/releases\/download\/v0\.1\.61\/nasseralbusaidi-mizan-0\.1\.61\.tgz -- mizan --try/);
   assert.match(result.stdout, /mizan --weekly --demo --output "\$HOME\/Documents\/Mizan\/mizan-demo-weekly\.md"/);
   assert.match(result.stdout, /mizan --setup/);
   assert.match(result.stdout, /mizan --set-transcripts personal=\/path work=\/path/);
@@ -88,11 +92,24 @@ test("--try ignores saved local budgets so the demo stays self-contained", () =>
   });
 
   assert.equal(result.status, 0, result.stderr);
-  assert.match(result.stdout, /^Mizan summary \[FAIL\] \(demo\)/m);
+  assert.match(result.stdout, /^Mizan sample findings \(demo\)/m);
+  assert.doesNotMatch(result.stdout, /^Mizan summary \[FAIL\] \(demo\)/m);
   assert.match(result.stdout, /2 cross-account leaks/);
   assert.doesNotMatch(result.stdout, /Budgets:/);
   assert.doesNotMatch(result.stdout, /monthly budget/);
   assert.doesNotMatch(result.stdout, /daily budget/);
+});
+
+test("--check --demo keeps automation failure semantics for intentional demo leaks", () => {
+  const result = spawnSync(process.execPath, [bin, "--check", "--demo", "--window", "7"], {
+    encoding: "utf8",
+    timeout: 5000,
+  });
+
+  assert.equal(result.status, 2);
+  assert.match(result.stdout, /^Mizan summary \[FAIL\] \(demo\)/m);
+  assert.match(result.stdout, /2 cross-account leaks/);
+  assert.doesNotMatch(result.stdout, /^Mizan sample findings \(demo\)/m);
 });
 
 test("--setup-kit prints recurring workflow commands without starting the dashboard", () => {

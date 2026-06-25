@@ -62,7 +62,13 @@ try {
   assertIncludes(tryOutput, "Demo data only", "--try should explain demo data");
   assertIncludes(tryOutput, "No local transcripts are read", "--try should explain privacy");
   assertIncludes(tryOutput, "sample intentionally includes wrong-account leaks", "--try should explain intentional leaks");
-  assertIncludes(tryOutput, "Mizan summary [FAIL] (demo)", "--try should print a demo summary");
+  assertIncludes(tryOutput, "Mizan sample findings (demo)", "--try should print a guided demo preview");
+  assertIncludes(
+    tryOutput,
+    "Preview only. Real `mizan --check` still exits nonzero when leaks are present.",
+    "--try should clarify that strict checks still fail on leaks",
+  );
+  assertIncludes(tryOutput, "Sample findings:", "--try should label intentional demo leaks as sample findings");
   assertIncludes(tryOutput, "Reviewable wrong-account spend: $37.98", "--try should print the reviewable spend value");
   assertIncludes(tryOutput, "Next:", "--try should print next steps");
   assertIncludes(

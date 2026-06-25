@@ -33,38 +33,38 @@ client, employer, or reimbursement log.
 Try a terminal demo without installing anything globally:
 
 ```bash
-npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.60 -- mizan --try
+npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.61 -- mizan --try
 ```
 
 Save a sample weekly report without installing globally:
 
 ```bash
-npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.60 -- mizan --weekly --demo --output "$HOME/Documents/Mizan/mizan-demo-weekly.md"
+npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.61 -- mizan --weekly --demo --output "$HOME/Documents/Mizan/mizan-demo-weekly.md"
 ```
 
 Preview the dashboard without installing globally or reading local transcripts:
 
 ```bash
-npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.60 -- mizan --demo
+npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.61 -- mizan --demo
 ```
 
 If GitHub tag package install fails, use the no-install release tarball demo:
 
 ```bash
-npm exec --yes --package https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.60/nasseralbusaidi-mizan-0.1.60.tgz -- mizan --try
+npm exec --yes --package https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.61/nasseralbusaidi-mizan-0.1.61.tgz -- mizan --try
 ```
 
 Install the current GitHub release from its pinned tag:
 
 ```bash
-npm install -g github:NasserAlbusaidi/mizan#v0.1.60
+npm install -g github:NasserAlbusaidi/mizan#v0.1.61
 ```
 
 If your npm client cannot install from GitHub tags, use the versioned release
 tarball:
 
 ```bash
-npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.60/nasseralbusaidi-mizan-0.1.60.tgz
+npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.61/nasseralbusaidi-mizan-0.1.61.tgz
 ```
 
 Preview the dashboard without reading local transcripts:
@@ -185,7 +185,9 @@ mizan --help
 current GitHub install command, versioned tarball fallback, and next setup
 commands without opening a browser or reading local transcripts. It is the
 fastest way to decide whether Mizan is worth installing. The demo intentionally
-includes leaks, so a `[FAIL]` status means the detector is being shown.
+includes leaks, but `--try` labels them as sample findings. Strict check
+commands such as `mizan --check --demo` still exit nonzero when leaks are
+present.
 
 `mizan --weekly` prints the same redacted 7-day Markdown report as
 `mizan --report --window 7`. It is the shortest command for a recurring review

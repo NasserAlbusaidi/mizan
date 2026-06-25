@@ -367,7 +367,12 @@ function formatTryReport(summary, next) {
 Demo data only. No local transcripts are read.
 The sample intentionally includes wrong-account leaks so you can see what Mizan catches.
 
-${formatSummary(summary)}
+${formatSummary(summary, {
+  heading: "Mizan sample findings",
+  showStatus: false,
+  issuesLabel: "Sample findings",
+  note: "Preview only. Real `mizan --check` still exits nonzero when leaks are present.",
+})}
 Next:
   - Save a sample report now: ${next[0]}
   - Open the sample dashboard without install: ${next[1]}

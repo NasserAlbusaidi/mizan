@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.1.61
+
+- Changes `mizan --try` to label intentional demo leaks as sample findings
+  while preserving `mizan --check --demo` as a failing automation gate.
+- Makes the manual **Publish npm** workflow fail clearly when `NPM_TOKEN` is
+  missing instead of reporting a successful skipped publish.
+
 ## 0.1.60
 
 - Documents `mizan --setup --fix` in CLI help, README, and the setup kit so the
