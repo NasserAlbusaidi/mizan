@@ -121,9 +121,13 @@ gh release create "v$(node -p 'require("./package.json").version')" \
   mizan-latest.tgz
 ```
 
-The versioned tarball gives reproducible installs. The `mizan-latest.tgz` asset
-keeps launch posts and README fallback installs stable:
+The versioned tarball gives reproducible installs. Use the versioned tarball
+URL in README and launch copy:
 
 ```bash
-npm install -g https://github.com/NasserAlbusaidi/mizan/releases/latest/download/mizan-latest.tgz
+npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/v$(node -p 'require("./package.json").version')/nasseralbusaidi-mizan-$(node -p 'require("./package.json").version').tgz
 ```
+
+The `mizan-latest.tgz` asset is kept as a convenience alias, but do not make it
+the documented install fallback. GitHub latest redirects can lag after release,
+and npm can reuse cached package URLs.

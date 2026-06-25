@@ -33,20 +33,20 @@ client, employer, or reimbursement log.
 Try a terminal demo without installing anything globally:
 
 ```bash
-npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.36 -- mizan --try
+npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.37 -- mizan --try
 ```
 
 Install the current GitHub release from its pinned tag:
 
 ```bash
-npm install -g github:NasserAlbusaidi/mizan#v0.1.36
+npm install -g github:NasserAlbusaidi/mizan#v0.1.37
 ```
 
-If your npm client cannot install from GitHub tags, use the stable latest
-release tarball:
+If your npm client cannot install from GitHub tags, use the versioned release
+tarball:
 
 ```bash
-npm install -g https://github.com/NasserAlbusaidi/mizan/releases/latest/download/mizan-latest.tgz
+npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.37/nasseralbusaidi-mizan-0.1.37.tgz
 ```
 
 Preview the dashboard without reading local transcripts:
@@ -157,8 +157,8 @@ mizan --help
 ```
 
 `mizan --try` prints a demo spend summary, current GitHub install command,
-stable tarball fallback, and next setup commands without opening a browser or
-reading local transcripts. It is the fastest way to decide whether Mizan is
+versioned tarball fallback, and next setup commands without opening a browser
+or reading local transcripts. It is the fastest way to decide whether Mizan is
 worth installing. The demo intentionally includes leaks, so a `[FAIL]` status
 means the detector is being shown.
 

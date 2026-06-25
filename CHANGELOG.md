@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.1.37
+
+- Replaces mutable `releases/latest/download/mizan-latest.tgz` install guidance
+  with versioned release tarball URLs in `mizan --try`, generated share copy,
+  and launch docs after live verification showed GitHub latest redirects can
+  serve a stale tarball immediately after release.
+
 ## 0.1.36
 
 - Makes `mizan --try` print the current GitHub install command and stable

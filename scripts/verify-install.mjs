@@ -49,7 +49,7 @@ try {
   assertIncludes(help, "mizan --share", "--help should document public sharing copy");
 
   const version = run(bin, ["--version"]).stdout.trim();
-  if (version !== "@nasseralbusaidi/mizan 0.1.36") {
+  if (version !== "@nasseralbusaidi/mizan 0.1.37") {
     throw new Error(`installed --version printed ${JSON.stringify(version)}`);
   }
 
@@ -62,13 +62,13 @@ try {
   assertIncludes(tryOutput, "Next:", "--try should print next steps");
   assertIncludes(
     tryOutput,
-    "Install Mizan: npm install -g github:NasserAlbusaidi/mizan#v0.1.36",
+    "Install Mizan: npm install -g github:NasserAlbusaidi/mizan#v0.1.37",
     "--try should print the current tagged install command",
   );
   assertIncludes(
     tryOutput,
-    "Fallback install: npm install -g https://github.com/NasserAlbusaidi/mizan/releases/latest/download/mizan-latest.tgz",
-    "--try should print the stable latest tarball fallback",
+    "Fallback install: npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.37/nasseralbusaidi-mizan-0.1.37.tgz",
+    "--try should print the current versioned tarball fallback",
   );
   assertIncludes(tryOutput, "mizan --setup", "--try should point to setup");
 
@@ -91,14 +91,14 @@ try {
   assertIncludes(shareGuide, "# Share Mizan", "--share should print Markdown");
   assertIncludes(
     shareGuide,
-    "npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.36 -- mizan --try",
+    "npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.37 -- mizan --try",
     "--share should include the pinned no-global demo path",
   );
-  assertIncludes(shareGuide, "github:NasserAlbusaidi/mizan#v0.1.36", "--share should include the tagged install path");
+  assertIncludes(shareGuide, "github:NasserAlbusaidi/mizan#v0.1.37", "--share should include the tagged install path");
   assertIncludes(
     shareGuide,
-    "releases/latest/download/mizan-latest.tgz",
-    "--share should include the stable latest tarball path",
+    "releases/download/v0.1.37/nasseralbusaidi-mizan-0.1.37.tgz",
+    "--share should include the versioned tarball path",
   );
   assertIncludes(shareGuide, "No account. No upload.", "--share should include the privacy claim");
 

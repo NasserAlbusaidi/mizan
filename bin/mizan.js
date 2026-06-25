@@ -187,10 +187,11 @@ if (options.tryDemo) {
   try {
     const data = compute(options.windowDays, { useMemo: false, demo: true, host, port });
     const summary = buildSummary(data);
-    const tag = `v${packageJson.version}`;
+    const version = packageJson.version;
+    const tag = `v${version}`;
     const next = [
       `npm install -g github:NasserAlbusaidi/mizan#${tag}`,
-      "npm install -g https://github.com/NasserAlbusaidi/mizan/releases/latest/download/mizan-latest.tgz",
+      `npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/${tag}/nasseralbusaidi-mizan-${version}.tgz`,
       "mizan --demo",
       "mizan --setup",
       "mizan --set-transcripts personal=/path work=/path",

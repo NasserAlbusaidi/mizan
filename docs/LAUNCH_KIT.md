@@ -37,33 +37,32 @@ Keep the recording tight. The promise is not "analytics platform"; it is
 No-global-install terminal demo:
 
 ```bash
-npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.36 -- mizan --try
+npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.37 -- mizan --try
 ```
 
 Current pinned install path before npm publish:
 
 ```bash
-npm install -g github:NasserAlbusaidi/mizan#v0.1.36
+npm install -g github:NasserAlbusaidi/mizan#v0.1.37
 mizan --demo
 mizan --setup
 mizan
 mizan --feedback
 ```
 
-Stable latest tarball fallback:
+Versioned tarball fallback:
 
 ```bash
-npm install -g https://github.com/NasserAlbusaidi/mizan/releases/latest/download/mizan-latest.tgz
+npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.37/nasseralbusaidi-mizan-0.1.37.tgz
 ```
 
 The npm package is prepared but not published yet. The no-global demo uses a
 pinned GitHub tag because npm can cache package URLs by URL; do not claim `npx
 @nasseralbusaidi/mizan` works from the npm registry until `npm view
-@nasseralbusaidi/mizan version` returns `0.1.36`.
-The latest tarball URL should always point at the newest GitHub release asset
-named `mizan-latest.tgz`.
-Do not use the stable latest tarball URL for `npm exec`; use it for install
-fallbacks only.
+@nasseralbusaidi/mizan version` returns `0.1.37`.
+Use a versioned release tarball URL for fallback install copy. Do not use
+`releases/latest/download/...` for install instructions; GitHub latest
+redirects can lag, and npm can reuse cached package URLs.
 
 ## Short post
 
@@ -76,7 +75,7 @@ projects, or personal quota spent on work.
 
 No account. No upload. Local-only dashboard.
 
-Release: https://github.com/NasserAlbusaidi/mizan/releases/tag/v0.1.36
+Release: https://github.com/NasserAlbusaidi/mizan/releases/tag/v0.1.37
 
 ## Longer post
 
@@ -94,7 +93,7 @@ It is a local-first CLI/dashboard for Claude Code usage:
 - Runs without runtime dependencies or uploads
 
 The first version is a GitHub release while npm publish waits on auth:
-https://github.com/NasserAlbusaidi/mizan/releases/tag/v0.1.36
+https://github.com/NasserAlbusaidi/mizan/releases/tag/v0.1.37
 
 If you run separate Claude configs or need a weekly usage note, try it. If
 anything is confusing, `mizan --feedback` prints the issue link and the redacted
@@ -122,7 +121,7 @@ It is intentionally local: no account, no upload, no hosted dashboard. The repor
 output redacts home paths for weekly notes or reimbursement logs.
 
 The first release is on GitHub while npm publishing waits on auth:
-https://github.com/NasserAlbusaidi/mizan/releases/tag/v0.1.36
+https://github.com/NasserAlbusaidi/mizan/releases/tag/v0.1.37
 ```
 
 Do not post to Show HN until the README, screenshot, release asset, and install
@@ -132,8 +131,9 @@ command have been rechecked that day.
 
 - Do not claim `npx @nasseralbusaidi/mizan` works before npm publish. The
   GitHub-tag `npm exec --package github:...` demo path is okay after rechecking
-  it that day. Do not use the stable latest tarball URL for `npm exec`; npm can
-  reuse an older cached tarball for the same URL.
+  it that day. Do not use a mutable latest tarball URL for install copy;
+  GitHub redirects can lag, and npm can reuse older cached tarballs for the
+  same URL.
 - Do not claim provider-billing accuracy; say estimates and link the pricing
   assumptions.
 - Do not imply transcript upload, team sync, or cloud history exists.
