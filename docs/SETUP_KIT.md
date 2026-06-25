@@ -34,7 +34,8 @@ mizan --doctor --fix
 
 `mizan --setup` creates `~/.mizan/config.json` if it is missing, prints the same
 diagnostics as `mizan --doctor`, and exits with code `2` when Mizan still cannot
-see at least one parseable Claude usage record.
+see at least one parseable Claude usage record. The diagnostics include whether
+the `claude` command is available on `PATH`.
 
 When setup looks usable, the diagnostics point you to the dashboard, the weekly
 saved-report command, and the scriptable JSON path.

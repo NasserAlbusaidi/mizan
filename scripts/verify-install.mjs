@@ -218,6 +218,7 @@ try {
     },
   });
   assertIncludes(emptyDoctorCheck.stdout, "Mizan doctor", "--doctor --check should print diagnostics before failing");
+  assertIncludes(emptyDoctorCheck.stdout, "Claude Code CLI:", "--doctor --check should report Claude CLI availability");
   assertIncludes(
     emptyDoctorCheck.stdout,
     'mizan --weekly --demo --output "$HOME/Documents/Mizan/mizan-demo-weekly.md"',
@@ -236,6 +237,7 @@ try {
   });
   assertIncludes(emptySetup.stdout, `Created ${emptySetupConfig}`, "--setup should create config before diagnostics");
   assertIncludes(emptySetup.stdout, "Mizan doctor", "--setup should print diagnostics");
+  assertIncludes(emptySetup.stdout, "Claude Code CLI:", "--setup should report Claude CLI availability");
   assertIncludes(
     emptySetup.stdout,
     'mizan --weekly --demo --output "$HOME/Documents/Mizan/mizan-demo-weekly.md"',

@@ -29,6 +29,7 @@ test("support bundle formats diagnostics without exposing absolute home paths", 
           usageRecords: 0,
         },
       ],
+      claudeCli: { command: "claude", found: true, version: "Claude Code 1.2.3", error: null },
       configFile: { path: "/Users/nasser/.mizan/config.json", exists: true, error: null },
       cacheFile: "/Users/nasser/.mizan/cache.json",
       workMarkers: ["/Users/nasser/Desktop/Work/", "/Clients/"],
@@ -48,6 +49,7 @@ test("support bundle formats diagnostics without exposing absolute home paths", 
   assert.match(markdown, /Node: v20\.0\.0/);
   assert.match(markdown, /Platform: darwin arm64/);
   assert.match(markdown, /personal\s+12 transcripts, 12 usage records\s+~\/\.claude\/projects/);
+  assert.match(markdown, /Claude Code CLI: found \(Claude Code 1\.2\.3\)/);
   assert.match(markdown, /Config: ~\/\.mizan\/config\.json/);
   assert.match(markdown, /Work markers: ~\/Desktop\/Work\/, \/Clients\//);
   assert.match(markdown, /No raw transcript lines are included/);

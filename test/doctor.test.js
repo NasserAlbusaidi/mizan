@@ -7,14 +7,34 @@ import { buildDoctorReport, formatDoctorReport } from "../src/doctor.js";
 
 test("doctor reports missing transcript folders with actionable guidance", () => {
   const home = fs.mkdtempSync(path.join(os.tmpdir(), "mizan-doctor-missing-"));
-  const report = buildDoctorReport({ home, env: {} });
+  const report = buildDoctorReport({ home, env: { PATH: "" } });
+  const text = formatDoctorReport(report);
   assert.equal(report.ok, false);
+  assert.equal(report.claudeCli.found, false);
   assert.equal(report.accounts[0].exists, false);
+  assert.match(text, /Claude Code CLI: not found/);
   assert.match(report.recommendations.join("\n"), /mizan --try/);
+  assert.match(report.recommendations.join("\n"), /Claude Code CLI was not found on PATH/);
   assert.match(report.recommendations.join("\n"), /Run Claude Code once/);
   assert.match(report.recommendations.join("\n"), /mizan --setup --fix/);
   assert.match(report.recommendations.join("\n"), /mizan --set-transcripts/);
   assert.doesNotMatch(report.recommendations.join("\n"), /MIZAN_PERSONAL_DIR/);
+});
+
+test("doctor reports Claude Code CLI version when available", () => {
+  const home = fs.mkdtempSync(path.join(os.tmpdir(), "mizan-doctor-claude-cli-"));
+  const binDir = path.join(home, "bin");
+  fs.mkdirSync(binDir, { recursive: true });
+  writeFakeClaude(binDir, "Claude Code 1.2.3");
+
+  const report = buildDoctorReport({ home, env: { PATH: binDir } });
+  const text = formatDoctorReport(report);
+
+  assert.equal(report.claudeCli.found, true);
+  assert.equal(report.claudeCli.command, "claude");
+  assert.equal(report.claudeCli.version, "Claude Code 1.2.3");
+  assert.match(text, /Claude Code CLI: found \(Claude Code 1\.2\.3\)/);
+  assert.doesNotMatch(report.recommendations.join("\n"), /not found on PATH/);
 });
 
 test("doctor counts transcripts from explicit personal and work dirs", () => {
@@ -179,4 +199,10 @@ function usageLine(id) {
 
 function escapeRegExp(value) {
   return String(value).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function writeFakeClaude(binDir, output) {
+  const command = path.join(binDir, "claude");
+  fs.writeFileSync(command, `#!/bin/sh\nprintf '%s\\n' ${JSON.stringify(output)}\n`);
+  fs.chmodSync(command, 0o755);
 }

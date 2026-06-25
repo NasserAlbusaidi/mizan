@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.63
+
+- Adds Claude Code CLI availability to setup diagnostics, so first-run users can
+  see when `claude` is not on `PATH` before chasing missing transcript folders.
+
 ## 0.1.62
 
 - Improves empty first-run setup guidance so users who have not generated Claude

@@ -33,38 +33,38 @@ client, employer, or reimbursement log.
 Try a terminal demo without installing anything globally:
 
 ```bash
-npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.62 -- mizan --try
+npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.63 -- mizan --try
 ```
 
 Save a sample weekly report without installing globally:
 
 ```bash
-npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.62 -- mizan --weekly --demo --output "$HOME/Documents/Mizan/mizan-demo-weekly.md"
+npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.63 -- mizan --weekly --demo --output "$HOME/Documents/Mizan/mizan-demo-weekly.md"
 ```
 
 Preview the dashboard without installing globally or reading local transcripts:
 
 ```bash
-npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.62 -- mizan --demo
+npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.63 -- mizan --demo
 ```
 
 If GitHub tag package install fails, use the no-install release tarball demo:
 
 ```bash
-npm exec --yes --package https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.62/nasseralbusaidi-mizan-0.1.62.tgz -- mizan --try
+npm exec --yes --package https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.63/nasseralbusaidi-mizan-0.1.63.tgz -- mizan --try
 ```
 
 Install the current GitHub release from its pinned tag:
 
 ```bash
-npm install -g github:NasserAlbusaidi/mizan#v0.1.62
+npm install -g github:NasserAlbusaidi/mizan#v0.1.63
 ```
 
 If your npm client cannot install from GitHub tags, use the versioned release
 tarball:
 
 ```bash
-npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.62/nasseralbusaidi-mizan-0.1.62.tgz
+npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.63/nasseralbusaidi-mizan-0.1.63.tgz
 ```
 
 Preview the dashboard without reading local transcripts:
@@ -109,7 +109,8 @@ npx @nasseralbusaidi/mizan
 
 `mizan --setup` creates `~/.mizan/config.json` when it is missing, prints the
 same diagnostics as `mizan --doctor`, and exits with code `2` when no parseable
-Claude usage records are found.
+Claude usage records are found. The diagnostics also show whether the `claude`
+command is available on `PATH`.
 When setup cannot find transcripts yet, it points to the sample report artifact:
 
 ```bash
@@ -218,9 +219,10 @@ mizan --weekly --output "$HOME/Documents/Mizan/mizan-weekly-$(date +%F).md"
 
 `mizan --doctor` is the first thing to run when the dashboard looks empty. It
 prints the transcript folders Mizan can see, how many `.jsonl` files and
-parseable usage records were found, the cache path, bind host, work markers, and
-the next setup step. If a saved or environment-provided transcript path is
-wrong, it checks the common Claude Code defaults and suggests a copyable
+parseable usage records were found, whether the `claude` command is available,
+the cache path, bind host, work markers, and the next setup step. If a saved or
+environment-provided transcript path is wrong, it checks the common Claude Code
+defaults and suggests a copyable
 `mizan --set-transcripts ...` command when it finds parseable usage there.
 For one-account users, one transcript folder is enough; the second account is
 optional unless you split personal and work Claude configs.

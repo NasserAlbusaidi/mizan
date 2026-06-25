@@ -23,7 +23,8 @@ mizan --doctor --fix
 \`\`\`
 
 \`mizan --setup\` creates local config if needed and exits with code \`2\` until
-Mizan can see at least one parseable Claude usage record.
+Mizan can see at least one parseable Claude usage record. The diagnostics also
+show whether the \`claude\` command is available on \`PATH\`.
 When setup looks usable, the diagnostics point you to the dashboard, the weekly
 saved-report command, and the scriptable JSON path.
 If the doctor discovers parseable usage in common default folders while saved

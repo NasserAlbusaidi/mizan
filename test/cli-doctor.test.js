@@ -150,6 +150,7 @@ test("--setup creates a config and exits nonzero when setup is still unusable", 
     encoding: "utf8",
     env: {
       ...process.env,
+      PATH: "",
       HOME: home,
       MIZAN_CONFIG: configPath,
     },
@@ -159,6 +160,8 @@ test("--setup creates a config and exits nonzero when setup is still unusable", 
   assert.match(result.stdout, new RegExp(`Created ${escapeRegExp(configPath)}`));
   assert.match(result.stdout, /^Mizan doctor/m);
   assert.match(result.stdout, /No transcript folders were found/);
+  assert.match(result.stdout, /Claude Code CLI: not found/);
+  assert.match(result.stdout, /Claude Code CLI was not found on PATH/);
   assert.match(result.stdout, /Run Claude Code once/);
   assert.match(result.stdout, /mizan --setup --fix/);
   assert.match(result.stdout, /mizan --weekly --demo --output "\$HOME\/Documents\/Mizan\/mizan-demo-weekly\.md"/);

@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
+import { spawnSync } from "node:child_process";
 import {
   CACHE_FILE,
   budgetIssues,
@@ -16,10 +17,12 @@ import { parseUsageLine } from "./parser.js";
 import { PRICING_METADATA } from "./pricing.js";
 
 const USAGE_SCAN_LIMIT = 50;
+const CLAUDE_CLI_TIMEOUT_MS = 1500;
 
 export function buildDoctorReport({ env = process.env, home = os.homedir() } = {}) {
   const user = loadUserConfig({ env, home });
   const accounts = resolveAccounts(env, home, user.config);
+  const claudeCli = inspectClaudeCli(env);
   const accountReports = Object.entries(accounts).map(([account, dir]) => {
     const exists = fs.existsSync(dir);
     const transcriptScan = exists ? inspectTranscripts(dir) : { transcripts: 0, sampled: 0, usageRecords: 0 };
@@ -49,6 +52,12 @@ export function buildDoctorReport({ env = process.env, home = os.homedir() } = {
   } else {
     recommendations.push(
       `Setup looks usable. Run \`mizan\` for the dashboard, \`${weeklyReportCommand()}\` to save a weekly report, or \`mizan --json --window 7\` for a scriptable snapshot.`,
+    );
+  }
+
+  if (!claudeCli.found && !hasAnyUsageRecords) {
+    recommendations.push(
+      "Claude Code CLI was not found on PATH. Install Claude Code or add `claude` to PATH, then run Claude Code once and recheck with `mizan --setup --fix`.",
     );
   }
 
@@ -101,6 +110,7 @@ export function buildDoctorReport({ env = process.env, home = os.homedir() } = {
   return {
     ok: hasAnyUsageRecords,
     accounts: accountReports,
+    claudeCli,
     suggestedTranscriptFolders,
     configFile: { path: user.path, exists: user.exists, error: user.error },
     cacheFile: CACHE_FILE,
@@ -124,6 +134,7 @@ export function formatDoctorReport(report) {
   lines.push("");
   lines.push(`Config: ${report.configFile.exists ? report.configFile.path : `${report.configFile.path} (not found)`}`);
   lines.push(`Cache: ${report.cacheFile}`);
+  lines.push(`Claude Code CLI: ${formatClaudeCli(report.claudeCli)}`);
   lines.push(`Host: ${report.host} (${report.localOnly ? "local-only" : "network-accessible"})`);
   lines.push(`Work markers: ${report.workMarkers.length ? report.workMarkers.join(", ") : "(none)"}`);
   lines.push(`Budgets: daily ${formatBudget(report.budgets.daily)}, monthly ${formatBudget(report.budgets.monthly)}`);
@@ -145,6 +156,39 @@ function formatTranscriptStatus(item) {
   const sampled =
     item.sampled && item.sampled < item.transcripts ? ` in newest ${item.sampled}` : "";
   return `${transcripts}, ${records}${sampled}`;
+}
+
+function inspectClaudeCli(env) {
+  const result = spawnSync("claude", ["--version"], {
+    encoding: "utf8",
+    env: { ...process.env, ...env },
+    timeout: CLAUDE_CLI_TIMEOUT_MS,
+  });
+  const output = `${result.stdout || ""}${result.stderr || ""}`.trim();
+  const firstLine = output.split(/\r?\n/).find(Boolean) || null;
+  if (result.error) {
+    return {
+      command: "claude",
+      found: false,
+      version: null,
+      error: result.error.code === "ENOENT" ? "not found" : result.error.message,
+    };
+  }
+  if (result.status !== 0) {
+    return {
+      command: "claude",
+      found: false,
+      version: firstLine,
+      error: firstLine || `exited ${result.status}`,
+    };
+  }
+  return { command: "claude", found: true, version: firstLine, error: null };
+}
+
+function formatClaudeCli(claudeCli) {
+  if (!claudeCli) return "not checked";
+  if (claudeCli.found) return claudeCli.version ? `found (${claudeCli.version})` : "found";
+  return "not found";
 }
 
 function inspectTranscripts(dir) {
