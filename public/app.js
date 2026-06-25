@@ -32,11 +32,11 @@
   const weeklyReviewCommand = () => 'mizan --weekly --output "$HOME/Documents/Mizan/mizan-weekly-$(date +%F).md"';
   const installAndSetupCommand = (config) =>
     config?.packageVersion
-      ? `npm install -g github:NasserAlbusaidi/mizan#v${config.packageVersion} && mizan --setup`
+      ? `npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/v${config.packageVersion}/nasseralbusaidi-mizan-${config.packageVersion}.tgz && mizan --setup`
       : "mizan --setup";
   const fallbackInstallAndSetupCommand = (config) =>
     config?.packageVersion
-      ? `npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/v${config.packageVersion}/nasseralbusaidi-mizan-${config.packageVersion}.tgz && mizan --setup`
+      ? `npm install -g github:NasserAlbusaidi/mizan#v${config.packageVersion} && mizan --setup`
       : "";
   const actionPriority = { danger: 0, warn: 1, neutral: 2, good: 3 };
   const PRICED_MODEL_FAMILIES = ["fable", "mythos", "opus", "sonnet", "haiku"];
@@ -205,8 +205,8 @@
       if (fallbackCommand) {
         actions.push({
           tone: "warn",
-          title: "Fallback install if GitHub tags fail",
-          body: "Use the versioned release tarball when npm cannot install directly from the GitHub tag.",
+          title: "Fallback GitHub tag install",
+          body: "Use the pinned GitHub tag if your npm client cannot install the versioned release tarball.",
           command: fallbackCommand,
         });
       }

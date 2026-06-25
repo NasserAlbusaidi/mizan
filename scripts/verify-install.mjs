@@ -73,23 +73,28 @@ try {
   assertIncludes(tryOutput, "Next:", "--try should print next steps");
   assertIncludes(
     tryOutput,
-    `Fallback no-install demo: npm exec --yes --package ${releaseTarballUrl} -- mizan --try`,
-    "--try should print the versioned no-install tarball demo fallback",
+    `Save a sample report now: npm exec --yes --package ${releaseTarballUrl} -- mizan --weekly --demo --output "$HOME/Documents/Mizan/mizan-demo-weekly.md"`,
+    "--try should point to the versioned no-global sample report artifact",
   );
   assertIncludes(
     tryOutput,
-    `Install Mizan: npm install -g github:NasserAlbusaidi/mizan#${releaseTag}`,
-    "--try should print the current tagged install command",
+    `Open the sample dashboard without install: npm exec --yes --package ${releaseTarballUrl} -- mizan --demo`,
+    "--try should point to the versioned no-global dashboard preview",
   );
   assertIncludes(
     tryOutput,
-    `Fallback install: npm install -g ${releaseTarballUrl}`,
-    "--try should print the current versioned tarball fallback",
+    `Fallback GitHub tag demo: npm exec --yes --package github:NasserAlbusaidi/mizan#${releaseTag} -- mizan --try`,
+    "--try should print the GitHub tag demo fallback",
   );
   assertIncludes(
     tryOutput,
-    `Save a sample report now: npm exec --yes --package github:NasserAlbusaidi/mizan#${releaseTag} -- mizan --weekly --demo --output "$HOME/Documents/Mizan/mizan-demo-weekly.md"`,
-    "--try should point to the no-global sample report artifact",
+    `Install Mizan: npm install -g ${releaseTarballUrl}`,
+    "--try should print the current versioned tarball install command",
+  );
+  assertIncludes(
+    tryOutput,
+    `Fallback GitHub tag install: npm install -g github:NasserAlbusaidi/mizan#${releaseTag}`,
+    "--try should print the current tagged install fallback",
   );
   assertIncludes(tryOutput, "mizan --setup", "--try should point to setup");
 
@@ -133,25 +138,25 @@ try {
   assertIncludes(shareGuide, "# Share Mizan", "--share should print Markdown");
   assertIncludes(
     shareGuide,
-    `npm exec --yes --package github:NasserAlbusaidi/mizan#${releaseTag} -- mizan --try`,
-    "--share should include the pinned no-global demo path",
-  );
-  assertIncludes(
-    shareGuide,
-    `npm exec --yes --package github:NasserAlbusaidi/mizan#${releaseTag} -- mizan --weekly --demo --output "$HOME/Documents/Mizan/mizan-demo-weekly.md"`,
-    "--share should include the pinned no-global sample report path",
-  );
-  assertIncludes(
-    shareGuide,
     `npm exec --yes --package ${releaseTarballUrl} -- mizan --try`,
-    "--share should include the no-install tarball demo fallback",
+    "--share should include the versioned no-global demo path",
   );
-  assertIncludes(shareGuide, `github:NasserAlbusaidi/mizan#${releaseTag}`, "--share should include the tagged install path");
   assertIncludes(
     shareGuide,
-    `releases/download/${releaseTag}/nasseralbusaidi-mizan-${packageJson.version}.tgz`,
-    "--share should include the versioned tarball path",
+    `npm exec --yes --package ${releaseTarballUrl} -- mizan --weekly --demo --output "$HOME/Documents/Mizan/mizan-demo-weekly.md"`,
+    "--share should include the versioned no-global sample report path",
   );
+  assertIncludes(
+    shareGuide,
+    `npm exec --yes --package github:NasserAlbusaidi/mizan#${releaseTag} -- mizan --try`,
+    "--share should include the GitHub tag demo fallback",
+  );
+  assertIncludes(
+    shareGuide,
+    `npm install -g ${releaseTarballUrl}`,
+    "--share should include the versioned tarball install path",
+  );
+  assertIncludes(shareGuide, `github:NasserAlbusaidi/mizan#${releaseTag}`, "--share should include the tagged install fallback");
   assertIncludes(shareGuide, "No account. No upload.", "--share should include the privacy claim");
 
   const pricing = JSON.parse(run(bin, ["--pricing", "--json"]).stdout);
@@ -176,8 +181,13 @@ try {
   assertIncludes(weekly, "## Next Steps", "--weekly --demo should include next steps inside the artifact");
   assertIncludes(
     weekly,
-    `Install Mizan: npm install -g github:NasserAlbusaidi/mizan#${releaseTag}`,
-    "--weekly --demo should include the current tagged install command",
+    `Install Mizan: npm install -g ${releaseTarballUrl}`,
+    "--weekly --demo should include the current versioned tarball install command",
+  );
+  assertIncludes(
+    weekly,
+    `Fallback GitHub tag install: npm install -g github:NasserAlbusaidi/mizan#${releaseTag}`,
+    "--weekly --demo should include the current tagged install fallback",
   );
   assertIncludes(
     weekly,

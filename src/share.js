@@ -1,12 +1,13 @@
 export function formatShareGuide({ packageVersion }) {
   const tag = `v${packageVersion}`;
   const releaseUrl = `https://github.com/NasserAlbusaidi/mizan/releases/tag/${tag}`;
-  const tryCommand = `npm exec --yes --package github:NasserAlbusaidi/mizan#${tag} -- mizan --try`;
-  const sampleReportCommand = `npm exec --yes --package github:NasserAlbusaidi/mizan#${tag} -- mizan --weekly --demo --output "$HOME/Documents/Mizan/mizan-demo-weekly.md"`;
-  const demoDashboardCommand = `npm exec --yes --package github:NasserAlbusaidi/mizan#${tag} -- mizan --demo`;
-  const fallbackTryCommand = `npm exec --yes --package https://github.com/NasserAlbusaidi/mizan/releases/download/${tag}/nasseralbusaidi-mizan-${packageVersion}.tgz -- mizan --try`;
-  const installCommand = `npm install -g github:NasserAlbusaidi/mizan#${tag}`;
-  const tarballCommand = `npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/${tag}/nasseralbusaidi-mizan-${packageVersion}.tgz`;
+  const tarballUrl = `https://github.com/NasserAlbusaidi/mizan/releases/download/${tag}/nasseralbusaidi-mizan-${packageVersion}.tgz`;
+  const tryCommand = `npm exec --yes --package ${tarballUrl} -- mizan --try`;
+  const sampleReportCommand = `npm exec --yes --package ${tarballUrl} -- mizan --weekly --demo --output "$HOME/Documents/Mizan/mizan-demo-weekly.md"`;
+  const demoDashboardCommand = `npm exec --yes --package ${tarballUrl} -- mizan --demo`;
+  const fallbackTryCommand = `npm exec --yes --package github:NasserAlbusaidi/mizan#${tag} -- mizan --try`;
+  const installCommand = `npm install -g ${tarballUrl}`;
+  const fallbackInstallCommand = `npm install -g github:NasserAlbusaidi/mizan#${tag}`;
 
   return `# Share Mizan
 
@@ -24,7 +25,7 @@ ${sampleReportCommand}
 ${demoDashboardCommand}
 \`\`\`
 
-No-install release tarball demo if GitHub tag package install fails:
+GitHub tag fallback:
 
 \`\`\`bash
 ${fallbackTryCommand}
@@ -36,10 +37,10 @@ ${fallbackTryCommand}
 ${installCommand}
 \`\`\`
 
-Versioned tarball fallback:
+GitHub tag fallback:
 
 \`\`\`bash
-${tarballCommand}
+${fallbackInstallCommand}
 \`\`\`
 
 ## Good Fit
@@ -76,7 +77,7 @@ It is a local-first CLI/dashboard for Claude Code usage:
 - Produces redacted weekly Markdown reports
 - Runs without runtime dependencies or uploads
 
-The first version is a GitHub release while npm publish waits on auth:
+The current version is a GitHub release while npm publish waits on auth:
 ${releaseUrl}
 
 If you run separate Claude configs or need a weekly usage note, try it. If
@@ -104,7 +105,7 @@ such as work quota spent on personal projects.
 It is intentionally local: no account, no upload, no hosted dashboard. The
 report output redacts home paths for weekly notes or reimbursement logs.
 
-The first release is on GitHub while npm publishing waits on auth:
+The current release is on GitHub while npm publishing waits on auth:
 ${releaseUrl}
 \`\`\`
 

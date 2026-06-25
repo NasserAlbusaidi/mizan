@@ -197,15 +197,15 @@ if (options.tryDemo) {
     const version = packageJson.version;
     const tag = `v${version}`;
     const tarballUrl = `https://github.com/NasserAlbusaidi/mizan/releases/download/${tag}/nasseralbusaidi-mizan-${version}.tgz`;
-    const sampleReportCommand = `npm exec --yes --package github:NasserAlbusaidi/mizan#${tag} -- mizan --weekly --demo --output "$HOME/Documents/Mizan/mizan-demo-weekly.md"`;
-    const demoDashboardCommand = `npm exec --yes --package github:NasserAlbusaidi/mizan#${tag} -- mizan --demo`;
-    const fallbackTryCommand = `npm exec --yes --package ${tarballUrl} -- mizan --try`;
+    const sampleReportCommand = `npm exec --yes --package ${tarballUrl} -- mizan --weekly --demo --output "$HOME/Documents/Mizan/mizan-demo-weekly.md"`;
+    const demoDashboardCommand = `npm exec --yes --package ${tarballUrl} -- mizan --demo`;
+    const fallbackTryCommand = `npm exec --yes --package github:NasserAlbusaidi/mizan#${tag} -- mizan --try`;
     const next = [
       sampleReportCommand,
       demoDashboardCommand,
       fallbackTryCommand,
-      `npm install -g github:NasserAlbusaidi/mizan#${tag}`,
       `npm install -g ${tarballUrl}`,
+      `npm install -g github:NasserAlbusaidi/mizan#${tag}`,
       'mizan --weekly --demo --output "$HOME/Documents/Mizan/mizan-demo-weekly.md"',
       "mizan --setup",
       "mizan --set-transcripts personal=/path work=/path",
@@ -376,9 +376,9 @@ ${formatSummary(summary, {
 Next:
   - Save a sample report now: ${next[0]}
   - Open the sample dashboard without install: ${next[1]}
-  - Fallback no-install demo: ${next[2]}
+  - Fallback GitHub tag demo: ${next[2]}
   - Install Mizan: ${next[3]}
-  - Fallback install: ${next[4]}
+  - Fallback GitHub tag install: ${next[4]}
   - Save a sample report after install: ${next[5]}
   - Check real transcript setup: ${next[6]}
   - Save custom folders: ${next[7]}`;

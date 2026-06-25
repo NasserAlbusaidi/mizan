@@ -251,10 +251,10 @@ function demoNextSteps(isDemo, packageVersion) {
   if (!isDemo) return [];
   const steps = ["Demo data only; no local transcripts were read."];
   if (packageVersion) {
-    steps.push(`Install Mizan: npm install -g github:NasserAlbusaidi/mizan#v${packageVersion}`);
     steps.push(
-      `Fallback install if GitHub tags fail: npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/v${packageVersion}/nasseralbusaidi-mizan-${packageVersion}.tgz`,
+      `Install Mizan: npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/v${packageVersion}/nasseralbusaidi-mizan-${packageVersion}.tgz`,
     );
+    steps.push(`Fallback GitHub tag install: npm install -g github:NasserAlbusaidi/mizan#v${packageVersion}`);
   } else {
     steps.push("Install Mizan from the current GitHub release.");
   }

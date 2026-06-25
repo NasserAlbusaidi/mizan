@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.65
+
+- Promotes the versioned release tarball as the primary pre-npm install and
+  no-install demo path across `mizan --try`, `mizan --share`, demo reports,
+  README, launch kit, and demo dashboard actions.
+
 ## 0.1.64
 
 - Distinguishes a missing `claude` command from a present-but-failing Claude

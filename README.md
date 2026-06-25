@@ -33,38 +33,37 @@ client, employer, or reimbursement log.
 Try a terminal demo without installing anything globally:
 
 ```bash
-npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.64 -- mizan --try
+npm exec --yes --package https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.65/nasseralbusaidi-mizan-0.1.65.tgz -- mizan --try
 ```
 
 Save a sample weekly report without installing globally:
 
 ```bash
-npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.64 -- mizan --weekly --demo --output "$HOME/Documents/Mizan/mizan-demo-weekly.md"
+npm exec --yes --package https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.65/nasseralbusaidi-mizan-0.1.65.tgz -- mizan --weekly --demo --output "$HOME/Documents/Mizan/mizan-demo-weekly.md"
 ```
 
 Preview the dashboard without installing globally or reading local transcripts:
 
 ```bash
-npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.64 -- mizan --demo
+npm exec --yes --package https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.65/nasseralbusaidi-mizan-0.1.65.tgz -- mizan --demo
 ```
 
-If GitHub tag package install fails, use the no-install release tarball demo:
+GitHub tag fallback:
 
 ```bash
-npm exec --yes --package https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.64/nasseralbusaidi-mizan-0.1.64.tgz -- mizan --try
+npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.65 -- mizan --try
 ```
 
-Install the current GitHub release from its pinned tag:
+Install the current GitHub release from its versioned tarball:
 
 ```bash
-npm install -g github:NasserAlbusaidi/mizan#v0.1.64
+npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.65/nasseralbusaidi-mizan-0.1.65.tgz
 ```
 
-If your npm client cannot install from GitHub tags, use the versioned release
-tarball:
+GitHub tag fallback:
 
 ```bash
-npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.64/nasseralbusaidi-mizan-0.1.64.tgz
+npm install -g github:NasserAlbusaidi/mizan#v0.1.65
 ```
 
 Preview the dashboard without reading local transcripts:

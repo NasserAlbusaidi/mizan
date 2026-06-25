@@ -51,7 +51,7 @@ test("dashboard demo mode gives no-install users an install and setup command", 
   assert.match(app, /installAndSetupCommand/);
   assert.match(app, /fallbackInstallAndSetupCommand/);
   assert.match(app, /Install Mizan, then check real setup/);
-  assert.match(app, /Fallback install if GitHub tags fail/);
+  assert.match(app, /Fallback GitHub tag install/);
   assert.match(app, /github:NasserAlbusaidi\/mizan#v/);
   assert.match(app, /releases\/download\/v/);
   assert.match(app, /&& mizan --setup/);
