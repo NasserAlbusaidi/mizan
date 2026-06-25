@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.42
+
+- Adds a no-global sample report command to `mizan --try`, `mizan --share`,
+  README, and the launch kit so a new user can save the redacted demo artifact
+  directly from the pinned GitHub tag before installing Mizan globally.
+
 ## 0.1.41
 
 - Points failed `mizan --setup` / `mizan --doctor --check` onboarding at the

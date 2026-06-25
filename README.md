@@ -33,20 +33,26 @@ client, employer, or reimbursement log.
 Try a terminal demo without installing anything globally:
 
 ```bash
-npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.41 -- mizan --try
+npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.42 -- mizan --try
+```
+
+Save a sample weekly report without installing globally:
+
+```bash
+npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.42 -- mizan --weekly --demo --output "$HOME/Documents/Mizan/mizan-demo-weekly.md"
 ```
 
 Install the current GitHub release from its pinned tag:
 
 ```bash
-npm install -g github:NasserAlbusaidi/mizan#v0.1.41
+npm install -g github:NasserAlbusaidi/mizan#v0.1.42
 ```
 
 If your npm client cannot install from GitHub tags, use the versioned release
 tarball:
 
 ```bash
-npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.41/nasseralbusaidi-mizan-0.1.41.tgz
+npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.42/nasseralbusaidi-mizan-0.1.42.tgz
 ```
 
 Preview the dashboard without reading local transcripts:
@@ -161,11 +167,11 @@ mizan --version
 mizan --help
 ```
 
-`mizan --try` prints a demo spend summary, current GitHub install command,
-versioned tarball fallback, sample report command, and next setup commands
-without opening a browser or reading local transcripts. It is the fastest way to
-decide whether Mizan is worth installing. The demo intentionally includes leaks,
-so a `[FAIL]` status means the detector is being shown.
+`mizan --try` prints a demo spend summary, a no-global sample report command,
+current GitHub install command, versioned tarball fallback, and next setup
+commands without opening a browser or reading local transcripts. It is the
+fastest way to decide whether Mizan is worth installing. The demo intentionally
+includes leaks, so a `[FAIL]` status means the detector is being shown.
 
 `mizan --weekly` prints the same redacted 7-day Markdown report as
 `mizan --report --window 7`. It is the shortest command for a recurring review
