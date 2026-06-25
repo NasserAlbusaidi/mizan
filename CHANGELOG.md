@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.47
+
+- Changes the dashboard's copyable weekly review action from a terminal-only
+  `mizan --weekly` command to the saved-report command that writes the weekly
+  Markdown report into `~/Documents/Mizan`.
+
 ## 0.1.46
 
 - Adds a guarded manual **Publish npm** GitHub Actions workflow, so npm

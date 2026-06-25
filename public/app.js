@@ -29,7 +29,7 @@
   const pct = (x) => (x * 100).toFixed(1) + "%";
   const list = (items, fallback = "none") => (items && items.length ? items.join(", ") : fallback);
   const budgetLabel = (value) => (value == null ? "unset" : money(value));
-  const weeklyReviewCommand = () => "mizan --weekly";
+  const weeklyReviewCommand = () => 'mizan --weekly --output "$HOME/Documents/Mizan/mizan-weekly-$(date +%F).md"';
   const PRICED_MODEL_FAMILIES = ["fable", "mythos", "opus", "sonnet", "haiku"];
   const setCopyState = (label) => {
     const btn = document.getElementById("copy-report");
@@ -243,7 +243,7 @@
     actions.push({
       tone: "neutral",
       title: "Weekly review command",
-      body: "Print a redacted Markdown report for notes, reimbursements, or a Friday spend review.",
+      body: "Save a redacted Markdown report for notes, reimbursements, or a Friday spend review.",
       command: weeklyReviewCommand(),
     });
     actions.push({

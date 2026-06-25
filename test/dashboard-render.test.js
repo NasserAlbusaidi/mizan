@@ -122,7 +122,7 @@ test("dashboard action queue warns when spend jumps versus the previous window",
   assert.match(actions, /Spend jumped vs previous window/);
   assert.match(actions, /\+\$45\.50 \(\+56\.9%\) versus the previous 7d/);
   assert.match(actions, /mizan --report --window 7/);
-  assert.match(actions, /mizan --weekly/);
+  assert.match(actions, /mizan --weekly --output &quot;\$HOME\/Documents\/Mizan\/mizan-weekly-\$\(date \+%F\)\.md&quot;/);
 });
 
 test("dashboard leak action explains marker fixes", async () => {
