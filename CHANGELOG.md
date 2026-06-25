@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.51
+
+- Adds a no-global demo dashboard command to `mizan --try`, README Quick Start,
+  the launch kit, and generated share copy so new users can see the browser
+  experience before installing Mizan globally.
+
 ## 0.1.50
 
 - Adds copy buttons for the dashboard's missing transcript-folder guidance and

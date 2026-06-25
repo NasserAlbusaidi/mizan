@@ -35,10 +35,10 @@ test("--try prints a demo summary and next steps without starting the dashboard"
   assert.match(result.stdout, /Leaks: 2/);
   assert.match(result.stdout, /Reviewable wrong-account spend: \$37\.98/);
   assert.match(result.stdout, /Next:/);
-  assert.match(result.stdout, /Install Mizan: npm install -g github:NasserAlbusaidi\/mizan#v0\.1\.50/);
-  assert.match(result.stdout, /Fallback install: npm install -g https:\/\/github\.com\/NasserAlbusaidi\/mizan\/releases\/download\/v0\.1\.50\/nasseralbusaidi-mizan-0\.1\.50\.tgz/);
-  assert.match(result.stdout, /npm exec --yes --package github:NasserAlbusaidi\/mizan#v0\.1\.50 -- mizan --weekly --demo --output "\$HOME\/Documents\/Mizan\/mizan-demo-weekly\.md"/);
-  assert.match(result.stdout, /mizan --demo/);
+  assert.match(result.stdout, /Install Mizan: npm install -g github:NasserAlbusaidi\/mizan#v0\.1\.51/);
+  assert.match(result.stdout, /Fallback install: npm install -g https:\/\/github\.com\/NasserAlbusaidi\/mizan\/releases\/download\/v0\.1\.51\/nasseralbusaidi-mizan-0\.1\.51\.tgz/);
+  assert.match(result.stdout, /npm exec --yes --package github:NasserAlbusaidi\/mizan#v0\.1\.51 -- mizan --weekly --demo --output "\$HOME\/Documents\/Mizan\/mizan-demo-weekly\.md"/);
+  assert.match(result.stdout, /Open the sample dashboard without install: npm exec --yes --package github:NasserAlbusaidi\/mizan#v0\.1\.51 -- mizan --demo/);
   assert.match(result.stdout, /mizan --weekly --demo --output "\$HOME\/Documents\/Mizan\/mizan-demo-weekly\.md"/);
   assert.match(result.stdout, /mizan --setup/);
   assert.match(result.stdout, /mizan --set-transcripts personal=\/path work=\/path/);

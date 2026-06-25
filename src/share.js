@@ -3,6 +3,7 @@ export function formatShareGuide({ packageVersion }) {
   const releaseUrl = `https://github.com/NasserAlbusaidi/mizan/releases/tag/${tag}`;
   const tryCommand = `npm exec --yes --package github:NasserAlbusaidi/mizan#${tag} -- mizan --try`;
   const sampleReportCommand = `npm exec --yes --package github:NasserAlbusaidi/mizan#${tag} -- mizan --weekly --demo --output "$HOME/Documents/Mizan/mizan-demo-weekly.md"`;
+  const demoDashboardCommand = `npm exec --yes --package github:NasserAlbusaidi/mizan#${tag} -- mizan --demo`;
   const installCommand = `npm install -g github:NasserAlbusaidi/mizan#${tag}`;
   const tarballCommand = `npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/${tag}/nasseralbusaidi-mizan-${packageVersion}.tgz`;
 
@@ -19,6 +20,7 @@ No account. No upload. Local-only by default.
 \`\`\`bash
 ${tryCommand}
 ${sampleReportCommand}
+${demoDashboardCommand}
 \`\`\`
 
 ## Install
