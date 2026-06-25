@@ -21,17 +21,17 @@ test("--share prints safe public launch copy without reading transcripts", () =>
   assert.equal(result.status, 0, result.stderr);
   assert.match(result.stdout, /^# Share Mizan/m);
   assert.match(result.stdout, /private Claude Code spend dashboard/i);
-  assert.match(result.stdout, /npm exec --yes --package github:NasserAlbusaidi\/mizan#v0\.1\.56 -- mizan --try/);
-  assert.match(result.stdout, /npm exec --yes --package github:NasserAlbusaidi\/mizan#v0\.1\.56 -- mizan --weekly --demo --output "\$HOME\/Documents\/Mizan\/mizan-demo-weekly\.md"/);
-  assert.match(result.stdout, /npm exec --yes --package github:NasserAlbusaidi\/mizan#v0\.1\.56 -- mizan --demo/);
+  assert.match(result.stdout, /npm exec --yes --package github:NasserAlbusaidi\/mizan#v0\.1\.57 -- mizan --try/);
+  assert.match(result.stdout, /npm exec --yes --package github:NasserAlbusaidi\/mizan#v0\.1\.57 -- mizan --weekly --demo --output "\$HOME\/Documents\/Mizan\/mizan-demo-weekly\.md"/);
+  assert.match(result.stdout, /npm exec --yes --package github:NasserAlbusaidi\/mizan#v0\.1\.57 -- mizan --demo/);
   assert.match(
     result.stdout,
-    /npm exec --yes --package https:\/\/github\.com\/NasserAlbusaidi\/mizan\/releases\/download\/v0\.1\.56\/nasseralbusaidi-mizan-0\.1\.56\.tgz -- mizan --try/,
+    /npm exec --yes --package https:\/\/github\.com\/NasserAlbusaidi\/mizan\/releases\/download\/v0\.1\.57\/nasseralbusaidi-mizan-0\.1\.57\.tgz -- mizan --try/,
   );
-  assert.match(result.stdout, /npm install -g github:NasserAlbusaidi\/mizan#v0\.1\.56/);
+  assert.match(result.stdout, /npm install -g github:NasserAlbusaidi\/mizan#v0\.1\.57/);
   assert.match(
     result.stdout,
-    /npm install -g https:\/\/github\.com\/NasserAlbusaidi\/mizan\/releases\/download\/v0\.1\.56\/nasseralbusaidi-mizan-0\.1\.56\.tgz/,
+    /npm install -g https:\/\/github\.com\/NasserAlbusaidi\/mizan\/releases\/download\/v0\.1\.57\/nasseralbusaidi-mizan-0\.1\.57\.tgz/,
   );
   assert.match(result.stdout, /No account\. No upload\. Local-only by default\./);
   assert.match(result.stdout, /^## Short Post/m);
@@ -60,12 +60,12 @@ test("--share --output writes the public launch copy", () => {
   assert.match(result.stdout, new RegExp(`Wrote share guide to ${escapeRegExp(output)}`));
   const markdown = fs.readFileSync(output, "utf8");
   assert.match(markdown, /^# Share Mizan/m);
-  assert.match(markdown, /github:NasserAlbusaidi\/mizan#v0\.1\.56 -- mizan --try/);
-  assert.match(markdown, /github:NasserAlbusaidi\/mizan#v0\.1\.56 -- mizan --weekly --demo --output "\$HOME\/Documents\/Mizan\/mizan-demo-weekly\.md"/);
-  assert.match(markdown, /github:NasserAlbusaidi\/mizan#v0\.1\.56 -- mizan --demo/);
-  assert.match(markdown, /releases\/download\/v0\.1\.56\/nasseralbusaidi-mizan-0\.1\.56\.tgz -- mizan --try/);
-  assert.match(markdown, /github:NasserAlbusaidi\/mizan#v0\.1\.56/);
-  assert.match(markdown, /releases\/download\/v0\.1\.56\/nasseralbusaidi-mizan-0\.1\.56\.tgz/);
+  assert.match(markdown, /github:NasserAlbusaidi\/mizan#v0\.1\.57 -- mizan --try/);
+  assert.match(markdown, /github:NasserAlbusaidi\/mizan#v0\.1\.57 -- mizan --weekly --demo --output "\$HOME\/Documents\/Mizan\/mizan-demo-weekly\.md"/);
+  assert.match(markdown, /github:NasserAlbusaidi\/mizan#v0\.1\.57 -- mizan --demo/);
+  assert.match(markdown, /releases\/download\/v0\.1\.57\/nasseralbusaidi-mizan-0\.1\.57\.tgz -- mizan --try/);
+  assert.match(markdown, /github:NasserAlbusaidi\/mizan#v0\.1\.57/);
+  assert.match(markdown, /releases\/download\/v0\.1\.57\/nasseralbusaidi-mizan-0\.1\.57\.tgz/);
   assert.match(markdown, /^## Short Post/m);
   assert.match(markdown, /^## Show HN Draft/m);
   assert.doesNotMatch(markdown, new RegExp(escapeRegExp(home)));

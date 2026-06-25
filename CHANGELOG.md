@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.57
+
+- Adds the versioned release-tarball fallback to demo Markdown report next
+  steps, so saved sample reports give users the same install path as the
+  dashboard when GitHub tag installs fail.
+
 ## 0.1.56
 
 - Adds a copyable versioned release-tarball install-and-setup fallback to the

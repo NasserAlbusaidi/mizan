@@ -44,7 +44,11 @@ test("--weekly prints a redacted seven-day report", () => {
   assert.match(result.stdout, /Window: last 7d/);
   assert.match(result.stdout, /Reviewable wrong-account spend: \$37\.98/);
   assert.match(result.stdout, /## Next Steps/);
-  assert.match(result.stdout, /npm install -g github:NasserAlbusaidi\/mizan#v0\.1\.56/);
+  assert.match(result.stdout, /npm install -g github:NasserAlbusaidi\/mizan#v0\.1\.57/);
+  assert.match(
+    result.stdout,
+    /npm install -g https:\/\/github\.com\/NasserAlbusaidi\/mizan\/releases\/download\/v0\.1\.57\/nasseralbusaidi-mizan-0\.1\.57\.tgz/,
+  );
   assert.match(result.stdout, /mizan --setup/);
   assert.doesNotMatch(result.stdout, /^Mizan summary/m);
 });
@@ -63,6 +67,10 @@ test("--weekly --output writes the seven-day report", () => {
   assert.match(report, /Window: last 7d/);
   assert.match(report, /Reviewable wrong-account spend: \$37\.98/);
   assert.match(report, /## Next Steps/);
+  assert.match(
+    report,
+    /npm install -g https:\/\/github\.com\/NasserAlbusaidi\/mizan\/releases\/download\/v0\.1\.57\/nasseralbusaidi-mizan-0\.1\.57\.tgz/,
+  );
   assert.match(report, /mizan --weekly --output "\$HOME\/Documents\/Mizan\/mizan-weekly-\$\(date \+%F\)\.md"/);
 });
 
