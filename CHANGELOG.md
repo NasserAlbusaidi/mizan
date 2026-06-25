@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.1.40
+
+- Adds a "Save a sample report" next step to `mizan --try`, pointing to
+  `mizan --weekly --demo --output "$HOME/Documents/Mizan/mizan-demo-weekly.md"`
+  so users can test the redacted report artifact before connecting real
+  transcripts.
+
 ## 0.1.39
 
 - Makes successful `mizan --setup` / `mizan --doctor` output point directly to a

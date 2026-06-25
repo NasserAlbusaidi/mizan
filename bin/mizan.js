@@ -193,6 +193,7 @@ if (options.tryDemo) {
       `npm install -g github:NasserAlbusaidi/mizan#${tag}`,
       `npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/${tag}/nasseralbusaidi-mizan-${version}.tgz`,
       "mizan --demo",
+      'mizan --weekly --demo --output "$HOME/Documents/Mizan/mizan-demo-weekly.md"',
       "mizan --setup",
       "mizan --set-transcripts personal=/path work=/path",
     ];
@@ -333,8 +334,9 @@ Next:
   - Install Mizan: ${next[0]}
   - Fallback install: ${next[1]}
   - Open the sample dashboard: ${next[2]}
-  - Check real transcript setup: ${next[3]}
-  - Save custom folders: ${next[4]}`;
+  - Save a sample report: ${next[3]}
+  - Check real transcript setup: ${next[4]}
+  - Save custom folders: ${next[5]}`;
 }
 
 function printWithNextSteps(message, steps) {
