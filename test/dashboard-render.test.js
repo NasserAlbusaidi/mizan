@@ -64,6 +64,8 @@ function dashboardData(overrides = {}) {
     config: {
       demo: true,
       localOnly: true,
+      packageName: "@nasseralbusaidi/mizan",
+      packageVersion: "0.1.55",
       host: "127.0.0.1",
       accounts: [],
       workMarkers: [],
@@ -125,13 +127,15 @@ test("dashboard action queue warns when spend jumps versus the previous window",
   assert.match(actions, /mizan --weekly --output &quot;\$HOME\/Documents\/Mizan\/mizan-weekly-\$\(date \+%F\)\.md&quot;/);
 });
 
-test("dashboard keeps demo mode visible with a copyable setup command", async () => {
+test("dashboard keeps demo mode visible with a copyable install-and-setup command", async () => {
   const elements = await renderDashboard();
 
   const actions = elements.get("actions").innerHTML;
   assert.match(actions, /Demo mode is active/);
   assert.match(actions, /No local transcripts are being read/);
-  assert.match(actions, /data-copy-command="mizan --setup"/);
+  assert.match(actions, /Install Mizan, then check real setup/);
+  assert.match(actions, /npm install -g github:NasserAlbusaidi\/mizan#v0\.1\.55 &amp;&amp; mizan --setup/);
+  assert.match(actions, /data-copy-command="npm install -g github:NasserAlbusaidi\/mizan#v0\.1\.55 &amp;&amp; mizan --setup"/);
 });
 
 test("dashboard action queue keeps budget warnings above softer habit actions", async () => {

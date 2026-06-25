@@ -30,6 +30,10 @@
   const list = (items, fallback = "none") => (items && items.length ? items.join(", ") : fallback);
   const budgetLabel = (value) => (value == null ? "unset" : money(value));
   const weeklyReviewCommand = () => 'mizan --weekly --output "$HOME/Documents/Mizan/mizan-weekly-$(date +%F).md"';
+  const installAndSetupCommand = (config) =>
+    config?.packageVersion
+      ? `npm install -g github:NasserAlbusaidi/mizan#v${config.packageVersion} && mizan --setup`
+      : "mizan --setup";
   const actionPriority = { danger: 0, warn: 1, neutral: 2, good: 3 };
   const PRICED_MODEL_FAMILIES = ["fable", "mythos", "opus", "sonnet", "haiku"];
   const setCopyState = (label) => {
@@ -186,11 +190,12 @@
     const unpricedModels = findUnpricedModels(d.models || []);
 
     if (d.config?.demo) {
+      const command = installAndSetupCommand(d.config);
       actions.push({
         tone: "warn",
         title: "Demo mode is active",
-        body: "No local transcripts are being read. When you are ready to check real setup, run mizan --setup.",
-        command: "mizan --setup",
+        body: "No local transcripts are being read. Install Mizan, then check real setup with the command below.",
+        command,
       });
     }
 

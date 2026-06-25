@@ -45,6 +45,15 @@ test("dashboard empty state gives users a copyable demo command first", () => {
   assert.match(app, /command: "mizan --set-transcripts personal=\/path work=\/path"/);
 });
 
+test("dashboard demo mode gives no-install users an install and setup command", () => {
+  const app = fs.readFileSync("public/app.js", "utf8");
+
+  assert.match(app, /installAndSetupCommand/);
+  assert.match(app, /Install Mizan, then check real setup/);
+  assert.match(app, /github:NasserAlbusaidi\/mizan#v/);
+  assert.match(app, /&& mizan --setup/);
+});
+
 test("dashboard exposes a one-day spend window tab", () => {
   const index = fs.readFileSync("public/index.html", "utf8");
 

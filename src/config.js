@@ -5,6 +5,10 @@
 import os from "node:os";
 import path from "node:path";
 import fs from "node:fs";
+import { createRequire } from "node:module";
+
+const require = createRequire(import.meta.url);
+const packageJson = require("../package.json");
 
 const HOME = os.homedir();
 const DEFAULT_PORT_VALUE = 7777;
@@ -205,6 +209,8 @@ export function getRuntimeConfig({ demo = false, host = DEFAULT_HOST, port = DEF
   return {
     demo,
     localOnly: isLocalHost(host),
+    packageName: packageJson.name,
+    packageVersion: packageJson.version,
     node: process.version,
     host,
     port,
@@ -223,6 +229,8 @@ function getDemoRuntimeConfig({ host = DEFAULT_HOST, port = DEFAULT_PORT } = {})
   return {
     demo: true,
     localOnly: isLocalHost(host),
+    packageName: packageJson.name,
+    packageVersion: packageJson.version,
     node: process.version,
     host,
     port,

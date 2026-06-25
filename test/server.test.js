@@ -1,6 +1,9 @@
 import { test, before, after } from "node:test";
 import assert from "node:assert/strict";
+import fs from "node:fs";
 import { createServer } from "../src/server.js";
+
+const pkg = JSON.parse(fs.readFileSync("package.json", "utf8"));
 
 // Spin the real server on an ephemeral port so we exercise the actual
 // request handler (not a mock). Port 0 => OS picks a free port.
@@ -38,6 +41,8 @@ test("status endpoint exposes local runtime configuration without scanning trans
   const body = await res.json();
   assert.equal(body.ok, true);
   assert.equal(body.config.localOnly, true);
+  assert.equal(body.config.packageName, pkg.name);
+  assert.equal(body.config.packageVersion, pkg.version);
   assert.ok(Array.isArray(body.config.accounts));
   assert.ok(Array.isArray(body.config.workMarkers));
 });
@@ -51,6 +56,8 @@ test("demo server returns sample rollups without reading local transcript state"
     assert.equal(res.status, 200);
     const body = await res.json();
     assert.equal(body.config.demo, true);
+    assert.equal(body.config.packageName, pkg.name);
+    assert.equal(body.config.packageVersion, pkg.version);
     assert.deepEqual(body.config.budgets, { daily: null, monthly: null });
     assert.equal(body.config.configFile.path, "demo://config");
     assert.equal(body.config.cacheFile, "demo://cache");

@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.55
+
+- Adds package metadata to runtime config and changes the demo dashboard's first
+  action to a copyable tagged install-and-setup command, so no-install preview
+  users are not stranded with a bare `mizan --setup` command.
+
 ## 0.1.54
 
 - Adds a versioned release-tarball `npm exec` fallback to `mizan --try`,
