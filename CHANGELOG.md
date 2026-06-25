@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.52
+
+- Keeps the dashboard's demo-mode warning visible in the capped action queue and
+  makes it copyable with `mizan --setup`, so users previewing sample data get a
+  clear next step into their real local setup.
+
 ## 0.1.51
 
 - Adds a no-global demo dashboard command to `mizan --try`, README Quick Start,

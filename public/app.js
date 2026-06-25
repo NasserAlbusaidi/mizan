@@ -187,9 +187,10 @@
 
     if (d.config?.demo) {
       actions.push({
-        tone: "good",
+        tone: "warn",
         title: "Demo mode is active",
-        body: "Run mizan without --demo to scan real transcripts, or use mizan --set-transcripts personal=/path work=/path for custom locations.",
+        body: "No local transcripts are being read. When you are ready to check real setup, run mizan --setup.",
+        command: "mizan --setup",
       });
     }
 

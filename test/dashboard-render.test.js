@@ -125,6 +125,15 @@ test("dashboard action queue warns when spend jumps versus the previous window",
   assert.match(actions, /mizan --weekly --output &quot;\$HOME\/Documents\/Mizan\/mizan-weekly-\$\(date \+%F\)\.md&quot;/);
 });
 
+test("dashboard keeps demo mode visible with a copyable setup command", async () => {
+  const elements = await renderDashboard();
+
+  const actions = elements.get("actions").innerHTML;
+  assert.match(actions, /Demo mode is active/);
+  assert.match(actions, /No local transcripts are being read/);
+  assert.match(actions, /data-copy-command="mizan --setup"/);
+});
+
 test("dashboard action queue keeps budget warnings above softer habit actions", async () => {
   const elements = await renderDashboard({
     config: {
