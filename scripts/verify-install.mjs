@@ -26,7 +26,9 @@ try {
   const dashboardHtml = fs.readFileSync(path.join(installedRoot, "public", "index.html"), "utf8");
   const dashboardApp = fs.readFileSync(path.join(installedRoot, "public", "app.js"), "utf8");
   assertIncludes(dashboardHtml, "panel-project-changes", "packaged dashboard should include project movers panel");
+  assertIncludes(dashboardHtml, "download-csv", "packaged dashboard should include CSV download control");
   assertIncludes(dashboardApp, "renderProjectChanges", "packaged dashboard should render project movers");
+  assertIncludes(dashboardApp, "downloadCsv", "packaged dashboard should wire CSV download");
 
   const bin = path.join(tempRoot, "node_modules", ".bin", process.platform === "win32" ? "mizan.cmd" : "mizan");
 
@@ -47,7 +49,7 @@ try {
   assertIncludes(help, "mizan --share", "--help should document public sharing copy");
 
   const version = run(bin, ["--version"]).stdout.trim();
-  if (version !== "@nasseralbusaidi/mizan 0.1.34") {
+  if (version !== "@nasseralbusaidi/mizan 0.1.35") {
     throw new Error(`installed --version printed ${JSON.stringify(version)}`);
   }
 
@@ -79,10 +81,10 @@ try {
   assertIncludes(shareGuide, "# Share Mizan", "--share should print Markdown");
   assertIncludes(
     shareGuide,
-    "npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.34 -- mizan --try",
+    "npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.35 -- mizan --try",
     "--share should include the pinned no-global demo path",
   );
-  assertIncludes(shareGuide, "github:NasserAlbusaidi/mizan#v0.1.34", "--share should include the tagged install path");
+  assertIncludes(shareGuide, "github:NasserAlbusaidi/mizan#v0.1.35", "--share should include the tagged install path");
   assertIncludes(
     shareGuide,
     "releases/latest/download/mizan-latest.tgz",

@@ -26,6 +26,7 @@ const ids = [
   "window-tabs",
   "copy-report",
   "download-report",
+  "download-csv",
   "updated",
 ];
 
@@ -158,6 +159,24 @@ test("dashboard report download saves the redacted Markdown report", async () =>
   assert.equal(elements.get("download-report").textContent, "Saved");
 });
 
+test("dashboard CSV download saves the redacted spreadsheet export", async () => {
+  const downloads = [];
+  const elements = await renderDashboard(
+    {},
+    {
+      reportCsv: "row_type,project,account,spend_usd\nproject,~/mizan,personal,12.50\n",
+      downloads,
+    },
+  );
+
+  await elements.get("download-csv").listeners.click();
+
+  assert.equal(downloads.length, 1);
+  assert.match(downloads[0].href, /^blob:mizan-report$/);
+  assert.match(downloads[0].download, /^mizan-report-30-\d{4}-\d{2}-\d{2}\.csv$/);
+  assert.equal(elements.get("download-csv").textContent, "Saved CSV");
+});
+
 async function renderDashboard(overrides = {}, options = {}) {
   const elements = new Map(ids.map((id) => [id, makeElement(id)]));
   const downloads = options.downloads || [];
@@ -176,7 +195,10 @@ async function renderDashboard(overrides = {}, options = {}) {
       String(url).startsWith("/api/report")
         ? {
             ok: true,
-            text: async () => options.reportMarkdown || "# Mizan Spend Report\n",
+            text: async () =>
+              String(url).includes("format=csv")
+                ? options.reportCsv || "row_type,project,account,spend_usd\n"
+                : options.reportMarkdown || "# Mizan Spend Report\n",
           }
         : {
             ok: true,

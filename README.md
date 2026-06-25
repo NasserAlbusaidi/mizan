@@ -33,13 +33,13 @@ client, employer, or reimbursement log.
 Try a terminal demo without installing anything globally:
 
 ```bash
-npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.34 -- mizan --try
+npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.35 -- mizan --try
 ```
 
 Install the current GitHub release from its pinned tag:
 
 ```bash
-npm install -g github:NasserAlbusaidi/mizan#v0.1.34
+npm install -g github:NasserAlbusaidi/mizan#v0.1.35
 ```
 
 If your npm client cannot install from GitHub tags, use the stable latest
@@ -272,8 +272,9 @@ the [Launch Kit](docs/LAUNCH_KIT.md).
   redacted recurring notes.
 - **Copy or save report** — one-click redacted Markdown from the dashboard for
   notes, status updates, or reimbursements.
-- **CSV export** — redacted account, project, and costliest-session rows for
-  spreadsheets and internal/client usage logs.
+- **Save CSV / CSV export** — redacted account, project, and costliest-session
+  rows from the dashboard or CLI for spreadsheets and internal/client usage
+  logs.
 - **Headline KPIs** — spend in window, previous-window trend, today, 7-day burn
   rate, projected monthly spend, request count.
 - **Project changes** — top projects that drove spend up versus the previous

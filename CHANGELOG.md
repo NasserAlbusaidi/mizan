@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.35
+
+- Adds dashboard `Save CSV` and `/api/report?format=csv`, making the redacted
+  spreadsheet export available from the browser as well as the CLI.
+
 ## 0.1.34
 
 - Adds `mizan --csv`, a redacted account/project/session CSV export for

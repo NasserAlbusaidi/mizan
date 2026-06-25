@@ -22,7 +22,10 @@ test("dashboard exposes a copyable weekly review command", () => {
   assert.match(app, /Make Mizan a weekly habit/);
   assert.match(index, /id="copy-report"/);
   assert.match(index, /id="download-report"/);
+  assert.match(index, /id="download-csv"/);
   assert.match(app, /downloadReport/);
+  assert.match(app, /downloadCsv/);
+  assert.match(app, /format=csv/);
   assert.match(app, /URL\.createObjectURL/);
   assert.match(app, /mizan-report-/);
   assert.match(app, /data-copy-command/);

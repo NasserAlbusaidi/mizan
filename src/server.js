@@ -6,7 +6,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { compute } from "./engine.js";
 import { getRuntimeConfig } from "./config.js";
-import { buildReport, formatMarkdownReport } from "./report.js";
+import { buildReport, formatCsvReport, formatMarkdownReport } from "./report.js";
 
 const PUBLIC_DIR = path.join(path.dirname(fileURLToPath(import.meta.url)), "..", "public");
 
@@ -32,6 +32,14 @@ function sendJson(res, status, obj) {
 function sendMarkdown(res, status, text) {
   res.writeHead(status, {
     "content-type": "text/markdown; charset=utf-8",
+    "cache-control": "no-store",
+  });
+  res.end(text);
+}
+
+function sendCsv(res, status, text) {
+  res.writeHead(status, {
+    "content-type": "text/csv; charset=utf-8",
     "cache-control": "no-store",
   });
   res.end(text);
@@ -79,6 +87,7 @@ export function createServer({ demo = false, host, port } = {}) {
       try {
         const report = buildReport(compute(WINDOWS[w], { demo, host, port }));
         if (url.searchParams.get("format") === "json") return sendJson(res, 200, report);
+        if (url.searchParams.get("format") === "csv") return sendCsv(res, 200, formatCsvReport(report));
         return sendMarkdown(res, 200, formatMarkdownReport(report));
       } catch (err) {
         return sendJson(res, 500, { error: String(err && err.stack ? err.stack : err) });

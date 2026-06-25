@@ -84,7 +84,7 @@ test("demo server accepts the one-day dashboard window", async () => {
   }
 });
 
-test("report endpoint returns redacted Markdown and JSON for the current window", async () => {
+test("report endpoint returns redacted Markdown, JSON, and CSV for the current window", async () => {
   const demoServer = createServer({ demo: true });
   await new Promise((resolve) => demoServer.listen(0, "127.0.0.1", resolve));
   try {
@@ -106,6 +106,16 @@ test("report endpoint returns redacted Markdown and JSON for the current window"
     assert.equal(json.status, "fail");
     assert.equal(json.privacy.redacted, true);
     assert.ok(json.topLeaks.length > 0);
+
+    const csvRes = await fetch(demoBase + "/api/report?window=7&format=csv");
+    assert.equal(csvRes.status, 200);
+    assert.equal(csvRes.headers.get("content-type"), "text/csv; charset=utf-8");
+    assert.equal(csvRes.headers.get("cache-control"), "no-store");
+    const csv = await csvRes.text();
+    assert.match(csv, /^row_type,project,account,spend_usd/m);
+    assert.match(csv, /^project,~\/Desktop\/Personal\/Rihla,personal/m);
+    assert.match(csv, /^session,~\/Desktop\/Personal\/starfield,work/m);
+    assert.doesNotMatch(csv, new RegExp(process.env.HOME.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
   } finally {
     await new Promise((resolve) => demoServer.close(resolve));
   }

@@ -51,6 +51,16 @@
       }, 2200);
     }
   };
+  const setCsvState = (label) => {
+    const btn = document.getElementById("download-csv");
+    btn.textContent = label;
+    window.clearTimeout(btn._mzResetTimer);
+    if (label !== "Save CSV") {
+      btn._mzResetTimer = window.setTimeout(() => {
+        btn.textContent = "Save CSV";
+      }, 2200);
+    }
+  };
 
   // model -> color
   const MODEL_COLORS = [
@@ -572,6 +582,7 @@
   document.getElementById("refresh").addEventListener("click", load);
   document.getElementById("copy-report").addEventListener("click", copyReport);
   document.getElementById("download-report").addEventListener("click", downloadReport);
+  document.getElementById("download-csv").addEventListener("click", downloadCsv);
   document.getElementById("actions").addEventListener("click", copyActionCommand);
   window.addEventListener("resize", () => {
     if (window._mz) {
@@ -614,7 +625,7 @@
       url = URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
-      link.download = reportFilename();
+      link.download = reportFilename("md");
       document.body.appendChild(link);
       link.click();
       link.remove();
@@ -622,6 +633,33 @@
     } catch (err) {
       console.error(err);
       setDownloadState("Save failed");
+    } finally {
+      if (url) window.setTimeout(() => URL.revokeObjectURL(url), 0);
+      btn.disabled = false;
+    }
+  }
+
+  async function downloadCsv() {
+    const btn = document.getElementById("download-csv");
+    btn.disabled = true;
+    setCsvState("Saving CSV...");
+    let url = null;
+    try {
+      const res = await fetch(`/api/report?window=${state.window}&format=csv`);
+      const csv = await res.text();
+      if (!res.ok) throw new Error(csv || res.statusText);
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+      url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = reportFilename("csv");
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      setCsvState("Saved CSV");
+    } catch (err) {
+      console.error(err);
+      setCsvState("CSV failed");
     } finally {
       if (url) window.setTimeout(() => URL.revokeObjectURL(url), 0);
       btn.disabled = false;
@@ -669,8 +707,8 @@
     }
   }
 
-  function reportFilename() {
+  function reportFilename(ext = "md") {
     const day = new Date().toISOString().slice(0, 10);
-    return `mizan-report-${state.window}-${day}.md`;
+    return `mizan-report-${state.window}-${day}.${ext}`;
   }
 })();
