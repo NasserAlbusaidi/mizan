@@ -32,6 +32,7 @@ node bin/mizan.js --weekly --demo
 node bin/mizan.js --report --demo --window 7
 node bin/mizan.js --report --check --demo --window 7
 node bin/mizan.js --check --demo --window 7
+MIZAN_INSTALL_VERSION="$(node -p 'require("./package.json").version')" MIZAN_INSTALL_DRY_RUN=1 bash scripts/install.sh
 tmpdir="$(mktemp -d)" && mkdir -p "$tmpdir/personal/project-a" "$tmpdir/work/project-b" && node -e 'const fs=require("fs"); const line=JSON.stringify({timestamp:"2026-06-24T12:00:00.000Z",cwd:"/tmp/project",sessionId:"release-check",requestId:"release-check",message:{id:"release-check",model:"claude-sonnet-4-6",usage:{input_tokens:100,output_tokens:20}}}); for (const file of process.argv.slice(1)) fs.writeFileSync(file,line+"\n");' "$tmpdir/personal/project-a/usage.jsonl" "$tmpdir/work/project-b/usage.jsonl" && MIZAN_CONFIG="$tmpdir/config.json" MIZAN_PERSONAL_DIR="$tmpdir/personal" MIZAN_WORK_DIR="$tmpdir/work" node bin/mizan.js --setup
 tmpdir="$(mktemp -d)" && MIZAN_CONFIG="$tmpdir/config.json" node bin/mizan.js --set-budget daily=20 monthly=250
 tmpdir="$(mktemp -d)" && MIZAN_CONFIG="$tmpdir/config.json" node bin/mizan.js --add-work-marker /Clients/
@@ -54,6 +55,8 @@ Expected:
 - `--report --demo` should print Markdown with redacted local paths.
 - `--report --check --demo` should print Markdown and exit with code `2`.
 - `--check --demo` should exit with code `2` because demo data includes leaks.
+- `scripts/install.sh` dry-run should print the versioned release tarball
+  install command without changing global npm packages.
 - `--setup` should create the selected config file, print diagnostics, and exit
   `0` when the selected transcript folders contain parseable usage records.
 - `--set-budget` should create/update only the selected config file.
@@ -72,6 +75,7 @@ Check that the package contains only intended files:
 - `bin/`
 - `docs/`
 - `public/`
+- `scripts/install.sh`
 - `src/`
 - `CHANGELOG.md`
 - `CONTRIBUTING.md`

@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.67
+
+- Adds `scripts/install.sh`, a small GitHub-release installer that resolves the
+  versioned tarball install command, supports pinned dry runs, and ships in the
+  npm package for users who want a shorter path before npm publishing is live.
+
 ## 0.1.66
 
 - Adds `mizan --update-check`, an explicit latest-release check that prints the
