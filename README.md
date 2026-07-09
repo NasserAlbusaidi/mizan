@@ -29,27 +29,79 @@ Node >= 20.
 
 ## Quick Start
 
-Try it without installing (terminal demo, reads no local data):
+Try a terminal demo without installing anything globally (reads no local data):
 
 ```bash
-npm exec --yes --package https://github.com/NasserAlbusaidi/mizan/releases/latest/download/mizan-latest.tgz -- mizan --try
+npm exec --yes --package https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.68/nasseralbusaidi-mizan-0.1.68.tgz -- mizan --try
 ```
 
-Install the latest release, check setup, start the dashboard:
+Save a sample weekly report the same way:
 
 ```bash
-npm install -g https://github.com/NasserAlbusaidi/mizan/releases/latest/download/mizan-latest.tgz
+npm exec --yes --package https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.68/nasseralbusaidi-mizan-0.1.68.tgz -- mizan --weekly --demo --output "$HOME/Documents/Mizan/mizan-demo-weekly.md"
+```
+
+Preview the dashboard without installing globally:
+
+```bash
+npm exec --yes --package https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.68/nasseralbusaidi-mizan-0.1.68.tgz -- mizan --demo
+```
+
+GitHub tag fallback:
+
+```bash
+npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.68 -- mizan --try
+```
+
+Install the current release — installer script, versioned tarball, or GitHub
+tag fallback, in that order of preference:
+
+```bash
+MIZAN_INSTALL_VERSION=0.1.68 bash -c "$(curl -fsSL https://raw.githubusercontent.com/NasserAlbusaidi/mizan/v0.1.68/scripts/install.sh)"
+npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.68/nasseralbusaidi-mizan-0.1.68.tgz
+npm install -g github:NasserAlbusaidi/mizan#v0.1.68
+```
+
+Preview the dashboard without reading local transcripts with `mizan --demo`.
+Then check whether Mizan can see your transcripts, and start the dashboard:
+
+```bash
 mizan --setup
 mizan
 ```
 
+`mizan --setup` creates `~/.mizan/config.json` when it is missing, prints the
+same diagnostics as `mizan --doctor` — including whether the `claude` command is available
+on `PATH` — and exits with code `2` when no parseable Claude usage records are
+found. When setup is usable, it prints the copyable saved-report command:
+
+```bash
+mizan --weekly --output "$HOME/Documents/Mizan/mizan-weekly-$(date +%F).md"
+```
+
+First time using Claude Code on this machine? Run Claude Code once, then
+recheck with `mizan --setup --fix`. When a saved transcript path is wrong but
+usage exists in the common defaults, the doctor suggests a copyable
+`mizan --set-transcripts ...` command. For one-account users, one transcript
+folder is enough; the second account is optional.
+
 First run parses every transcript; after that it is incremental. Mizan starts
 `http://127.0.0.1:7777`, opens the browser, and refreshes every 15 seconds. If
-the dashboard starts empty, preview with `mizan --demo` or save folders with
-`mizan --set-transcripts personal=/path work=/path`.
+the dashboard starts with zero records, preview with `mizan --demo` or save
+folders with `mizan --set-transcripts personal=/path work=/path`.
 
-Pinned versions, installer script, tag fallbacks, and source installs:
-[docs/INSTALL.md](docs/INSTALL.md).
+From the public GitHub source:
+
+```bash
+git clone https://github.com/NasserAlbusaidi/mizan.git
+cd mizan
+node bin/mizan.js --setup
+npm start
+```
+
+The npm package is prepared but not published yet; `npx @nasseralbusaidi/mizan`
+becomes available after npm publish. Pinned versions, installer details, and
+more fallbacks: [docs/INSTALL.md](docs/INSTALL.md).
 
 ## CLI
 
@@ -86,6 +138,29 @@ Full per-flag reference with examples: [docs/CLI.md](docs/CLI.md).
 | `--no-open` | Do not open the browser automatically |
 | `--no-warm` | Skip the startup cache warm-up |
 | `--version` / `--help` | Print version / usage |
+
+Daily and weekly checks:
+
+```bash
+mizan --today            # shortcut for: mizan --summary --window 1
+mizan --weekly           # redacted 7-day Markdown report with previous-window comparison
+mizan --csv --window 7   # CSV rows for the same window as the weekly report
+```
+
+`mizan --try` prints a demo spend summary, a no-global sample report command,
+the current GitHub install command, a versioned tarball fallback, and next
+setup commands. Demo reports include next steps for installing Mizan, checking
+real transcript setup, and saving the first real weekly report.
+
+`mizan --csv` writes redacted rows for reimbursement spreadsheets and usage
+logs; the dashboard's Save CSV / CSV export control emits the same rows.
+Reports omit home paths while keeping the project/account breakdown, account
+split, and costliest sessions.
+
+`mizan --setup-kit` prints a copyable weekly review setup kit — first-run
+checks, report commands, cron, launchd, privacy reminders; a saved copy ships
+as the [Setup Kit](docs/SETUP_KIT.md). For demo flow and public post copy, see
+the [Launch Kit](docs/LAUNCH_KIT.md).
 
 ## What it shows
 
@@ -136,8 +211,8 @@ Mizan uses Anthropic Claude API public per-MTok pricing checked on 2026-06-25:
 | Haiku 3.5 | $0.80 | $4 |
 
 Cache tiers are derived: read = 0.1× input, write-5m = 1.25×, write-1h = 2×.
-Mizan uses standard global Claude API rates without fast mode, batch, partner
-cloud, or data residency multipliers. Unmatched non-synthetic models are priced
+Mizan uses standard global Claude API rates and does not apply fast mode, batch,
+partner cloud, or data residency multipliers. Unmatched non-synthetic models are priced
 at `$0` and surfaced as unpriced warnings so totals are not trusted silently.
 
 > Note: Opus pricing changed by 3× across generations ($15/$75 for 4.0/4.1,
@@ -182,6 +257,9 @@ Prefer the persistent commands over env vars: `mizan --set-transcripts`,
 ## Support
 
 Run `mizan --feedback` first — it prints the issue link, the redacted
-support-bundle command, and a privacy checklist. See [SUPPORT.md](SUPPORT.md),
-[SECURITY.md](SECURITY.md), and [CONTRIBUTING.md](CONTRIBUTING.md) before
-opening public issues or patches.
+support-bundle command, and a privacy checklist. For setup problems,
+`mizan --support-bundle` prints a redacted support bundle without raw
+transcripts or full home paths. `mizan --share` prints safe public launch copy,
+and `mizan --update-check` compares your installed copy to the latest GitHub release.
+See [SUPPORT.md](SUPPORT.md), [SECURITY.md](SECURITY.md), and
+[CONTRIBUTING.md](CONTRIBUTING.md) before opening public issues or patches.
