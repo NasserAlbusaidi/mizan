@@ -1,7 +1,8 @@
 # Mizan Launch Kit
 
 Use this when you want to put Mizan in front of real Claude Code users without
-overstating what is ready.
+overstating what is ready. Everything below assumes the npm package is live —
+verify with `npm view @nasseralbusaidi/mizan version` before posting anything.
 
 ## 60-second demo
 
@@ -20,137 +21,104 @@ Show these beats:
 1. `mizan --setup` finds parseable Claude usage records or gives the next setup
    command.
 2. `mizan --demo` opens the local dashboard without reading real transcripts.
-3. The KPI row shows whether spend and requests are up or down versus the
+3. The KPI row shows whether usage and requests are up or down versus the
    previous matching window.
-4. Project changes shows which projects moved spend versus the prior window.
+4. The red cross-account leak banner with the wrong-account quota value — this
+   is the money shot; linger on it.
 5. The action queue shows the few things worth checking first.
-6. Leak detection explains wrong-account usage in plain language.
-7. `mizan --weekly --demo` shows the recurring report command in one short line.
-8. Copy report and Save report turn the dashboard into a redacted weekly note.
-9. `mizan --share` prints safe launch copy and current install commands.
+6. `mizan --weekly --demo` shows the recurring report command in one short line.
+7. Copy report and Save report turn the dashboard into a redacted weekly note.
 
 Keep the recording tight. The promise is not "analytics platform"; it is
-"private Claude Code spend and leak visibility in one local command."
+"private Claude Code usage and leak visibility in one local command."
 
 ## Install copy
 
-No-global-install terminal demo:
+Primary (post-publish):
 
 ```bash
-npm exec --yes --package https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.68/nasseralbusaidi-mizan-0.1.68.tgz -- mizan --try
-npm exec --yes --package https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.68/nasseralbusaidi-mizan-0.1.68.tgz -- mizan --weekly --demo --output "$HOME/Documents/Mizan/mizan-demo-weekly.md"
-npm exec --yes --package https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.68/nasseralbusaidi-mizan-0.1.68.tgz -- mizan --demo
+npx @nasseralbusaidi/mizan --demo      # preview, no transcripts read
+npx @nasseralbusaidi/mizan --try       # terminal demo summary
+npm install -g @nasseralbusaidi/mizan  # keep it
 ```
 
-GitHub tag fallback:
+Fallback for registry-averse users: the versioned GitHub release tarball
+commands in the README's collapsed install section. Never use a mutable
+latest tarball URL — GitHub redirects lag and npm caches package URLs.
 
-```bash
-npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.68 -- mizan --try
-```
-
-Current versioned release tarball install before npm publish:
-
-```bash
-MIZAN_INSTALL_VERSION=0.1.68 bash -c "$(curl -fsSL https://raw.githubusercontent.com/NasserAlbusaidi/mizan/v0.1.68/scripts/install.sh)"
-npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.68/nasseralbusaidi-mizan-0.1.68.tgz
-mizan --demo
-mizan --setup
-mizan --update-check
-mizan
-mizan --feedback
-```
-
-GitHub tag fallback:
-
-```bash
-npm install -g github:NasserAlbusaidi/mizan#v0.1.68
-```
-
-The npm package is prepared but not published yet. The no-global demo uses the
-versioned release tarball because it is reproducible and avoids GitHub tag
-package resolution; do not claim `npx
-@nasseralbusaidi/mizan` works from the npm registry until `npm view
-@nasseralbusaidi/mizan version` returns `0.1.68`.
-Do not use a mutable latest tarball URL for install copy. GitHub latest
-redirects can lag, and npm can reuse cached package URLs.
-The `scripts/install.sh` helper just resolves a GitHub release tarball and runs
-the same `npm install -g` command; keep the direct tarball command beside it for
-users who want to inspect or pin the install path manually.
-After install, `mizan --update-check` can confirm the installed version against
-the latest GitHub release and print the next versioned tarball install command.
-
-## Short post
-
-I built Mizan: a local Claude Code spend dashboard that reads the JSONL
-transcripts already on your machine.
-
-It shows daily spend, burn rate, model mix, cache efficiency, top projects, and
-the expensive mistake I actually needed to catch: work quota spent on personal
-projects, or personal quota spent on work.
-
-No account. No upload. Local-only dashboard.
-
-Release: https://github.com/NasserAlbusaidi/mizan/releases/tag/v0.1.68
-
-## Longer post
-
-I kept losing track of Claude Code spend across personal and work configs, so I
-built Mizan.
-
-It is a local-first CLI/dashboard for Claude Code usage:
-
-- Reads local JSONL transcripts
-- Estimates spend with visible pricing assumptions
-- Separates personal vs work usage
-- Shows which projects drove spend changes
-- Flags wrong-account leaks
-- Produces redacted weekly Markdown reports
-- Runs without runtime dependencies or uploads
-
-The first version is a GitHub release while npm publish waits on auth:
-https://github.com/NasserAlbusaidi/mizan/releases/tag/v0.1.68
-
-If you run separate Claude configs or need a weekly usage note, try it. If
-anything is confusing, `mizan --feedback` prints the issue link and the redacted
-support-bundle command. `mizan --update-check` confirms whether you are on the
-latest GitHub release.
-
-## Show HN draft
+## Show HN
 
 Title:
 
 ```text
-Show HN: Mizan - local Claude Code spend and account-leak dashboard
+Show HN: Mizan – local Claude Code/Codex usage dashboard that catches wrong-account leaks
+```
+
+First comment:
+
+```text
+I split Claude Code across two configs — personal and work. One night a
+forgotten terminal pane ran a personal project on my work account for 14 hours
+and quietly burned ~$978 (valued at API rates) of the wrong account's quota. I
+only noticed days later. Existing tools (ccusage is the good one) tell you what
+you used, but not which account paid for which project — so this class of
+mistake is invisible until it isn't.
+
+Mizan reads the JSONL transcripts already on your machine and serves a local
+dashboard on 127.0.0.1: daily usage by account, burn rate, projected monthly,
+and the part I built it for — cross-account leak detection that flags sessions
+billed to the wrong account and totals the reviewable quota value in dollars.
+Dollar figures are API-list-price valuations and labeled as such (on a Max/Pro
+subscription that's quota value, not cash). Zero runtime dependencies, nothing
+leaves the machine, no account. It also avoids a common mispricing: Opus 4.5+
+is $5/$25, not the $15/$75 older scripts hardcode. Try it without installing:
+npx @nasseralbusaidi/mizan --demo. Feedback on the leak heuristic especially
+welcome.
+```
+
+Do not post until the README, screenshot, npm listing, and install command have
+been rechecked that day.
+
+## r/ClaudeAI
+
+Title:
+
+```text
+I built a local dashboard that catches when Claude Code bills the wrong account (a forgotten pane once burned ~$978 of my work quota)
 ```
 
 Body:
 
 ```text
-I built Mizan after realizing I had no quick local answer to "what did Claude
-Code cost this week?" across personal and work configs.
+If you run Claude Code across two configs — personal and work — you've
+probably had a session bill the wrong account. A forgotten pane once ran a
+personal project on my work quota for 14 hours and burned ~$978 (valued at API
+rates) before I noticed.
 
-It reads Claude Code JSONL transcripts already on your machine and shows spend,
-burn rate, model mix, top projects, cache efficiency, and wrong-account leaks
-such as work quota spent on personal projects.
+So I made Mizan: a local dashboard that reads the transcripts already on your
+machine and shows daily usage by account, burn rate, projected monthly, top
+projects — and flags cross-account leaks with the wrong-account quota value in
+dollars, clearly labeled as an API-rate estimate. It also handles Codex, and
+prices Opus 4.5+ correctly at $5/$25 (a lot of scripts still hardcode the old
+$15/$75).
 
-It is intentionally local: no account, no upload, no hosted dashboard. The report
-output redacts home paths for weekly notes or reimbursement logs.
+Zero dependencies, binds to localhost, nothing uploaded. Try it without
+installing:
+npx @nasseralbusaidi/mizan --demo
 
-The first release is on GitHub while npm publishing waits on auth:
-https://github.com/NasserAlbusaidi/mizan/releases/tag/v0.1.68
+GitHub: github.com/NasserAlbusaidi/mizan — feedback welcome, especially on the
+leak detection.
 ```
-
-Do not post to Show HN until the README, screenshot, release asset, and install
-command have been rechecked that day.
 
 ## What not to claim
 
-- Do not claim `npx @nasseralbusaidi/mizan` works before npm publish. The
-  versioned release tarball demo path is okay after rechecking it that day. Do
-  not use a mutable latest tarball URL for install copy; GitHub redirects can
-  lag, and npm can reuse older cached tarballs for the same URL.
+- Do not claim `npx @nasseralbusaidi/mizan` works before
+  `npm view @nasseralbusaidi/mizan version` returns the released version.
+- Do not present dollar figures as cash bills. They are API-list-price
+  valuations; on subscription plans they are quota value. Say "valued at API
+  rates" whenever a dollar amount appears in launch copy.
 - Do not claim provider-billing accuracy; say estimates and link the pricing
   assumptions.
 - Do not imply transcript upload, team sync, or cloud history exists.
-- Do not show raw transcript lines, private project names, client names, or full
-  home paths in launch media.
+- Do not show raw transcript lines, private project names, client names, or
+  full home paths in launch media.

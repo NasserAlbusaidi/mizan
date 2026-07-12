@@ -31,7 +31,7 @@ test("repo has public support and security docs", () => {
 test("package metadata points npm users to the public GitHub repo", () => {
   const pkg = JSON.parse(fs.readFileSync("package.json", "utf8"));
 
-  assert.equal(pkg.version, "0.1.68");
+  assert.match(pkg.version, /^\d+\.\d+\.\d+$/);
   assert.deepEqual(pkg.repository, {
     type: "git",
     url: "git+https://github.com/NasserAlbusaidi/mizan.git",
@@ -93,9 +93,9 @@ test("README pricing section names current source date and estimate limits", () 
 
 test("README shows public trust signals before install", () => {
   const readme = fs.readFileSync("README.md", "utf8");
-  const quickStartIndex = readme.indexOf("## Quick Start");
+  const quickStartIndex = readme.indexOf("## Try it in 30 seconds");
 
-  assert.ok(quickStartIndex > 0, "README should include Quick Start");
+  assert.ok(quickStartIndex > 0, "README should include the quick start section");
   assert.ok(readme.indexOf("actions/workflows/ci.yml/badge.svg") < quickStartIndex);
   assert.ok(readme.indexOf("releases/latest") < quickStartIndex);
   assert.ok(readme.indexOf("license-MIT") < quickStartIndex);
@@ -106,48 +106,19 @@ test("README shows public trust signals before install", () => {
 
 test("README quick start previews value before setup", () => {
   const readme = fs.readFileSync("README.md", "utf8");
-  const quickStart = section(readme, "## Quick Start", "## CLI");
+  const quickStart = section(readme, "## Try it in 30 seconds", "## First run");
 
-  assert.match(
-    quickStart,
-    /npm exec --yes --package https:\/\/github\.com\/NasserAlbusaidi\/mizan\/releases\/download\/v0\.1\.68\/nasseralbusaidi-mizan-0\.1\.68\.tgz -- mizan --try/,
-  );
-  assert.match(
-    quickStart,
-    /npm exec --yes --package https:\/\/github\.com\/NasserAlbusaidi\/mizan\/releases\/download\/v0\.1\.68\/nasseralbusaidi-mizan-0\.1\.68\.tgz -- mizan --weekly --demo --output "\$HOME\/Documents\/Mizan\/mizan-demo-weekly\.md"/,
-  );
-  assert.match(
-    quickStart,
-    /npm exec --yes --package https:\/\/github\.com\/NasserAlbusaidi\/mizan\/releases\/download\/v0\.1\.68\/nasseralbusaidi-mizan-0\.1\.68\.tgz -- mizan --demo/,
-  );
-  assert.match(
-    quickStart,
-    /npm exec --yes --package github:NasserAlbusaidi\/mizan#v0\.1\.68 -- mizan --try/,
-  );
+  assert.match(quickStart, /npx @nasseralbusaidi\/mizan --demo/);
+  assert.match(quickStart, /npx @nasseralbusaidi\/mizan --try/);
+  assert.match(quickStart, /npx @nasseralbusaidi\/mizan --setup/);
   assert.ok(
-    quickStart.indexOf(
-      "npm exec --yes --package https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.68/nasseralbusaidi-mizan-0.1.68.tgz -- mizan --try",
-    ) <
-      quickStart.indexOf("npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.68 -- mizan --try"),
+    quickStart.indexOf("npx @nasseralbusaidi/mizan --demo") <
+      quickStart.indexOf("npx @nasseralbusaidi/mizan --setup"),
+    "demo preview should come before setup",
   );
-  assert.ok(
-    quickStart.indexOf("npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.68") <
-      quickStart.indexOf("npm install -g github:NasserAlbusaidi/mizan#v0.1.68"),
-  );
-  assert.ok(
-    quickStart.indexOf(
-      "npm exec --yes --package https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.68/nasseralbusaidi-mizan-0.1.68.tgz -- mizan --try",
-    ) < quickStart.indexOf("npm install -g github:NasserAlbusaidi/mizan#v0.1.68"),
-  );
-  assert.ok(
-    quickStart.indexOf("npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.68 -- mizan --demo") <
-      quickStart.indexOf("mizan --setup"),
-  );
-  assert.match(quickStart, /Try a terminal demo without installing anything globally/);
-  assert.match(quickStart, /Preview the dashboard without installing globally/);
-  assert.match(quickStart, /GitHub tag fallback/i);
-  assert.match(quickStart, /Preview the dashboard without reading local transcripts/);
-  assert.match(quickStart, /Then check whether Mizan can see your transcripts/);
+  assert.match(quickStart, /no transcripts read/);
+  assert.match(quickStart, /npm install -g @nasseralbusaidi\/mizan/);
+  assert.match(quickStart, /mizan --set-transcripts personal=\/path work=\/path codex=\/path/);
 });
 
 test("README documents the guided setup command", () => {
@@ -160,15 +131,15 @@ test("README documents the guided setup command", () => {
   assert.match(readme, /saved-report command/);
   assert.match(readme, /mizan --weekly --output "\$HOME\/Documents\/Mizan\/mizan-weekly-\$\(date \+%F\)\.md"/);
   assert.match(readme, /mizan --weekly --demo --output "\$HOME\/Documents\/Mizan\/mizan-demo-weekly\.md"/);
-  assert.match(readme, /parseable Claude usage records/);
+  assert.match(readme, /parseable Claude usage or Codex token records/);
   assert.match(readme, /`claude` command is available/);
-  assert.match(readme, /Run Claude Code once/);
+  assert.match(readme, /Run Claude Code or Codex once/);
   assert.match(readme, /mizan --setup --fix/);
   assert.match(readme, /suggests a copyable/);
   assert.match(readme, /zero records/);
   assert.match(readme, /one-account users/i);
   assert.match(readme, /second account is\s+optional/i);
-  assert.match(readme, /mizan --set-transcripts personal=\/path work=\/path/);
+  assert.match(readme, /mizan --set-transcripts personal=\/path work=\/path codex=\/path/);
 });
 
 test("README documents running from the public GitHub source", () => {
@@ -180,27 +151,18 @@ test("README documents running from the public GitHub source", () => {
   assert.match(readme, /npm start/);
 });
 
-test("README documents versioned release installs before npm publish", () => {
+test("README keeps registry-free install fallbacks", () => {
   const readme = fs.readFileSync("README.md", "utf8");
-  const quickStart = section(readme, "## Quick Start", "## CLI");
+  const quickStart = section(readme, "## Try it in 30 seconds", "## First run");
 
   assert.match(quickStart, /scripts\/install\.sh/);
-  assert.match(quickStart, /MIZAN_INSTALL_VERSION=0\.1\.68/);
+  assert.match(quickStart, /MIZAN_INSTALL_VERSION=\d+\.\d+\.\d+/);
   assert.match(
     quickStart,
-    /npm install -g https:\/\/github\.com\/NasserAlbusaidi\/mizan\/releases\/download\/v0\.1\.68\/nasseralbusaidi-mizan-0\.1\.68\.tgz/,
+    /npm install -g https:\/\/github\.com\/NasserAlbusaidi\/mizan\/releases\/download\/v\d+\.\d+\.\d+\/nasseralbusaidi-mizan-\d+\.\d+\.\d+\.tgz/,
   );
-  assert.match(quickStart, /npm install -g github:NasserAlbusaidi\/mizan#v0\.1\.68/);
-  assert.ok(
-    quickStart.indexOf(
-      "npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.68/nasseralbusaidi-mizan-0.1.68.tgz",
-    ) <
-      quickStart.indexOf(
-        "npm install -g github:NasserAlbusaidi/mizan#v0.1.68",
-      ),
-  );
-  assert.match(readme, /npm package is prepared but not published yet/i);
-  assert.match(readme, /npx @nasseralbusaidi\/mizan.*after npm publish/is);
+  assert.match(quickStart, /npm install -g github:NasserAlbusaidi\/mizan#v\d+\.\d+\.\d+/);
+  assert.match(quickStart, /git clone https:\/\/github\.com\/NasserAlbusaidi\/mizan\.git/);
   assert.match(readme, /mizan --update-check/);
   assert.match(readme, /latest GitHub release/i);
 });
@@ -257,30 +219,14 @@ test("launch kit gives a practical public launch script", () => {
   assert.match(kit, /mizan --share/);
   assert.match(kit, /Copy report/);
   assert.match(kit, /Save report/);
-  assert.match(
-    kit,
-    /npm exec --yes --package https:\/\/github\.com\/NasserAlbusaidi\/mizan\/releases\/download\/v0\.1\.68\/nasseralbusaidi-mizan-0\.1\.68\.tgz -- mizan --try/,
-  );
-  assert.match(
-    kit,
-    /npm exec --yes --package https:\/\/github\.com\/NasserAlbusaidi\/mizan\/releases\/download\/v0\.1\.68\/nasseralbusaidi-mizan-0\.1\.68\.tgz -- mizan --weekly --demo --output "\$HOME\/Documents\/Mizan\/mizan-demo-weekly\.md"/,
-  );
-  assert.match(kit, /npm exec --yes --package github:NasserAlbusaidi\/mizan#v0\.1\.68 -- mizan --try/);
-  assert.match(kit, /Do not use a mutable latest tarball URL for install copy/);
-  assert.match(kit, /scripts\/install\.sh/);
-  assert.match(kit, /MIZAN_INSTALL_VERSION=0\.1\.68/);
-  assert.match(
-    kit,
-    /npm install -g https:\/\/github\.com\/NasserAlbusaidi\/mizan\/releases\/download\/v0\.1\.68\/nasseralbusaidi-mizan-0\.1\.68\.tgz/,
-  );
-  assert.match(kit, /npm install -g github:NasserAlbusaidi\/mizan#v0\.1\.68/);
-  assert.match(kit, /versioned release tarball/i);
-  assert.match(kit, /GitHub tag fallback/i);
-  assert.match(kit, /mizan --update-check/);
-  assert.match(kit, /latest GitHub release/i);
+  assert.match(kit, /npx @nasseralbusaidi\/mizan --demo/);
+  assert.match(kit, /npm install -g @nasseralbusaidi\/mizan/);
+  assert.match(kit, /npm view @nasseralbusaidi\/mizan version/);
+  assert.match(kit, /mutable\s+latest tarball URL/i);
   assert.match(kit, /Show HN/);
-  assert.match(kit, /npm package is prepared but not published yet/i);
-  assert.match(kit, /Do not claim.*npm/i);
+  assert.match(kit, /valued at API rates/);
+  assert.match(kit, /quota value, not cash/);
+  assert.match(kit, /Do not claim/i);
 });
 
 test("git ignore protects local launch artifacts and private notes", () => {
