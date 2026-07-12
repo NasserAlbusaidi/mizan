@@ -6,6 +6,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 
 const bin = path.resolve("bin/mizan.js");
+const { version } = JSON.parse(fs.readFileSync("package.json", "utf8"));
 
 test("--support-bundle prints redacted Markdown diagnostics", () => {
   const home = fs.mkdtempSync(path.join(os.tmpdir(), "mizan-support-home-"));
@@ -26,7 +27,7 @@ test("--support-bundle prints redacted Markdown diagnostics", () => {
 
   assert.equal(result.status, 0);
   assert.match(result.stdout, /^# Mizan Support Bundle/m);
-  assert.match(result.stdout, /Mizan: @nasseralbusaidi\/mizan 0\.1\.68/);
+  assert.ok(result.stdout.includes(`Mizan: @nasseralbusaidi/mizan ${version}`));
   assert.match(result.stdout, /## Doctor/m);
   assert.match(result.stdout, /~\/\.claude\/projects/);
   assert.match(result.stdout, /Claude Code CLI:/);

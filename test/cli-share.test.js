@@ -6,6 +6,8 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 
 const bin = path.resolve("bin/mizan.js");
+const { version } = JSON.parse(fs.readFileSync("package.json", "utf8"));
+const tarball = `https://github.com/NasserAlbusaidi/mizan/releases/download/v${version}/nasseralbusaidi-mizan-${version}.tgz`;
 
 test("--share prints safe public launch copy without reading transcripts", () => {
   const home = fs.mkdtempSync(path.join(os.tmpdir(), "mizan-share-home-"));
@@ -21,33 +23,23 @@ test("--share prints safe public launch copy without reading transcripts", () =>
   assert.equal(result.status, 0, result.stderr);
   assert.match(result.stdout, /^# Share Mizan/m);
   assert.match(result.stdout, /private Claude Code spend dashboard/i);
-  assert.match(
-    result.stdout,
-    /npm exec --yes --package https:\/\/github\.com\/NasserAlbusaidi\/mizan\/releases\/download\/v0\.1\.68\/nasseralbusaidi-mizan-0\.1\.68\.tgz -- mizan --try/,
+  assert.ok(result.stdout.includes(`npm exec --yes --package ${tarball} -- mizan --try`));
+  assert.ok(
+    result.stdout.includes(
+      `npm exec --yes --package ${tarball} -- mizan --weekly --demo --output "$HOME/Documents/Mizan/mizan-demo-weekly.md"`,
+    ),
   );
-  assert.match(
-    result.stdout,
-    /npm exec --yes --package https:\/\/github\.com\/NasserAlbusaidi\/mizan\/releases\/download\/v0\.1\.68\/nasseralbusaidi-mizan-0\.1\.68\.tgz -- mizan --weekly --demo --output "\$HOME\/Documents\/Mizan\/mizan-demo-weekly\.md"/,
-  );
-  assert.match(
-    result.stdout,
-    /npm exec --yes --package https:\/\/github\.com\/NasserAlbusaidi\/mizan\/releases\/download\/v0\.1\.68\/nasseralbusaidi-mizan-0\.1\.68\.tgz -- mizan --demo/,
-  );
-  assert.match(
-    result.stdout,
-    /npm install -g https:\/\/github\.com\/NasserAlbusaidi\/mizan\/releases\/download\/v0\.1\.68\/nasseralbusaidi-mizan-0\.1\.68\.tgz/,
-  );
-  assert.match(
-    result.stdout,
-    /MIZAN_INSTALL_VERSION=0\.1\.68 bash -c "\$\(curl -fsSL https:\/\/raw\.githubusercontent\.com\/NasserAlbusaidi\/mizan\/v0\.1\.68\/scripts\/install\.sh\)"/,
+  assert.ok(result.stdout.includes(`npm exec --yes --package ${tarball} -- mizan --demo`));
+  assert.ok(result.stdout.includes(`npm install -g ${tarball}`));
+  assert.ok(
+    result.stdout.includes(
+      `MIZAN_INSTALL_VERSION=${version} bash -c "$(curl -fsSL https://raw.githubusercontent.com/NasserAlbusaidi/mizan/v${version}/scripts/install.sh)"`,
+    ),
   );
   assert.match(result.stdout, /GitHub tag fallback/);
-  assert.match(result.stdout, /npm exec --yes --package github:NasserAlbusaidi\/mizan#v0\.1\.68 -- mizan --try/);
-  assert.match(result.stdout, /npm install -g github:NasserAlbusaidi\/mizan#v0\.1\.68/);
-  assert.ok(
-    result.stdout.indexOf("https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.68") <
-      result.stdout.indexOf("GitHub tag fallback"),
-  );
+  assert.ok(result.stdout.includes(`npm exec --yes --package github:NasserAlbusaidi/mizan#v${version} -- mizan --try`));
+  assert.ok(result.stdout.includes(`npm install -g github:NasserAlbusaidi/mizan#v${version}`));
+  assert.ok(result.stdout.indexOf(tarball) < result.stdout.indexOf("GitHub tag fallback"));
   assert.match(result.stdout, /No account\. No upload\. Local-only by default\./);
   assert.match(result.stdout, /^## Short Post/m);
   assert.match(result.stdout, /I built Mizan: a local Claude Code spend dashboard/);
@@ -75,12 +67,12 @@ test("--share --output writes the public launch copy", () => {
   assert.match(result.stdout, new RegExp(`Wrote share guide to ${escapeRegExp(output)}`));
   const markdown = fs.readFileSync(output, "utf8");
   assert.match(markdown, /^# Share Mizan/m);
-  assert.match(markdown, /releases\/download\/v0\.1\.68\/nasseralbusaidi-mizan-0\.1\.68\.tgz -- mizan --try/);
-  assert.match(markdown, /releases\/download\/v0\.1\.68\/nasseralbusaidi-mizan-0\.1\.68\.tgz -- mizan --weekly --demo/);
-  assert.match(markdown, /releases\/download\/v0\.1\.68\/nasseralbusaidi-mizan-0\.1\.68\.tgz -- mizan --demo/);
-  assert.match(markdown, /MIZAN_INSTALL_VERSION=0\.1\.68 bash -c "\$\(curl -fsSL https:\/\/raw\.githubusercontent\.com\/NasserAlbusaidi\/mizan\/v0\.1\.68\/scripts\/install\.sh\)"/);
-  assert.match(markdown, /releases\/download\/v0\.1\.68\/nasseralbusaidi-mizan-0\.1\.68\.tgz/);
-  assert.match(markdown, /github:NasserAlbusaidi\/mizan#v0\.1\.68/);
+  assert.match(markdown, /releases\/download\/v\d+\.\d+\.\d+\/nasseralbusaidi-mizan-\d+\.\d+\.\d+\.tgz -- mizan --try/);
+  assert.match(markdown, /releases\/download\/v\d+\.\d+\.\d+\/nasseralbusaidi-mizan-\d+\.\d+\.\d+\.tgz -- mizan --weekly --demo/);
+  assert.match(markdown, /releases\/download\/v\d+\.\d+\.\d+\/nasseralbusaidi-mizan-\d+\.\d+\.\d+\.tgz -- mizan --demo/);
+  assert.match(markdown, /MIZAN_INSTALL_VERSION=\d+\.\d+\.\d+ bash -c "\$\(curl -fsSL https:\/\/raw\.githubusercontent\.com\/NasserAlbusaidi\/mizan\/v\d+\.\d+\.\d+\/scripts\/install\.sh\)"/);
+  assert.match(markdown, /releases\/download\/v\d+\.\d+\.\d+\/nasseralbusaidi-mizan-\d+\.\d+\.\d+\.tgz/);
+  assert.match(markdown, /github:NasserAlbusaidi\/mizan#v\d+\.\d+\.\d+/);
   assert.match(markdown, /^## Short Post/m);
   assert.match(markdown, /^## Show HN Draft/m);
   assert.doesNotMatch(markdown, new RegExp(escapeRegExp(home)));

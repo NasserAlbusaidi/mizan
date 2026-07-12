@@ -40,12 +40,12 @@ test("--try prints a demo summary and next steps without starting the dashboard"
   assert.match(result.stdout, /Leaks: 2/);
   assert.match(result.stdout, /Reviewable wrong-account spend: \$37\.98/);
   assert.match(result.stdout, /Next:/);
-  assert.match(result.stdout, /Install Mizan with helper: MIZAN_INSTALL_VERSION=0\.1\.68 bash -c "\$\(curl -fsSL https:\/\/raw\.githubusercontent\.com\/NasserAlbusaidi\/mizan\/v0\.1\.68\/scripts\/install\.sh\)"/);
-  assert.match(result.stdout, /Install Mizan: npm install -g https:\/\/github\.com\/NasserAlbusaidi\/mizan\/releases\/download\/v0\.1\.68\/nasseralbusaidi-mizan-0\.1\.68\.tgz/);
-  assert.match(result.stdout, /Fallback GitHub tag install: npm install -g github:NasserAlbusaidi\/mizan#v0\.1\.68/);
-  assert.match(result.stdout, /Save a sample report now: npm exec --yes --package https:\/\/github\.com\/NasserAlbusaidi\/mizan\/releases\/download\/v0\.1\.68\/nasseralbusaidi-mizan-0\.1\.68\.tgz -- mizan --weekly --demo --output "\$HOME\/Documents\/Mizan\/mizan-demo-weekly\.md"/);
-  assert.match(result.stdout, /Open the sample dashboard without install: npm exec --yes --package https:\/\/github\.com\/NasserAlbusaidi\/mizan\/releases\/download\/v0\.1\.68\/nasseralbusaidi-mizan-0\.1\.68\.tgz -- mizan --demo/);
-  assert.match(result.stdout, /Fallback GitHub tag demo: npm exec --yes --package github:NasserAlbusaidi\/mizan#v0\.1\.68 -- mizan --try/);
+  assert.match(result.stdout, /Install Mizan with helper: MIZAN_INSTALL_VERSION=\d+\.\d+\.\d+ bash -c "\$\(curl -fsSL https:\/\/raw\.githubusercontent\.com\/NasserAlbusaidi\/mizan\/v\d+\.\d+\.\d+\/scripts\/install\.sh\)"/);
+  assert.match(result.stdout, /Install Mizan: npm install -g https:\/\/github\.com\/NasserAlbusaidi\/mizan\/releases\/download\/v\d+\.\d+\.\d+\/nasseralbusaidi-mizan-\d+\.\d+\.\d+\.tgz/);
+  assert.match(result.stdout, /Fallback GitHub tag install: npm install -g github:NasserAlbusaidi\/mizan#v\d+\.\d+\.\d+/);
+  assert.match(result.stdout, /Save a sample report now: npm exec --yes --package https:\/\/github\.com\/NasserAlbusaidi\/mizan\/releases\/download\/v\d+\.\d+\.\d+\/nasseralbusaidi-mizan-\d+\.\d+\.\d+\.tgz -- mizan --weekly --demo --output "\$HOME\/Documents\/Mizan\/mizan-demo-weekly\.md"/);
+  assert.match(result.stdout, /Open the sample dashboard without install: npm exec --yes --package https:\/\/github\.com\/NasserAlbusaidi\/mizan\/releases\/download\/v\d+\.\d+\.\d+\/nasseralbusaidi-mizan-\d+\.\d+\.\d+\.tgz -- mizan --demo/);
+  assert.match(result.stdout, /Fallback GitHub tag demo: npm exec --yes --package github:NasserAlbusaidi\/mizan#v\d+\.\d+\.\d+ -- mizan --try/);
   assert.match(result.stdout, /mizan --weekly --demo --output "\$HOME\/Documents\/Mizan\/mizan-demo-weekly\.md"/);
   assert.match(result.stdout, /mizan --setup/);
   assert.match(result.stdout, /mizan --set-transcripts personal=\/path work=\/path/);
@@ -189,7 +189,7 @@ test("--update-check reports the latest release install command without starting
   const server = createServer((req, res) => {
     assert.equal(req.url, "/latest");
     res.writeHead(200, { "content-type": "application/json" });
-    res.end(JSON.stringify({ tag_name: "v0.1.69" }));
+    res.end(JSON.stringify({ tag_name: "v9.9.9" }));
   });
   await listen(server);
 
@@ -200,14 +200,14 @@ test("--update-check reports the latest release install command without starting
 
     assert.equal(result.status, 0, result.stderr);
     assert.match(result.stdout, /^Mizan update check/m);
-    assert.match(result.stdout, /Current: 0\.1\.68/);
-    assert.match(result.stdout, /Latest: 0\.1\.69/);
+    assert.match(result.stdout, /Current: \d+\.\d+\.\d+/);
+    assert.match(result.stdout, /Latest: 9\.9\.9/);
     assert.match(result.stdout, /Status: update available/);
     assert.match(
       result.stdout,
-      /Install: npm install -g https:\/\/github\.com\/NasserAlbusaidi\/mizan\/releases\/download\/v0\.1\.69\/nasseralbusaidi-mizan-0\.1\.69\.tgz/,
+      /Install: npm install -g https:\/\/github\.com\/NasserAlbusaidi\/mizan\/releases\/download\/v9\.9\.9\/nasseralbusaidi-mizan-9\.9\.9\.tgz/,
     );
-    assert.match(result.stdout, /Fallback: npm install -g github:NasserAlbusaidi\/mizan#v0\.1\.69/);
+    assert.match(result.stdout, /Fallback: npm install -g github:NasserAlbusaidi\/mizan#v9\.9\.9/);
     assert.doesNotMatch(result.stdout + result.stderr, /http:\/\/127\.0\.0\.1:7777/);
   } finally {
     await close(server);
@@ -229,7 +229,7 @@ test("--update-check keeps a zero exit when the release check is unavailable", a
 
     assert.equal(result.status, 0, result.stderr);
     assert.match(result.stdout, /^Mizan update check/m);
-    assert.match(result.stdout, /Current: 0\.1\.68/);
+    assert.match(result.stdout, /Current: \d+\.\d+\.\d+/);
     assert.match(result.stdout, /Status: could not check latest release/);
     assert.match(result.stdout, /Reason: latest release request failed with HTTP 503/);
     assert.match(result.stdout, /Latest release: https:\/\/github\.com\/NasserAlbusaidi\/mizan\/releases\/latest/);
@@ -248,13 +248,14 @@ test("--csv prints a redacted reimbursement export without starting the dashboar
   assert.equal(result.status, 0, result.stderr);
   assert.match(
     result.stdout,
-    /^row_type,project,account,spend_usd,requests,output_tokens,duration_minutes,model,note/m,
+    /^row_type,provider,project,account,spend_usd,requests,tokens,output_tokens,duration_minutes,model,note/m,
   );
-  assert.match(result.stdout, /^account,,personal,31\.66,6,746000,,,account total/m);
-  assert.match(result.stdout, /^project,~\/Desktop\/Personal\/Rihla,personal,26\.98,4,632000,,,project total/m);
+  assert.match(result.stdout, /^account,,,personal,31\.66,7,,747900,,,account total/m);
+  assert.match(result.stdout, /^project,claude,~\/Desktop\/Personal\/Rihla,personal,26\.98,4,14622000,632000,,,project total/m);
+  assert.match(result.stdout, /^project,codex,~\/Desktop\/Personal\/mizan,personal,0\.00,1,359900,1900,,,project total/m);
   assert.match(
     result.stdout,
-    /^session,~\/Desktop\/Personal\/starfield,work,33\.30,2,610000,14,claude-opus-4-8,costliest session/m,
+    /^session,claude,~\/Desktop\/Personal\/starfield,work,33\.30,2,,610000,14,claude-opus-4-8,costliest session/m,
   );
   assert.doesNotMatch(result.stdout, /\/Users\//);
   assert.doesNotMatch(result.stdout + result.stderr, /http:\/\/127\.0\.0\.1/);
@@ -271,8 +272,9 @@ test("--csv --output writes the reimbursement export", () => {
   assert.equal(result.status, 0, result.stderr);
   assert.match(result.stdout, new RegExp(`Wrote CSV export to ${escapeRegExp(output)}`));
   const body = fs.readFileSync(output, "utf8");
-  assert.match(body, /^row_type,project,account,spend_usd,requests,output_tokens,duration_minutes,model,note/m);
-  assert.match(body, /^project,~\/Desktop\/Personal\/Rihla,personal,26\.98,4,632000,,,project total/m);
+  assert.match(body, /^row_type,provider,project,account,spend_usd,requests,tokens,output_tokens,duration_minutes,model,note/m);
+  assert.match(body, /^project,claude,~\/Desktop\/Personal\/Rihla,personal,26\.98,4,14622000,632000,,,project total/m);
+  assert.match(body, /^project,codex,~\/Desktop\/Personal\/mizan,personal,0\.00,1,359900,1900,,,project total/m);
   assert.doesNotMatch(body, /\/Users\//);
   assert.doesNotMatch(result.stdout + result.stderr, /http:\/\/127\.0\.0\.1/);
 });

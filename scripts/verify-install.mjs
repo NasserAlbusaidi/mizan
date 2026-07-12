@@ -165,19 +165,21 @@ try {
   assertIncludes(shareGuide, `github:NasserAlbusaidi/mizan#${releaseTag}`, "--share should include the tagged install fallback");
   assertIncludes(shareGuide, "No account. No upload.", "--share should include the privacy claim");
 
+  const [major] = packageJson.version.split(".");
+  const newerVersion = `${Number(major) + 1}.0.0`;
   const updateCheck = run(bin, ["--update-check"], {
     env: {
       ...process.env,
-      MIZAN_RELEASES_URL: "data:application/json,%7B%22tag_name%22%3A%22v0.1.69%22%7D",
+      MIZAN_RELEASES_URL: `data:application/json,${encodeURIComponent(JSON.stringify({ tag_name: `v${newerVersion}` }))}`,
     },
   }).stdout;
   assertIncludes(updateCheck, "Mizan update check", "--update-check should print its heading");
-  assertIncludes(updateCheck, "Current: 0.1.68", "--update-check should print the installed version");
-  assertIncludes(updateCheck, "Latest: 0.1.69", "--update-check should print the latest release version");
+  assertIncludes(updateCheck, `Current: ${packageJson.version}`, "--update-check should print the installed version");
+  assertIncludes(updateCheck, `Latest: ${newerVersion}`, "--update-check should print the latest release version");
   assertIncludes(updateCheck, "Status: update available", "--update-check should flag newer releases");
   assertIncludes(
     updateCheck,
-    "npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.69/nasseralbusaidi-mizan-0.1.69.tgz",
+    `npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/v${newerVersion}/nasseralbusaidi-mizan-${newerVersion}.tgz`,
     "--update-check should print the next versioned tarball install command",
   );
 
@@ -218,27 +220,31 @@ try {
   );
 
   const csv = run(bin, ["--csv", "--demo", "--window", "7"]).stdout;
-  assertIncludes(csv, "row_type,project,account,spend_usd", "--csv should print a header row");
-  assertIncludes(csv, "project,~/Desktop/Personal/Rihla,personal", "--csv should include redacted project rows");
-  assertIncludes(csv, "session,~/Desktop/Personal/starfield,work", "--csv should include redacted session rows");
+  assertIncludes(csv, "row_type,provider,project,account,spend_usd", "--csv should print a provider-aware header row");
+  assertIncludes(csv, "project,claude,~/Desktop/Personal/Rihla,personal", "--csv should include redacted Claude project rows");
+  assertIncludes(csv, "project,codex,~/Desktop/Personal/mizan,personal", "--csv should include redacted Codex project rows");
+  assertIncludes(csv, "session,claude,~/Desktop/Personal/starfield,work", "--csv should include redacted session rows");
   if (csv.includes(process.env.HOME || "__never__")) {
     throw new Error("installed --csv exposed the absolute home path");
   }
 
   const emptyPersonalDir = path.join(tempRoot, "empty-personal-projects");
   const emptyWorkDir = path.join(tempRoot, "empty-work-projects");
+  const emptyCodexDir = path.join(tempRoot, "empty-codex-sessions");
   fs.mkdirSync(emptyPersonalDir, { recursive: true });
   fs.mkdirSync(emptyWorkDir, { recursive: true });
+  fs.mkdirSync(emptyCodexDir, { recursive: true });
   const emptySummary = run(bin, ["--summary", "--window", "7"], {
     env: {
       ...process.env,
       MIZAN_PERSONAL_DIR: emptyPersonalDir,
       MIZAN_WORK_DIR: emptyWorkDir,
+      MIZAN_CODEX_DIR: emptyCodexDir,
       MIZAN_CONFIG: path.join(tempRoot, "empty-config.json"),
     },
   }).stdout;
   assertIncludes(emptySummary, "Mizan summary [WARN]", "empty transcript folders should warn");
-  assertIncludes(emptySummary, "No Claude Code usage records", "empty transcript folders should explain next steps");
+  assertIncludes(emptySummary, "No Claude Code or Codex usage records", "empty transcript folders should explain next steps");
 
   const emptyDoctorCheck = run(bin, ["--doctor", "--check"], {
     expectCode: 2,
@@ -246,6 +252,7 @@ try {
       ...process.env,
       MIZAN_PERSONAL_DIR: emptyPersonalDir,
       MIZAN_WORK_DIR: emptyWorkDir,
+      MIZAN_CODEX_DIR: emptyCodexDir,
       MIZAN_CONFIG: path.join(tempRoot, "empty-config.json"),
     },
   });
@@ -264,6 +271,7 @@ try {
       ...process.env,
       MIZAN_PERSONAL_DIR: emptyPersonalDir,
       MIZAN_WORK_DIR: emptyWorkDir,
+      MIZAN_CODEX_DIR: emptyCodexDir,
       MIZAN_CONFIG: emptySetupConfig,
     },
   });
@@ -337,7 +345,7 @@ try {
   const csvOutput = run(bin, ["--csv", "--demo", "--window", "7", "--output", csvPath]).stdout;
   assertIncludes(csvOutput, `Wrote CSV export to ${csvPath}`, "--csv --output should print the saved path");
   const savedCsv = fs.readFileSync(csvPath, "utf8");
-  assertIncludes(savedCsv, "row_type,project,account,spend_usd", "--csv --output should write CSV");
+  assertIncludes(savedCsv, "row_type,provider,project,account,spend_usd", "--csv --output should write CSV");
 
   const invalidOutput = run(bin, ["--demo", "--output", path.join(tempRoot, "ignored.md")], { expectCode: 1 });
   assertIncludes(invalidOutput.stderr, "--output requires", "--output without a one-shot mode should fail clearly");

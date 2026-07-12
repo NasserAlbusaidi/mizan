@@ -1,5 +1,30 @@
 # Changelog
 
+## 0.2.0
+
+First npm release: `npx @nasseralbusaidi/mizan`.
+
+- Tracks Codex alongside Claude Code: parses `~/.codex/sessions` transcripts
+  (including resumed-session replays and cumulative-total token events) into
+  the same dashboard, doctor, summaries, and reports. Codex rows are
+  token-only until a reliable local cost source exists.
+- Relabels the hero KPI from "Spend" to "API value" with an always-visible
+  "at API list price — not your subscription bill" caveat, and reframes leak
+  callouts as wrong-account quota value. Dollar figures were always
+  API-list-price valuations; now they say so everywhere.
+- Stops the idle cache-write loop: the parse cache (tens of MB on heavy
+  machines) is no longer rewritten on every dashboard poll — only when
+  transcripts actually changed.
+- Fixes a Codex parser edge where a cumulative-total token event following a
+  per-turn event booked the full running total as one turn.
+- Hardens the static-file prefix check on the local server.
+- npm-first install docs; GitHub tarball and source installs remain as
+  fallbacks.
+- Deferred: lifetime (all-time) project rows. Computing them honestly needs a
+  persisted cross-session dedup index; shipping the cheap version would
+  overcount resumed sessions by ~39%. Project rows are window-scoped until
+  that lands.
+
 ## 0.1.68
 
 - Adds the versioned installer helper to generated `mizan --try` next steps and
