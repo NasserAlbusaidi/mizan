@@ -1,8 +1,15 @@
 # Installing Mizan
 
-The recommended paths are in the [README Quick Start](../README.md#quick-start):
-try without installing, or install the latest release tarball. This page covers
-pinned versions, fallbacks, and running from source.
+The recommended path is npm:
+
+```bash
+npx @nasseralbusaidi/mizan --demo      # try without installing
+npm install -g @nasseralbusaidi/mizan  # keep it
+```
+
+(npm listing pending — until it appears, the tarball paths below install
+identical bits.) This page covers pinned versions, registry-free fallbacks,
+and running from source.
 
 Requirements: Node.js >= 20 with npm.
 
@@ -25,13 +32,13 @@ npm install -g https://github.com/NasserAlbusaidi/mizan/releases/latest/download
 Each release also ships a versioned tarball whose URL never changes meaning:
 
 ```bash
-npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.68/nasseralbusaidi-mizan-0.1.68.tgz
+npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/v0.2.0/nasseralbusaidi-mizan-0.2.0.tgz
 ```
 
 Try without installing:
 
 ```bash
-npm exec --yes --package https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.68/nasseralbusaidi-mizan-0.1.68.tgz -- mizan --try
+npm exec --yes --package https://github.com/NasserAlbusaidi/mizan/releases/download/v0.2.0/nasseralbusaidi-mizan-0.2.0.tgz -- mizan --try
 ```
 
 Browse all versions on the [releases page](https://github.com/NasserAlbusaidi/mizan/releases).
@@ -47,7 +54,7 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/NasserAlbusaidi/mizan/ma
 Pin a version with `MIZAN_INSTALL_VERSION`:
 
 ```bash
-MIZAN_INSTALL_VERSION=0.1.68 bash -c "$(curl -fsSL https://raw.githubusercontent.com/NasserAlbusaidi/mizan/v0.1.68/scripts/install.sh)"
+MIZAN_INSTALL_VERSION=0.2.0 bash -c "$(curl -fsSL https://raw.githubusercontent.com/NasserAlbusaidi/mizan/v0.2.0/scripts/install.sh)"
 ```
 
 ## GitHub tag fallback
@@ -56,13 +63,13 @@ If release-asset downloads are blocked on your network, npm can install
 straight from a git tag:
 
 ```bash
-npm install -g github:NasserAlbusaidi/mizan#v0.1.68
+npm install -g github:NasserAlbusaidi/mizan#v0.2.0
 ```
 
 Or run the demo without installing:
 
 ```bash
-npm exec --yes --package github:NasserAlbusaidi/mizan#v0.1.68 -- mizan --try
+npm exec --yes --package github:NasserAlbusaidi/mizan#v0.2.0 -- mizan --try
 ```
 
 ## From source
