@@ -48,5 +48,78 @@ export function parseUsageLine(line) {
     cwd: o.cwd || null,
     session: o.sessionId || null,
     branch: o.gitBranch || null,
+    provider: "claude",
+  };
+}
+
+export function parseCodexUsageLine(line, state = {}) {
+  let o;
+  try {
+    o = JSON.parse(line);
+  } catch {
+    return null;
+  }
+
+  if (o.type === "session_meta" && o.payload && typeof o.payload === "object") {
+    const p = o.payload;
+    state.cwd = p.cwd || state.cwd || null;
+    state.session = p.id || p.session_id || state.session || null;
+    state.branch = p.git?.branch || state.branch || null;
+    state.agent = p.thread_source === "subagent" || !!p.source?.subagent || state.agent || false;
+    state.model = p.model || p.model_slug || p.model_name || state.model || "codex";
+    return null;
+  }
+
+  if (o.payload?.type !== "token_count") return null;
+  const ts = o.timestamp;
+  const t = Date.parse(ts);
+  if (Number.isNaN(t)) return null;
+
+  const info = o.payload.info || {};
+  const total = info.total_token_usage;
+  const usage = info.last_token_usage || deltaFromTotalUsage(total, state.previousTotalUsage);
+  if (!usage || typeof usage !== "object") return null;
+  // Advance the cumulative baseline whichever shape this event used, so a later
+  // event that must fall back to total_token_usage computes a true per-turn delta
+  // instead of booking the full running total as one turn.
+  if (total && typeof total === "object") state.previousTotalUsage = { ...total };
+
+  const cached = usage.cached_input_tokens || 0;
+  const rawInput = usage.input_tokens || 0;
+  const input = Math.max(0, rawInput - cached);
+  const output = usage.output_tokens || 0;
+  const totalTokens = usage.total_tokens || rawInput + output;
+  if (rawInput + cached + output + totalTokens <= 0) return null;
+
+  state.tokenIndex = (state.tokenIndex || 0) + 1;
+  const session = state.session || state.file || "codex-session";
+  return {
+    key: `codex:${session}:${ts}:${state.tokenIndex}`,
+    t,
+    model: state.model || "codex",
+    input,
+    cc5: 0,
+    cc1: 0,
+    cr: cached,
+    output,
+    sidechain: state.agent === true,
+    cwd: state.cwd || null,
+    session,
+    branch: state.branch || null,
+    provider: "codex",
+  };
+}
+
+function deltaFromTotalUsage(total, prev = {}) {
+  if (!total || typeof total !== "object") return null;
+  return {
+    input_tokens: Math.max(0, (total.input_tokens || 0) - (prev.input_tokens || 0)),
+    cached_input_tokens: Math.max(0, (total.cached_input_tokens || 0) - (prev.cached_input_tokens || 0)),
+    output_tokens: Math.max(0, (total.output_tokens || 0) - (prev.output_tokens || 0)),
+    reasoning_output_tokens: Math.max(
+      0,
+      (total.reasoning_output_tokens || 0) - (prev.reasoning_output_tokens || 0),
+    ),
+    total_tokens: Math.max(0, (total.total_tokens || 0) - (prev.total_tokens || 0)),
   };
 }

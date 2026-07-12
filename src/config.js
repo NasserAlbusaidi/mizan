@@ -23,6 +23,7 @@ export function defaultConfig(home = HOME) {
   return {
     personalDir: path.join(home, ".claude", "projects"),
     workDir: path.join(home, ".claude-work", "projects"),
+    codexDir: path.join(home, ".codex", "sessions"),
     workMarkers: DEFAULT_WORK_MARKERS,
     dailyBudget: null,
     monthlyBudget: null,
@@ -98,13 +99,14 @@ export function writeTranscriptConfig(accounts, { env = process.env, home = HOME
   const next = { ...defaultConfig(home), ...user.config };
   if (Object.hasOwn(accounts, "personal")) next.personalDir = accounts.personal;
   if (Object.hasOwn(accounts, "work")) next.workDir = accounts.work;
+  if (Object.hasOwn(accounts, "codex")) next.codexDir = accounts.codex;
 
   fs.mkdirSync(path.dirname(user.path), { recursive: true });
   fs.writeFileSync(user.path, `${JSON.stringify(next, null, 2)}\n`);
   return {
     path: user.path,
     created,
-    accounts: { personal: next.personalDir, work: next.workDir },
+    accounts: { personal: next.personalDir, work: next.workDir, codex: next.codexDir },
   };
 }
 
@@ -121,6 +123,12 @@ export function resolveAccounts(env = process.env, home = HOME, userConfig = loa
 export const ACCOUNTS = resolveAccounts();
 
 export const ACCOUNT_ORDER = ["personal", "work"];
+
+export function resolveCodexDir(env = process.env, home = HOME, userConfig = loadUserConfig({ env, home }).config) {
+  return env.MIZAN_CODEX_DIR || userConfig.codexDir || path.join(home, ".codex", "sessions");
+}
+
+export const CODEX_DIR = resolveCodexDir();
 
 // A project (working directory) is classified as "work" if its path contains any
 // of these markers; otherwise it is "personal". This drives leak detection:
@@ -222,6 +230,14 @@ export function getRuntimeConfig({ demo = false, host = DEFAULT_HOST, port = DEF
       const dir = ACCOUNTS[account];
       return { account, dir, exists: fs.existsSync(dir) };
     }),
+    providers: [
+      {
+        provider: "claude",
+        label: "Claude Code",
+        dirs: ACCOUNT_ORDER.map((account) => ({ account, dir: ACCOUNTS[account], exists: fs.existsSync(ACCOUNTS[account]) })),
+      },
+      { provider: "codex", label: "Codex", dir: CODEX_DIR, exists: fs.existsSync(CODEX_DIR) },
+    ],
   };
 }
 
@@ -243,6 +259,14 @@ function getDemoRuntimeConfig({ host = DEFAULT_HOST, port = DEFAULT_PORT } = {})
       dir: `demo://${account}`,
       exists: true,
     })),
+    providers: [
+      {
+        provider: "claude",
+        label: "Claude Code",
+        dirs: ACCOUNT_ORDER.map((account) => ({ account, dir: `demo://${account}`, exists: true })),
+      },
+      { provider: "codex", label: "Codex", dir: "demo://codex", exists: true },
+    ],
   };
 }
 

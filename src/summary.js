@@ -14,7 +14,7 @@ export function buildSummary(data) {
     warnings.push({
       type: "no_usage",
       message:
-        "No Claude Code usage records were found in this window. Run mizan --doctor, try mizan --demo, or persist transcript folders with mizan --set-transcripts personal=/path work=/path.",
+        "No Claude Code or Codex usage records were found in this window. Run mizan --doctor, try mizan --demo, or persist transcript folders with mizan --set-transcripts personal=/path work=/path codex=/path.",
     });
   }
 
@@ -72,6 +72,7 @@ export function buildSummary(data) {
     burnPerDay: data.burn.perDay,
     projected30d: data.burn.projected30d,
     requests: data.totals.reqs,
+    totalTokens: data.totals.tokens || tokenTotal(data.totals),
     budgets: { daily: budgets.daily || null, monthly: budgets.monthly || null },
     comparison,
     leaks: {
@@ -81,6 +82,7 @@ export function buildSummary(data) {
       personalPaysWork: data.leaks.totals.personal_pays_work,
     },
     topProjects: data.projects.slice(0, 5).map((project) => ({
+      provider: project.provider || "claude",
       account: project.account,
       project: project.display,
       cost: project.cost,
@@ -194,10 +196,15 @@ function normalizeComparison(comparison) {
   };
 }
 
+function tokenTotal(bucket = {}) {
+  return (bucket.input || 0) + (bucket.cc || 0) + (bucket.cr || 0) + (bucket.output || 0);
+}
+
 function findUnpricedModels(models) {
   return models
     .filter((entry) => {
       const model = String(entry.model || "");
+      if (entry.provider && entry.provider !== "claude") return false;
       if (!model || model === "<synthetic>") return false;
       const tokens = (entry.input || 0) + (entry.cc || 0) + (entry.cr || 0) + (entry.output || 0);
       if (tokens <= 0) return false;

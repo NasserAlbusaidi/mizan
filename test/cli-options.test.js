@@ -259,8 +259,17 @@ test("parseCliArgs supports adding persistent work markers", () => {
 });
 
 test("parseCliArgs supports setting persistent transcript folders", () => {
-  const opts = parseCliArgs(["--set-transcripts", "personal=/vault/personal", "work=/vault/work"]);
-  assert.deepEqual(opts.setTranscripts, { personal: "/vault/personal", work: "/vault/work" });
+  const opts = parseCliArgs([
+    "--set-transcripts",
+    "personal=/vault/personal",
+    "work=/vault/work",
+    "codex=/vault/codex",
+  ]);
+  assert.deepEqual(opts.setTranscripts, {
+    personal: "/vault/personal",
+    work: "/vault/work",
+    codex: "/vault/codex",
+  });
   assert.equal(opts.open, false);
 
   const inline = parseCliArgs(["--set-transcripts=work=/tmp/work-projects"]);
@@ -281,7 +290,7 @@ test("parseCliArgs rejects missing work markers", () => {
 
 test("parseCliArgs rejects invalid transcript assignments", () => {
   assert.throws(() => parseCliArgs(["--set-transcripts"]), /transcript assignment/);
-  assert.throws(() => parseCliArgs(["--set-transcripts", "team=/tmp/work"]), /personal= or work=/);
+  assert.throws(() => parseCliArgs(["--set-transcripts", "team=/tmp/work"]), /personal=, work=, or codex=/);
   assert.throws(() => parseCliArgs(["--set-transcripts", "personal="]), /transcript path/);
 });
 

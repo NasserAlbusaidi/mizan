@@ -52,7 +52,7 @@ test("summary warns when no usage records are found", () => {
 
   assert.equal(summary.status, "warn");
   assert.deepEqual(summary.warnings.map((warning) => warning.type), ["no_usage"]);
-  assert.match(summary.warnings[0].message, /No Claude Code usage records/);
+  assert.match(summary.warnings[0].message, /No Claude Code or Codex usage records/);
   assert.match(summary.warnings[0].message, /mizan --doctor/);
   assert.match(formatSummary(summary), /Mizan summary \[WARN\]/);
   assert.match(formatSummary(summary), /mizan --set-transcripts/);

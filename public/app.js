@@ -27,6 +27,7 @@
     return String(n);
   };
   const pct = (x) => (x * 100).toFixed(1) + "%";
+  const tokenTotal = (b) => (b?.tokens || 0) || (b?.input || 0) + (b?.cc || 0) + (b?.cr || 0) + (b?.output || 0);
   const list = (items, fallback = "none") => (items && items.length ? items.join(", ") : fallback);
   const budgetLabel = (value) => (value == null ? "unset" : money(value));
   const weeklyReviewCommand = () => 'mizan --weekly --output "$HOME/Documents/Mizan/mizan-weekly-$(date +%F).md"';
@@ -73,6 +74,7 @@
 
   // model -> color
   const MODEL_COLORS = [
+    ["codex", "#f97316"],
     ["fable", "#b98bff"],
     ["opus", "#e3b259"],
     ["sonnet", "#3ddc97"],
@@ -82,6 +84,9 @@
     for (const [k, c] of MODEL_COLORS) if (m.includes(k)) return c;
     return "#6b7488";
   };
+  const PROVIDER_COLORS = { claude: "#e3b259", codex: "#f97316" };
+  const providerColor = (provider) => PROVIDER_COLORS[provider] || "#6b7488";
+  const providerLabel = (provider) => (provider === "claude" ? "Claude Code" : provider === "codex" ? "Codex" : provider || "Unknown");
   const modelShort = (m) =>
     m
       .replace(/^claude-/, "")
@@ -120,6 +125,7 @@
     renderLeaks(d);
     renderProjectChanges(d);
     renderAccounts(d);
+    renderProviders(d);
     MizanCharts.drawDaily(document.getElementById("daily-chart"), d.days);
     renderModels(d);
     renderCache(d);
@@ -144,17 +150,17 @@
       copy.textContent =
         "This sample shows leaks, burn rate, cache savings, and project concentration without reading your transcript folders.";
     } else if (!d.totals.reqs) {
-      title.textContent = "No Claude Code usage found yet";
+      title.textContent = "No AI coding usage found yet";
       copy.textContent =
-        "Mizan is running, but the current transcript folders did not produce usage records for this window.";
+        "Mizan is running, but the configured Claude Code and Codex folders did not produce usage records for this window.";
     } else if (d.leaks.count > 0) {
       title.textContent = `${d.leaks.count} cross-account leak${d.leaks.count === 1 ? "" : "s"} need attention`;
       copy.textContent =
-        `${money(d.leaks.totals.work_pays_personal + d.leaks.totals.personal_pays_work)} appears billed to the wrong account in this window.`;
+        `${money(d.leaks.totals.work_pays_personal + d.leaks.totals.personal_pays_work)} of API-rate quota value was charged to the wrong account in this window.`;
     } else {
       title.textContent = "Your current window is clean";
       copy.textContent =
-        `${tok(d.totals.reqs)} requests scanned across ${existingAccounts.length || 0} account folder${existingAccounts.length === 1 ? "" : "s"} with no account leaks detected.`;
+        `${tok(d.totals.reqs)} requests scanned across ${(d.providers || []).length || existingAccounts.length || 0} provider${(d.providers || []).length === 1 ? "" : "s"} with no account leaks detected.`;
     }
 
     const cards = [
@@ -167,6 +173,9 @@
       ["Work markers", list(d.config?.workMarkers, "not configured")],
       ["Pricing", d.pricing?.checkedAt ? `checked ${d.pricing.checkedAt}` : "static estimate"],
     ];
+    if (d.stats?.providers?.codex?.records) {
+      cards.push(["Codex", `${tok(d.stats.providers.codex.records)} token events`]);
+    }
     if (d.config?.budgets?.daily || d.config?.budgets?.monthly) {
       cards.push([
         "Budgets",
@@ -224,20 +233,23 @@
       actions.push({
         tone: "good",
         title: "Preview demo data first",
-        body: "Open the sample dashboard to see leak detection, burn rate, cache savings, and report copy without reading local transcripts.",
+        body: "Open the sample dashboard to see provider mix, leak detection, burn rate, cache savings, and report copy without reading local transcripts.",
         command: "mizan --demo",
       });
       actions.push({
         tone: "neutral",
         title: "Run setup diagnostics",
-        body: `Check whether Mizan can see the expected transcript folders: ${list((d.config?.accounts || []).map((a) => a.dir))}.`,
+        body: `Check whether Mizan can see the expected transcript folders: ${list([
+          ...(d.config?.accounts || []).map((a) => a.dir),
+          d.config?.providers?.find((p) => p.provider === "codex")?.dir,
+        ].filter(Boolean))}.`,
         command: "mizan --setup",
       });
       actions.push({
         tone: "danger",
         title: "Save transcript folders",
-        body: "Persist custom personal/work project folders when Claude Code transcripts live outside the defaults.",
-        command: "mizan --set-transcripts personal=/path work=/path",
+        body: "Persist custom Claude or Codex folders when transcripts live outside the defaults.",
+        command: "mizan --set-transcripts personal=/path work=/path codex=/path",
       });
       return actions;
     }
@@ -276,8 +288,8 @@
     if (unpricedModels.length) {
       actions.push({
         tone: "warn",
-        title: "Unpriced model usage",
-        body: `Totals may be understated until pricing is added for ${unpricedModels
+        title: "Unpriced Claude model usage",
+        body: `Claude spend may be understated until pricing is added for ${unpricedModels
           .map((item) => `${modelShort(item.model)} (${item.reqs} reqs)`)
           .join(", ")}.`,
       });
@@ -378,6 +390,7 @@
   function findUnpricedModels(models) {
     return models.filter((entry) => {
       const model = String(entry.model || "");
+      if (entry.provider && entry.provider !== "claude") return false;
       if (!model || model === "<synthetic>") return false;
       const tokens = (entry.input || 0) + (entry.cc || 0) + (entry.cr || 0) + (entry.output || 0);
       if (tokens <= 0) return false;
@@ -405,10 +418,10 @@
     const requestComparison = formatRequestComparison(d.comparison);
     const cards = [
       {
-        label: `Spend · ${winLabel}`,
+        label: `API value · ${winLabel}`,
         value: money(d.totals.cost),
         hero: true,
-        sub: spendComparison || tok(d.totals.output) + " output tokens",
+        sub: "at API list price — not your subscription bill" + (spendComparison ? ` · ${spendComparison}` : ""),
       },
       {
         label: "Today",
@@ -421,7 +434,7 @@
         value: money(d.burn.projected30d),
         sub: monthlyBudget ? `${pct(Math.min(1, d.burn.projected30d / monthlyBudget))} of ${money(monthlyBudget)}` : "at current rate",
       },
-      { label: "Requests", value: tok(d.totals.reqs), sub: requestComparison || `${d.models.length} models` },
+      { label: "Requests", value: tok(d.totals.reqs), sub: requestComparison || `${(d.providers || []).length || 1} providers` },
     ];
     document.getElementById("kpis").innerHTML = cards
       .map(
@@ -455,15 +468,15 @@
     const top = d.leaks.sessions[0];
     el.innerHTML =
       `<div class="lb-icon">⚠️</div>` +
-      `<div class="lb-main"><h3>Cross-account leak detected</h3>` +
-      `<p>${d.leaks.count} session(s) billed to the wrong account in this window.` +
+      `<div class="lb-main"><h3>Cross-account quota leak</h3>` +
+      `<p>${d.leaks.count} session(s) charged the wrong account's quota in this window (value at API list price).` +
       (top
         ? ` Largest: <b>${money(top.cost)}</b> on <b>${esc(top.account)}</b> running <b>${esc(top.project)}</b> (${top.durationMin}m).`
         : "") +
       `</p></div>` +
       `<div class="leak-figs">` +
-      `<div class="leak-fig"><div class="n">${money(wp)}</div><div class="l">work → personal work</div></div>` +
-      `<div class="leak-fig"><div class="n">${money(pw)}</div><div class="l">personal → work work</div></div>` +
+      `<div class="leak-fig"><div class="n">${money(wp)}</div><div class="l">work quota on personal project</div></div>` +
+      `<div class="leak-fig"><div class="n">${money(pw)}</div><div class="l">personal quota on work project</div></div>` +
       `</div>`;
   }
 
@@ -506,6 +519,33 @@
       .join("");
   }
 
+  function renderProviders(d) {
+    const providers = (d.providers || []).filter((p) => p.reqs > 0).slice(0, 5);
+    if (!providers.length) {
+      document.getElementById("providers").innerHTML = `<div class="empty-note">No provider usage in this window.</div>`;
+      return;
+    }
+    const max = providers.reduce((largest, provider) => Math.max(largest, provider.cost || 0, tokenTotal(provider)), 1);
+    document.getElementById("providers").innerHTML = providers
+      .map((provider) => {
+        const usage = provider.cost > 0 ? money(provider.cost) : tok(tokenTotal(provider));
+        const meta =
+          provider.cost > 0
+            ? `${tok(tokenTotal(provider))} tokens · ${tok(provider.reqs)} reqs`
+            : `${tok(provider.reqs)} token events · token-only`;
+        const barValue = provider.cost > 0 ? provider.cost : tokenTotal(provider);
+        return (
+          `<div class="provider-row">` +
+          `<div class="provider-main"><span class="sw" style="background:${providerColor(provider.provider)}"></span>` +
+          `<strong>${esc(provider.label || providerLabel(provider.provider))}</strong><span>${esc(usage)}</span></div>` +
+          `<div class="provider-meta">${esc(meta)}</div>` +
+          `<div class="provider-track"><div style="width:${(barValue / max) * 100}%;background:${providerColor(provider.provider)}"></div></div>` +
+          `</div>`
+        );
+      })
+      .join("");
+  }
+
   function renderCache(d) {
     const r = d.cache.hitRatio;
     document.getElementById("cache-gauge").innerHTML =
@@ -516,15 +556,19 @@
   }
 
   function renderProjects(d) {
-    const top = d.projects.filter((p) => p.cost > 0).slice(0, 10);
-    const max = top.length ? top[0].cost : 1;
+    const top = d.projects.filter((p) => p.cost > 0 || tokenTotal(p) > 0).slice(0, 10);
+    const max = top.reduce((largest, p) => Math.max(largest, p.cost || 0, tokenTotal(p)), 1);
     document.getElementById("projects").innerHTML = top
       .map((p) => {
-        const col = p.account === "work" ? "#e3b259" : "#5b9dff";
+        const col = providerColor(p.provider);
+        const currentUsage = p.cost > 0 ? money(p.cost) : tok(tokenTotal(p));
+        const barValue = p.cost > 0 ? p.cost : tokenTotal(p);
         return (
-          `<div class="bar-row"><div class="bar-label"><span class="tag ${esc(p.account)}">${esc(p.account[0].toUpperCase())}</span>${esc(p.display)}</div>` +
-          `<div class="bar-cost">${money(p.cost)}</div>` +
-          `<div class="bar-track"><div class="bar-fill" style="width:${(p.cost / max) * 100}%;background:${col}"></div></div></div>`
+          `<div class="bar-row"><div class="bar-label"><span class="tag ${esc(p.account)}">${esc(p.account[0].toUpperCase())}</span>` +
+          `<span class="provider-pill" style="border-color:${col};color:${col}">${esc(providerLabel(p.provider))}</span>${esc(p.display)}</div>` +
+          `<div class="bar-cost">${esc(currentUsage)}</div>` +
+          `<div class="bar-meta">${esc(`${tok(tokenTotal(p))} tokens · ${tok(p.reqs || 0)} reqs`)}</div>` +
+          `<div class="bar-track"><div class="bar-fill" style="width:${(barValue / max) * 100}%;background:${col}"></div></div></div>`
         );
       })
       .join("");
@@ -577,6 +621,7 @@
           (s.agent ? `<span class="badge agent">agent</span>` : "");
         return (
           `<tr><td class="num">${money(s.cost)}</td>` +
+          `<td>${esc(providerLabel(s.provider))}</td>` +
           `<td><span class="tag ${esc(s.account)}" style="font-size:10px;padding:1px 6px;border-radius:5px">${esc(s.account)}</span></td>` +
           `<td class="proj-cell" title="${esc(s.cwd || "")}">${esc(s.project)}</td>` +
           `<td>${esc(modelShort(s.model))}</td>` +
@@ -587,7 +632,7 @@
       })
       .join("");
     document.getElementById("sessions").innerHTML =
-      `<table><thead><tr><th class="num">Cost</th><th>Acct</th><th>Project</th><th>Model</th><th class="num">Out</th><th class="num">Dur</th><th>Flags</th></tr></thead><tbody>${rows}</tbody></table>`;
+      `<table><thead><tr><th class="num">Cost</th><th>Provider</th><th>Acct</th><th>Project</th><th>Model</th><th class="num">Out</th><th class="num">Dur</th><th>Flags</th></tr></thead><tbody>${rows}</tbody></table>`;
   }
 
   function renderFooter(d) {
@@ -598,12 +643,12 @@
       `computed in ${s.computeMs}ms`;
     const pricing = d.pricing || {};
     document.getElementById("pricing-note").innerHTML =
-      `Estimated from local transcripts using ` +
+      `Claude value estimated at API list price from local transcripts using ` +
       (pricing.sourceUrl
         ? `<a href="${esc(pricing.sourceUrl)}" target="_blank" rel="noreferrer">${esc(pricing.sourceName || "public pricing")}</a>`
         : esc(pricing.sourceName || "public pricing")) +
       (pricing.checkedAt ? ` checked ${esc(pricing.checkedAt)}` : "") +
-      ` · authoritative billing: console.anthropic.com`;
+      ` · Codex token-only · not a subscription bill · authoritative billing: provider consoles`;
   }
 
   // ---- events ----

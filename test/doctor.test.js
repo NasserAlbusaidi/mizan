@@ -15,7 +15,7 @@ test("doctor reports missing transcript folders with actionable guidance", () =>
   assert.match(text, /Claude Code CLI: not found/);
   assert.match(report.recommendations.join("\n"), /mizan --try/);
   assert.match(report.recommendations.join("\n"), /Claude Code CLI was not found on PATH/);
-  assert.match(report.recommendations.join("\n"), /Run Claude Code once/);
+  assert.match(report.recommendations.join("\n"), /Run Claude Code or Codex once/);
   assert.match(report.recommendations.join("\n"), /mizan --setup --fix/);
   assert.match(report.recommendations.join("\n"), /mizan --set-transcripts/);
   assert.doesNotMatch(report.recommendations.join("\n"), /MIZAN_PERSONAL_DIR/);
@@ -108,6 +108,7 @@ test("doctor treats one-account transcript setup as usable", () => {
   assert.match(text, /personal\s+1 transcript/);
   assert.match(text, /1 usage record/);
   assert.match(text, /work\s+missing/);
+  assert.match(text, /Provider sources:/);
   assert.match(text, /Setup looks usable/);
   assert.match(text, /Optional: add a work transcript folder/);
   assert.doesNotMatch(text, /Work transcripts are missing/);

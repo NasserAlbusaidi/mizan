@@ -103,7 +103,7 @@ if (options.setTranscripts) {
   try {
     const result = writeTranscriptConfig(options.setTranscripts);
     printWithNextSteps(
-      `Saved transcript folders to ${result.path}: personal ${result.accounts.personal}, work ${result.accounts.work}`,
+      `Saved transcript folders to ${result.path}: personal ${result.accounts.personal}, work ${result.accounts.work}, codex ${result.accounts.codex}`,
       [
         "Verify folders: mizan --doctor --check",
         "Open the dashboard: mizan",

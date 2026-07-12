@@ -15,13 +15,14 @@ test("--doctor --check exits nonzero when no transcript folders are usable", () 
       ...process.env,
       HOME: home,
       MIZAN_CONFIG: path.join(home, ".mizan", "config.json"),
+      MIZAN_CODEX_DIR: path.join(home, "missing-codex"),
     },
   });
 
   assert.equal(result.status, 2);
   assert.match(result.stdout, /^Mizan doctor/m);
   assert.match(result.stdout, /No transcript folders were found/);
-  assert.match(result.stdout, /Run Claude Code once/);
+  assert.match(result.stdout, /Run Claude Code or Codex once/);
   assert.match(result.stdout, /mizan --setup --fix/);
   assert.match(result.stdout, /mizan --weekly --demo --output "\$HOME\/Documents\/Mizan\/mizan-demo-weekly\.md"/);
 });
@@ -42,6 +43,7 @@ test("--doctor --check exits zero when transcript setup is usable", () => {
       MIZAN_CONFIG: path.join(root, ".mizan", "config.json"),
       MIZAN_PERSONAL_DIR: path.join(root, "personal-projects"),
       MIZAN_WORK_DIR: path.join(root, "work-projects"),
+      MIZAN_CODEX_DIR: path.join(root, "missing-codex"),
     },
   });
 
@@ -63,6 +65,7 @@ test("--doctor --check exits nonzero when transcript files have no parseable usa
       MIZAN_CONFIG: path.join(root, ".mizan", "config.json"),
       MIZAN_PERSONAL_DIR: path.join(root, "personal-projects"),
       MIZAN_WORK_DIR: path.join(root, "work-projects"),
+      MIZAN_CODEX_DIR: path.join(root, "missing-codex"),
     },
   });
 
@@ -153,6 +156,7 @@ test("--setup creates a config and exits nonzero when setup is still unusable", 
       PATH: "",
       HOME: home,
       MIZAN_CONFIG: configPath,
+      MIZAN_CODEX_DIR: path.join(home, "missing-codex"),
     },
   });
 
@@ -162,7 +166,7 @@ test("--setup creates a config and exits nonzero when setup is still unusable", 
   assert.match(result.stdout, /No transcript folders were found/);
   assert.match(result.stdout, /Claude Code CLI: not found/);
   assert.match(result.stdout, /Claude Code CLI was not found on PATH/);
-  assert.match(result.stdout, /Run Claude Code once/);
+  assert.match(result.stdout, /Run Claude Code or Codex once/);
   assert.match(result.stdout, /mizan --setup --fix/);
   assert.match(result.stdout, /mizan --weekly --demo --output "\$HOME\/Documents\/Mizan\/mizan-demo-weekly\.md"/);
 

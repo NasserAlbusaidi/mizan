@@ -49,7 +49,7 @@ function serveStatic(res, urlPath) {
   // Restrict to files that physically resolve inside PUBLIC_DIR (no traversal).
   const rel = urlPath === "/" ? "index.html" : urlPath.replace(/^\/+/, "");
   const abs = path.join(PUBLIC_DIR, rel);
-  if (!abs.startsWith(PUBLIC_DIR)) {
+  if (abs !== PUBLIC_DIR && !abs.startsWith(PUBLIC_DIR + path.sep)) {
     res.writeHead(403);
     return res.end("forbidden");
   }

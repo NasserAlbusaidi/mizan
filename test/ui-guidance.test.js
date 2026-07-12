@@ -42,7 +42,7 @@ test("dashboard empty state gives users a copyable demo command first", () => {
   assert.match(app, /command: "mizan --demo"/);
   assert.match(app, /Run setup diagnostics/);
   assert.match(app, /command: "mizan --setup"/);
-  assert.match(app, /command: "mizan --set-transcripts personal=\/path work=\/path"/);
+  assert.match(app, /command: "mizan --set-transcripts personal=\/path work=\/path codex=\/path"/);
 });
 
 test("dashboard demo mode gives no-install users an install and setup command", () => {
@@ -67,9 +67,9 @@ test("dashboard exposes a one-day spend window tab", () => {
 test("dashboard action queue warns about unpriced model usage", () => {
   const app = fs.readFileSync("public/app.js", "utf8");
 
-  assert.match(app, /Unpriced model usage/);
+  assert.match(app, /Unpriced Claude model usage/);
   assert.match(app, /findUnpricedModels/);
-  assert.match(app, /Totals may be understated/);
+  assert.match(app, /Claude spend may be understated/);
 });
 
 test("dashboard surfaces project-level spend movers", () => {

@@ -21,12 +21,21 @@ export function buildReport(data, { packageVersion = null } = {}) {
       burnPerDay: summary.burnPerDay,
       projected30d: summary.projected30d,
       requests: summary.requests,
+      totalTokens: summary.totalTokens,
       leakCount: summary.leaks.count,
       leakTotal: summary.leaks.total,
       reviewableWrongAccountSpend: summary.leaks.total,
       budgets: summary.budgets,
     },
     comparison: redactComparison(summary.comparison),
+    providers: (data.providers || []).map((provider) => ({
+      provider: provider.provider || "unknown",
+      label: provider.label || provider.provider || "unknown",
+      spend: provider.cost || 0,
+      requests: provider.reqs || 0,
+      tokens: provider.tokens || tokenTotal(provider),
+      outputTokens: provider.output || 0,
+    })),
     accounts: Object.entries(data.accounts || {}).map(([account, bucket]) => ({
       account,
       spend: bucket.cost || 0,
@@ -34,11 +43,13 @@ export function buildReport(data, { packageVersion = null } = {}) {
       outputTokens: bucket.output || 0,
     })),
     projects: (data.projects || []).map((project) => ({
+      provider: project.provider || "claude",
       account: project.account,
       project: redactPath(project.display || project.cwd || "(unknown)"),
       spend: project.cost || 0,
       requests: project.reqs || 0,
       outputTokens: project.output || 0,
+      tokens: project.tokens || tokenTotal(project),
     })),
     topProjects: summary.topProjects.map((project) => ({
       ...project,
@@ -51,6 +62,7 @@ export function buildReport(data, { packageVersion = null } = {}) {
       durationMin: session.durationMin || 0,
     })),
     sessions: (data.sessions || []).map((session) => ({
+      provider: session.provider || "claude",
       account: session.account,
       project: redactPath(session.project || session.cwd || "(unknown)"),
       cost: session.cost || 0,
@@ -60,6 +72,7 @@ export function buildReport(data, { packageVersion = null } = {}) {
       model: session.model || "unknown",
     })),
     topSessions: (data.sessions || []).slice(0, 5).map((session) => ({
+      provider: session.provider || "claude",
       account: session.account,
       project: redactPath(session.project || session.cwd || "(unknown)"),
       cost: session.cost || 0,
@@ -98,6 +111,7 @@ export function formatMarkdownReport(report) {
     `- Burn rate: ${money(report.metrics.burnPerDay)} / day`,
     `- Projected 30d: ${money(report.metrics.projected30d)}`,
     `- Requests: ${report.metrics.requests}`,
+    `- Total tokens: ${tokens(report.metrics.totalTokens)}`,
     `- Leaks: ${report.metrics.leakCount} (${money(report.metrics.leakTotal)})`,
   ];
   if (report.metrics.reviewableWrongAccountSpend > 0) {
@@ -140,6 +154,21 @@ export function formatMarkdownReport(report) {
     }
   }
 
+  if (report.providers.length) {
+    lines.push(
+      "",
+      "## Provider Mix",
+      "",
+      "| Provider | Spend | Requests | Tokens | Output tokens |",
+      "|---|---:|---:|---:|---:|",
+    );
+    for (const provider of report.providers) {
+      lines.push(
+        `| ${cell(provider.label)} | ${money(provider.spend)} | ${provider.requests} | ${tokens(provider.tokens)} | ${tokens(provider.outputTokens)} |`,
+      );
+    }
+  }
+
   if (report.actions.length) {
     lines.push("", "## Action Items", "");
     for (const action of report.actions) {
@@ -161,12 +190,12 @@ export function formatMarkdownReport(report) {
       "",
       "## Costliest Sessions",
       "",
-      "| Project | Account | Spend | Duration | Requests | Model |",
-      "|---|---:|---:|---:|---:|---|",
+      "| Project | Provider | Account | Spend | Duration | Requests | Model |",
+      "|---|---|---:|---:|---:|---:|---|",
     );
     for (const session of report.topSessions) {
       lines.push(
-        `| ${cell(session.project)} | ${cell(session.account)} | ${money(session.cost)} | ${session.durationMin}m | ${session.requests} | ${cell(session.model)} |`,
+        `| ${cell(session.project)} | ${cell(session.provider)} | ${cell(session.account)} | ${money(session.cost)} | ${session.durationMin}m | ${session.requests} | ${cell(session.model)} |`,
       );
     }
   }
@@ -190,25 +219,42 @@ export function formatMarkdownReport(report) {
     "## Notes",
     "",
     `- ${report.privacy.note}`,
-    `- Cost is an estimate from local Claude Code transcripts using ${report.pricing.sourceName}${
+    `- Claude cost is an estimate from local transcripts using ${report.pricing.sourceName}${
       report.pricing.checkedAt ? ` checked ${report.pricing.checkedAt}` : ""
     }.`,
-    "- Authoritative billing remains console.anthropic.com.",
+    "- Codex sessions are token-only until an authoritative local cost source is available.",
+    "- Authoritative billing remains with the provider billing consoles.",
   );
 
   return lines.join("\n");
 }
 
 export function formatCsvReport(report) {
-  const rows = [["row_type", "project", "account", "spend_usd", "requests", "output_tokens", "duration_minutes", "model", "note"]];
+  const rows = [
+    [
+      "row_type",
+      "provider",
+      "project",
+      "account",
+      "spend_usd",
+      "requests",
+      "tokens",
+      "output_tokens",
+      "duration_minutes",
+      "model",
+      "note",
+    ],
+  ];
 
   for (const account of report.accounts) {
     rows.push([
       "account",
       "",
+      "",
       account.account,
       cents(account.spend),
       account.requests,
+      "",
       account.outputTokens,
       "",
       "",
@@ -219,10 +265,12 @@ export function formatCsvReport(report) {
   for (const project of report.projects) {
     rows.push([
       "project",
+      project.provider,
       project.project,
       project.account,
       cents(project.spend),
       project.requests,
+      project.tokens,
       project.outputTokens,
       "",
       "",
@@ -233,10 +281,12 @@ export function formatCsvReport(report) {
   for (const session of report.sessions) {
     rows.push([
       "session",
+      session.provider,
       session.project,
       session.account,
       cents(session.cost),
       session.requests,
+      "",
       session.outputTokens,
       session.durationMin,
       session.model,
@@ -331,6 +381,10 @@ function tokens(value) {
   if (value >= 1e6) return `${(value / 1e6).toFixed(1)}M`;
   if (value >= 1e3) return `${(value / 1e3).toFixed(1)}k`;
   return String(value || 0);
+}
+
+function tokenTotal(bucket) {
+  return (bucket.input || 0) + (bucket.cc || 0) + (bucket.cr || 0) + (bucket.output || 0);
 }
 
 function titleCase(value) {

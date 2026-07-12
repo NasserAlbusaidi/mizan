@@ -119,9 +119,10 @@ test("report endpoint returns redacted Markdown, JSON, and CSV for the current w
     assert.equal(csvRes.headers.get("content-type"), "text/csv; charset=utf-8");
     assert.equal(csvRes.headers.get("cache-control"), "no-store");
     const csv = await csvRes.text();
-    assert.match(csv, /^row_type,project,account,spend_usd/m);
-    assert.match(csv, /^project,~\/Desktop\/Personal\/Rihla,personal/m);
-    assert.match(csv, /^session,~\/Desktop\/Personal\/starfield,work/m);
+    assert.match(csv, /^row_type,provider,project,account,spend_usd/m);
+    assert.match(csv, /^project,claude,~\/Desktop\/Personal\/Rihla,personal/m);
+    assert.match(csv, /^project,codex,~\/Desktop\/Personal\/mizan,personal/m);
+    assert.match(csv, /^session,claude,~\/Desktop\/Personal\/starfield,work/m);
     assert.doesNotMatch(csv, new RegExp(process.env.HOME.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
   } finally {
     await new Promise((resolve) => demoServer.close(resolve));

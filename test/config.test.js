@@ -157,7 +157,11 @@ test("writeTranscriptConfig creates config and preserves unrelated settings", ()
 
   const first = writeTranscriptConfig({ personal: "/vault/personal", work: "/vault/work" }, { env, home });
   assert.equal(first.created, true);
-  assert.deepEqual(first.accounts, { personal: "/vault/personal", work: "/vault/work" });
+  assert.deepEqual(first.accounts, {
+    personal: "/vault/personal",
+    work: "/vault/work",
+    codex: path.join(home, ".codex", "sessions"),
+  });
 
   const saved = JSON.parse(fs.readFileSync(env.MIZAN_CONFIG, "utf8"));
   saved.dailyBudget = 20;
@@ -168,5 +172,6 @@ test("writeTranscriptConfig creates config and preserves unrelated settings", ()
   assert.equal(second.created, false);
   assert.equal(updated.personalDir, "/vault/personal");
   assert.equal(updated.workDir, "/new/work");
+  assert.equal(updated.codexDir, path.join(home, ".codex", "sessions"));
   assert.equal(updated.dailyBudget, 20);
 });

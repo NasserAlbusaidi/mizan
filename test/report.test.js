@@ -145,9 +145,9 @@ test("markdown report includes costliest sessions without session ids", () => {
   );
 
   assert.match(markdown, /## Costliest Sessions/);
-  assert.match(markdown, /\| Project \| Account \| Spend \| Duration \| Requests \| Model \|/);
-  assert.match(markdown, /\| ~\/Desktop\/Personal\/SecretApp \| personal \| \$80\.00 \| 77m \| 20 \| claude-opus-4-8 \|/);
-  assert.match(markdown, /\| ~\/Desktop\/Work\/ClientPortal \| work \| \$45\.50 \| 12m \| 28 \| claude-sonnet-4-6 \|/);
+  assert.match(markdown, /\| Project \| Provider \| Account \| Spend \| Duration \| Requests \| Model \|/);
+  assert.match(markdown, /\| ~\/Desktop\/Personal\/SecretApp \| claude \| personal \| \$80\.00 \| 77m \| 20 \| claude-opus-4-8 \|/);
+  assert.match(markdown, /\| ~\/Desktop\/Work\/ClientPortal \| claude \| work \| \$45\.50 \| 12m \| 28 \| claude-sonnet-4-6 \|/);
   assert.doesNotMatch(markdown, /secret-session-id/);
   assert.doesNotMatch(markdown, /\/Users\/nasser/);
 });
@@ -205,7 +205,7 @@ test("markdown report warns when no usage records are found", () => {
 
   assert.match(markdown, /Status: \*\*WARN\*\*/);
   assert.doesNotMatch(markdown, /Reviewable wrong-account spend/);
-  assert.match(markdown, /No Claude Code usage records/);
+  assert.match(markdown, /No Claude Code or Codex usage records/);
   assert.match(markdown, /mizan --doctor/);
   assert.match(markdown, /mizan --set-transcripts/);
 });

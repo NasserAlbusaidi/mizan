@@ -157,6 +157,7 @@ test("comparison identifies projects that drove spend increases", () => {
   assert.deepEqual(d.comparison.projects, [
     {
       account: "personal",
+      provider: "claude",
       project: "~/Desktop/Personal/Rihla",
       current: { cost: 50, reqs: 2 },
       previous: { cost: 25, reqs: 1 },
@@ -164,12 +165,36 @@ test("comparison identifies projects that drove spend increases", () => {
     },
     {
       account: "work",
+      provider: "claude",
       project: "~/Desktop/Work/ClientPortal",
       current: { cost: 25, reqs: 1 },
       previous: { cost: 0, reqs: 0 },
       delta: { cost: 25, reqs: 1, costPct: null, reqsPct: null },
     },
   ]);
+});
+
+test("project rows are scoped to the selected window, not lifetime", () => {
+  const cutoff = NOW - 7 * 86_400_000;
+  const rihla = `${HOME}/Desktop/Personal/Rihla`;
+  const units = [
+    unit("personal", rihla, "rihla-current", [
+      rec("current|1", "claude-opus-4-8", 1_000_000, today),
+    ]),
+    unit("personal", rihla, "rihla-old", [
+      rec("old|1", "claude-opus-4-8", 1_000_000, NOW - 90 * 86_400_000),
+    ]),
+  ];
+
+  const d = aggregate(units, cutoff, NOW);
+
+  // Only the in-window record counts toward the project total; the 90-day-old
+  // record is excluded and no lifetime rollup is attached to the payload.
+  assert.equal(d.projects.length, 1);
+  assert.equal(d.projects[0].cost, 25);
+  assert.equal(d.projects[0].reqs, 1);
+  assert.equal(d.projects[0].allTime, undefined);
+  assert.equal(d.allTime, undefined);
 });
 
 test("cache hit ratio reflects cheap cache reads vs fresh input", () => {

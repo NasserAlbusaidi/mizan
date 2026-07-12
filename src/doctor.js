@@ -9,11 +9,12 @@ import {
   loadUserConfig,
   resolveAccounts,
   resolveBudgets,
+  resolveCodexDir,
   resolveHost,
   resolveWorkMarkers,
   isLocalHost,
 } from "./config.js";
-import { parseUsageLine } from "./parser.js";
+import { parseCodexUsageLine, parseUsageLine } from "./parser.js";
 import { PRICING_METADATA } from "./pricing.js";
 
 const USAGE_SCAN_LIMIT = 50;
@@ -22,32 +23,51 @@ const CLAUDE_CLI_TIMEOUT_MS = 1500;
 export function buildDoctorReport({ env = process.env, home = os.homedir() } = {}) {
   const user = loadUserConfig({ env, home });
   const accounts = resolveAccounts(env, home, user.config);
+  const codexDir = resolveCodexDir(env, home, user.config);
   const claudeCli = inspectClaudeCli(env);
   const accountReports = Object.entries(accounts).map(([account, dir]) => {
     const exists = fs.existsSync(dir);
     const transcriptScan = exists ? inspectTranscripts(dir) : { transcripts: 0, sampled: 0, usageRecords: 0 };
     return { account, dir, exists, ...transcriptScan };
   });
+  const providerReports = [
+    {
+      provider: "claude",
+      label: "Claude Code",
+      exists: accountReports.some((item) => item.exists),
+      transcripts: accountReports.reduce((sum, item) => sum + item.transcripts, 0),
+      sampled: accountReports.reduce((sum, item) => sum + item.sampled, 0),
+      usageRecords: accountReports.reduce((sum, item) => sum + item.usageRecords, 0),
+      dir: Object.values(accounts).join(" + "),
+    },
+    {
+      provider: "codex",
+      label: "Codex",
+      dir: codexDir,
+      exists: fs.existsSync(codexDir),
+      ...(fs.existsSync(codexDir) ? inspectTranscripts(codexDir, countCodexUsageRecords) : { transcripts: 0, sampled: 0, usageRecords: 0 }),
+    },
+  ];
 
-  const totalTranscripts = accountReports.reduce((sum, item) => sum + item.transcripts, 0);
-  const totalUsageRecords = accountReports.reduce((sum, item) => sum + item.usageRecords, 0);
-  const hasAnyTranscripts = accountReports.some((item) => item.transcripts > 0);
-  const hasAnyUsageRecords = accountReports.some((item) => item.usageRecords > 0);
+  const totalTranscripts = providerReports.reduce((sum, item) => sum + item.transcripts, 0);
+  const totalUsageRecords = providerReports.reduce((sum, item) => sum + item.usageRecords, 0);
+  const hasAnyTranscripts = providerReports.some((item) => item.transcripts > 0);
+  const hasAnyUsageRecords = providerReports.some((item) => item.usageRecords > 0);
   const suggestedTranscriptFolders = suggestTranscriptFolders(accountReports, { env, home });
   const recommendations = [];
 
-  if (!accountReports.some((item) => item.exists)) {
+  if (!providerReports.some((item) => item.exists)) {
     recommendations.push(
-      `No transcript folders were found. Try \`mizan --try\` or save a sample report with \`${demoWeeklyReportCommand()}\`. Run Claude Code once, then recheck with \`mizan --setup --fix\`. If your transcripts live elsewhere, run \`mizan --set-transcripts personal=/path/to/personal/projects work=/path/to/work/projects\`.`,
+      `No transcript folders were found. Try \`mizan --try\` or save a sample report with \`${demoWeeklyReportCommand()}\`. Run Claude Code or Codex once, then recheck with \`mizan --setup --fix\`. If your transcripts live elsewhere, run \`mizan --set-transcripts personal=/path/to/personal/projects work=/path/to/work/projects codex=/path/to/codex/sessions\`.`,
     );
   } else if (totalTranscripts === 0) {
     recommendations.push(
-      `Transcript folders exist, but no .jsonl files were found. Run Claude Code once, save a sample report with \`${demoWeeklyReportCommand()}\`, or update the saved folders with \`mizan --set-transcripts personal=/path work=/path\`.`,
+      `Transcript folders exist, but no .jsonl files were found. Run Claude Code or Codex once, save a sample report with \`${demoWeeklyReportCommand()}\`, or update the saved folders with \`mizan --set-transcripts personal=/path work=/path codex=/path\`.`,
     );
   } else if (totalUsageRecords === 0) {
-    const sampleCount = accountReports.reduce((sum, item) => sum + item.sampled, 0);
+    const sampleCount = providerReports.reduce((sum, item) => sum + item.sampled, 0);
     recommendations.push(
-      `Transcript files were found, but no parseable usage records were found in the newest ${sampleCount} transcript file${sampleCount === 1 ? "" : "s"}. Run Claude Code once, then run \`mizan --doctor\` again. If this seems wrong, run \`mizan --support-bundle\` and open an issue.`,
+      `Transcript files were found, but no parseable usage records were found in the newest ${sampleCount} transcript file${sampleCount === 1 ? "" : "s"} (Claude usage or Codex token records). Run Claude Code or Codex once, then run \`mizan --doctor\` again. If this seems wrong, run \`mizan --support-bundle\` and open an issue.`,
     );
   } else {
     recommendations.push(
@@ -114,6 +134,7 @@ export function buildDoctorReport({ env = process.env, home = os.homedir() } = {
   return {
     ok: hasAnyUsageRecords,
     accounts: accountReports,
+    providers: providerReports,
     claudeCli,
     suggestedTranscriptFolders,
     configFile: { path: user.path, exists: user.exists, error: user.error },
@@ -134,6 +155,12 @@ export function formatDoctorReport(report) {
   for (const item of report.accounts) {
     const status = item.exists ? formatTranscriptStatus(item) : "missing";
     lines.push(`  ${item.account.padEnd(8)} ${status.padEnd(16)} ${item.dir}`);
+  }
+  lines.push("");
+  lines.push("Provider sources:");
+  for (const item of report.providers || []) {
+    const status = item.exists ? formatTranscriptStatus(item) : "missing";
+    lines.push(`  ${item.label.padEnd(12)} ${status.padEnd(16)} ${item.dir}`);
   }
   lines.push("");
   lines.push(`Config: ${report.configFile.exists ? report.configFile.path : `${report.configFile.path} (not found)`}`);
@@ -197,11 +224,11 @@ function formatClaudeCli(claudeCli) {
   return "not found";
 }
 
-function inspectTranscripts(dir) {
+function inspectTranscripts(dir, countRecords = countClaudeUsageRecords) {
   const files = listTranscriptFiles(dir);
   let usageRecords = 0;
   for (const file of files.slice(0, USAGE_SCAN_LIMIT)) {
-    usageRecords += countUsageRecords(file.path);
+    usageRecords += countRecords(file.path);
   }
   return {
     transcripts: files.length,
@@ -255,7 +282,7 @@ function listTranscriptFiles(dir) {
   return files.sort((a, b) => b.mtimeMs - a.mtimeMs);
 }
 
-function countUsageRecords(file) {
+function countClaudeUsageRecords(file) {
   let text;
   try {
     text = fs.readFileSync(file, "utf8");
@@ -267,6 +294,23 @@ function countUsageRecords(file) {
   for (const line of text.split("\n")) {
     if (line.indexOf('"usage"') === -1) continue;
     if (parseUsageLine(line)) count += 1;
+  }
+  return count;
+}
+
+function countCodexUsageRecords(file) {
+  let text;
+  try {
+    text = fs.readFileSync(file, "utf8");
+  } catch {
+    return 0;
+  }
+
+  let count = 0;
+  const state = { file };
+  for (const line of text.split("\n")) {
+    if (line.indexOf("token_count") === -1 && line.indexOf("session_meta") === -1) continue;
+    if (parseCodexUsageLine(line, state)) count += 1;
   }
   return count;
 }

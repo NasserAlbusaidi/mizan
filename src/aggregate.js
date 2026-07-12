@@ -40,6 +40,7 @@ export function aggregate(units, displayCutoffMs, nowMs) {
   const accounts = { personal: emptyBucket(), work: emptyBucket() };
   const models = new Map();
   const projects = new Map();
+  const providers = new Map();
   const previousProjects = new Map();
   const days = new Map(); // dateKey -> { personal, work }
   const sessions = new Map();
@@ -59,18 +60,24 @@ export function aggregate(units, displayCutoffMs, nowMs) {
   for (const unit of units) {
     const account = unit.account;
     const cwd = unit.cwd;
+    const unitProvider = unit.provider || "claude";
     for (const rec of unit.recs) {
-      const [key, t, model, input, cc5, cc1, cr, output, sc] = rec;
-      // Skip only records too old for BOTH the display window and the 30-day burn window.
-      if (t < cutoffMs && t < since30 && (!previousCutoffMs || t < previousCutoffMs)) continue;
-      if (key !== "|" && seen.has(key)) continue; // dedup (skip empty composite keys)
-      if (key !== "|") seen.add(key);
+      const [key, t, model, input, cc5, cc1, cr, output, sc, recordProvider] = rec;
+      const provider = recordProvider || unitProvider;
+      const dedupKey = key === "|" ? null : `${provider}:${key}`;
+      if (dedupKey && seen.has(dedupKey)) continue;
+      if (dedupKey) seen.add(dedupKey);
 
       const cost = costOf(
         { input, output, cacheRead: cr, cacheWrite5m: cc5, cacheWrite1h: cc1 },
         model,
       );
       const r = { input, cc5, cc1, cr, output };
+      const projectKey = `${provider}\x00${account}\x00${cwd || "(unknown)"}`;
+
+      // Skip records too old for BOTH the display window and the 30-day burn
+      // window (dedup above has already run, so a later duplicate cannot resurrect them).
+      if (t < cutoffMs && t < since30 && (!previousCutoffMs || t < previousCutoffMs)) continue;
 
       // Burn windows are absolute and independent of the display window.
       if (localDateKey(t) === todayKey) spendToday += cost;
@@ -79,9 +86,14 @@ export function aggregate(units, displayCutoffMs, nowMs) {
 
       if (previousCutoffMs && t >= previousCutoffMs && t < cutoffMs) {
         addTokens(previousTotals, r, cost);
-        const pkey = `${account}\x00${cwd || "(unknown)"}`;
+        const pkey = projectKey;
         let pb = previousProjects.get(pkey);
-        if (!pb) previousProjects.set(pkey, (pb = { account, cwd: cwd || "(unknown)", ...emptyBucket() }));
+        if (!pb) {
+          previousProjects.set(
+            pkey,
+            (pb = { provider, account, cwd: cwd || "(unknown)", ...emptyBucket() }),
+          );
+        }
         addTokens(pb, r, cost);
         continue;
       }
@@ -92,13 +104,18 @@ export function aggregate(units, displayCutoffMs, nowMs) {
       addTokens(totals, r, cost);
       addTokens(accounts[account] || (accounts[account] = emptyBucket()), r, cost);
 
-      let mb = models.get(model);
-      if (!mb) models.set(model, (mb = { model, ...emptyBucket() }));
+      let pbv = providers.get(provider);
+      if (!pbv) providers.set(provider, (pbv = { provider, label: providerLabel(provider), ...emptyBucket() }));
+      addTokens(pbv, r, cost);
+
+      const modelKey = `${provider}\x00${model}`;
+      let mb = models.get(modelKey);
+      if (!mb) models.set(modelKey, (mb = { provider, model, ...emptyBucket() }));
       addTokens(mb, r, cost);
 
-      const pkey = `${account}\x00${cwd || "(unknown)"}`;
+      const pkey = projectKey;
       let pb = projects.get(pkey);
-      if (!pb) projects.set(pkey, (pb = { account, cwd: cwd || "(unknown)", ...emptyBucket() }));
+      if (!pb) projects.set(pkey, (pb = { provider, account, cwd: cwd || "(unknown)", ...emptyBucket() }));
       addTokens(pb, r, cost);
 
       const dk = localDateKey(t);
@@ -106,11 +123,12 @@ export function aggregate(units, displayCutoffMs, nowMs) {
       if (!db) days.set(dk, (db = { personal: 0, work: 0 }));
       db[account] = (db[account] || 0) + cost;
 
-      const skey = unit.session || `file:${pkey}`;
+      const skey = unit.session ? `${provider}:${unit.session}` : `file:${pkey}`;
       let sb = sessions.get(skey);
       if (!sb) {
         sb = {
           session: skey,
+          provider,
           account,
           cwd,
           branch: unit.branch || null,
@@ -145,7 +163,7 @@ export function aggregate(units, displayCutoffMs, nowMs) {
     }
     delete s.modelCost;
     s.model = topModel;
-    const leak = classifyLeak(s);
+    const leak = s.provider === "claude" ? classifyLeak(s) : null;
     if (leak) {
       s.leak = leak;
       leakTotals[leak] += s.cost;
@@ -163,8 +181,9 @@ export function aggregate(units, displayCutoffMs, nowMs) {
     }))
     .sort((a, b) => (a.date < b.date ? -1 : 1));
 
-  const modelList = [...models.values()].sort((a, b) => b.cost - a.cost);
-  const projectList = [...projects.values()].sort((a, b) => b.cost - a.cost);
+  const modelList = [...models.values()].sort(compareUsageBuckets);
+  const providerList = [...providers.values()].sort(compareUsageBuckets);
+  const projectList = [...projects.values()].sort(compareUsageBuckets);
   const topSessions = [...sessionList].sort((a, b) => b.cost - a.cost).slice(0, 30);
   leaks.sort((a, b) => b.cost - a.cost);
 
@@ -177,10 +196,10 @@ export function aggregate(units, displayCutoffMs, nowMs) {
   return {
     generatedAt: nowMs,
     window: { cutoffMs, days: cutoffMs ? Math.round((nowMs - cutoffMs) / DAY) : null },
-    totals: roundBucket(totals),
+    totals: withTokenTotal(totals),
     accounts: {
-      personal: roundBucket(accounts.personal),
-      work: roundBucket(accounts.work),
+      personal: withTokenTotal(accounts.personal),
+      work: withTokenTotal(accounts.work),
     },
     burn: {
       today: round(spendToday),
@@ -197,8 +216,9 @@ export function aggregate(units, displayCutoffMs, nowMs) {
       freshInputTokens: totals.input,
     },
     days: dayList,
-    models: modelList.map(roundBucket),
-    projects: projectList.map((p) => ({ ...roundBucket(p), display: shorten(p.cwd) })),
+    providers: providerList.map(withTokenTotal),
+    models: modelList.map(withTokenTotal),
+    projects: projectList.map((p) => ({ ...withTokenTotal(p), display: shorten(p.cwd) })),
     sessions: topSessions.map(finalizeSession),
     leaks: {
       totals: {
@@ -247,6 +267,7 @@ function buildProjectComparison(currentProjects, previousProjects) {
       const reqDelta = currentReqs - previousReqs;
       return {
         account: current?.account || previous?.account || "unknown",
+        provider: current?.provider || previous?.provider || "claude",
         project: shorten(current?.cwd || previous?.cwd || "(unknown)"),
         current: { cost: currentCost, reqs: currentReqs },
         previous: { cost: previousCost, reqs: previousReqs },
@@ -266,6 +287,7 @@ function buildProjectComparison(currentProjects, previousProjects) {
 function finalizeSession(s) {
   return {
     session: s.session,
+    provider: s.provider || "claude",
     account: s.account,
     project: shorten(s.cwd),
     cwd: s.cwd,
@@ -293,4 +315,22 @@ const round = (n) => Math.round(n * 1000) / 1000;
 const round4 = (n) => Math.round(n * 10000) / 10000;
 function roundBucket(b) {
   return { ...b, cost: round(b.cost) };
+}
+
+function tokenTotal(b) {
+  return (b.input || 0) + (b.cc || 0) + (b.cr || 0) + (b.output || 0);
+}
+
+function withTokenTotal(b) {
+  return { ...roundBucket(b), tokens: tokenTotal(b) };
+}
+
+function compareUsageBuckets(a, b) {
+  return b.cost - a.cost || tokenTotal(b) - tokenTotal(a) || b.reqs - a.reqs;
+}
+
+function providerLabel(provider) {
+  if (provider === "claude") return "Claude Code";
+  if (provider === "codex") return "Codex";
+  return provider || "Unknown";
 }

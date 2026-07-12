@@ -15,6 +15,7 @@ const ids = [
   "kpis",
   "leak-banner",
   "account-split",
+  "providers",
   "daily-chart",
   "model-donut",
   "model-legend",
@@ -101,7 +102,20 @@ function dashboardData(overrides = {}) {
     models: [{ model: "claude-sonnet-4-6", cost: 125.5, input: 0, cc: 0, cr: 0, output: 120_000, reqs: 48 }],
     days: [],
     cache: { hitRatio: 0.42, readTokens: 42_000, freshInputTokens: 58_000 },
-    projects: [{ account: "personal", display: "~/mizan", cost: 125.5, reqs: 48 }],
+    providers: [
+      { provider: "claude", label: "Claude Code", cost: 125.5, reqs: 48, tokens: 1_900_000, output: 120_000 },
+      { provider: "codex", label: "Codex", cost: 0, reqs: 12, tokens: 600_000, output: 10_000 },
+    ],
+    projects: [
+      {
+        provider: "claude",
+        account: "personal",
+        display: "~/mizan",
+        cost: 125.5,
+        reqs: 48,
+        tokens: 1_900_000,
+      },
+    ],
     sessions: [],
     pricing: { sourceName: "test pricing", checkedAt: "2026-06-24" },
     ...overrides,
@@ -112,7 +126,8 @@ test("dashboard spend KPI renders previous-window comparison", async () => {
   const elements = await renderDashboard();
 
   const kpis = elements.get("kpis").innerHTML;
-  assert.match(kpis, /Spend · last 7d/);
+  assert.match(kpis, /API value · last 7d/);
+  assert.match(kpis, /not your subscription bill/);
   assert.match(kpis, /\+\$45\.50 \(\+56\.9%\) vs previous 7d/);
   assert.match(kpis, /\+8 reqs vs previous 7d/);
 });
@@ -125,6 +140,16 @@ test("dashboard action queue warns when spend jumps versus the previous window",
   assert.match(actions, /\+\$45\.50 \(\+56\.9%\) versus the previous 7d/);
   assert.match(actions, /mizan --report --window 7/);
   assert.match(actions, /mizan --weekly --output &quot;\$HOME\/Documents\/Mizan\/mizan-weekly-\$\(date \+%F\)\.md&quot;/);
+});
+
+test("dashboard renders provider mix and window project usage", async () => {
+  const elements = await renderDashboard();
+
+  assert.match(elements.get("providers").innerHTML, /Claude Code/);
+  assert.match(elements.get("providers").innerHTML, /Codex/);
+  const projects = elements.get("projects").innerHTML;
+  assert.match(projects, /~\/mizan/);
+  assert.match(projects, /48 reqs/);
 });
 
 test("dashboard keeps demo mode visible with a copyable install-and-setup command", async () => {

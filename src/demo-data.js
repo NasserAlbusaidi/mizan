@@ -13,11 +13,25 @@ export function demoUnits(nowMs = Date.now()) {
     extra.cr || 0,
     output,
     extra.agent ? 1 : 0,
+    "claude",
+  ];
+  const codexRec = (id, daysAgo, input, cached, output, extra = {}) => [
+    `demo-codex-${id}|token-${id}`,
+    nowMs - daysAgo * DAY,
+    "codex",
+    input,
+    0,
+    0,
+    cached,
+    output,
+    extra.agent ? 1 : 0,
+    "codex",
   ];
 
   return [
     {
       account: "personal",
+      provider: "claude",
       mtimeMs: nowMs,
       cwd: `${HOME}/Desktop/Personal/Rihla`,
       session: "demo-personal-rihla",
@@ -29,6 +43,7 @@ export function demoUnits(nowMs = Date.now()) {
     },
     {
       account: "personal",
+      provider: "claude",
       mtimeMs: nowMs,
       cwd: `${HOME}/Desktop/Personal/Rihla`,
       session: "demo-personal-rihla-followup",
@@ -40,6 +55,7 @@ export function demoUnits(nowMs = Date.now()) {
     },
     {
       account: "work",
+      provider: "claude",
       mtimeMs: nowMs,
       cwd: `${HOME}/Desktop/Work/ClientPortal`,
       session: "demo-work-client",
@@ -51,6 +67,7 @@ export function demoUnits(nowMs = Date.now()) {
     },
     {
       account: "work",
+      provider: "claude",
       mtimeMs: nowMs,
       cwd: `${HOME}/Desktop/Personal/starfield`,
       session: "demo-work-pays-personal",
@@ -62,6 +79,7 @@ export function demoUnits(nowMs = Date.now()) {
     },
     {
       account: "personal",
+      provider: "claude",
       mtimeMs: nowMs,
       cwd: `${HOME}/Desktop/Work/LaunchOps`,
       session: "demo-personal-pays-work",
@@ -73,6 +91,7 @@ export function demoUnits(nowMs = Date.now()) {
     },
     {
       account: "personal",
+      provider: "claude",
       mtimeMs: nowMs,
       cwd: `${HOME}/Desktop/Personal/invoice-ar`,
       session: "demo-invoice-ar",
@@ -82,11 +101,25 @@ export function demoUnits(nowMs = Date.now()) {
         rec("p5", 8.69, "claude-sonnet-4-6", 330_000, 76_000, { cr: 1_700_000 }),
       ],
     },
+    {
+      account: "personal",
+      provider: "codex",
+      mtimeMs: nowMs,
+      cwd: `${HOME}/Desktop/Personal/mizan`,
+      session: "demo-codex-mizan",
+      branch: "main",
+      recs: [
+        codexRec("c1", 0.3, 48_000, 310_000, 1_900, { agent: true }),
+        codexRec("c2", 12.4, 96_000, 720_000, 4_200, { agent: true }),
+        codexRec("c3", 65.2, 140_000, 1_100_000, 7_800, { agent: true }),
+      ],
+    },
   ];
 }
 
 export function demoStats(units, nowMs = Date.now()) {
   const accounts = {};
+  const providers = {};
   for (const unit of units) {
     accounts[unit.account] ||= {
       dir: `demo://${unit.account}`,
@@ -100,6 +133,22 @@ export function demoStats(units, nowMs = Date.now()) {
     accounts[unit.account].files += 1;
     accounts[unit.account].parsed += 1;
     accounts[unit.account].records += unit.recs.length;
+
+    const provider = unit.provider || "claude";
+    providers[provider] ||= {
+      provider,
+      label: provider === "codex" ? "Codex" : "Claude Code",
+      dir: `demo://${provider}`,
+      exists: true,
+      files: 0,
+      parsed: 0,
+      cached: 0,
+      skipped: 0,
+      records: 0,
+    };
+    providers[provider].files += 1;
+    providers[provider].parsed += 1;
+    providers[provider].records += unit.recs.length;
   }
   return {
     demo: true,
@@ -109,6 +158,7 @@ export function demoStats(units, nowMs = Date.now()) {
     skipped: 0,
     records: units.reduce((sum, unit) => sum + unit.recs.length, 0),
     accounts,
+    providers,
     computeMs: Date.now() - nowMs,
   };
 }

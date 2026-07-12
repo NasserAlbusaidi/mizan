@@ -331,19 +331,19 @@ function parseTranscriptAssignments(values) {
       .filter(Boolean),
   );
   if (!parts.length) {
-    throw new Error("Missing transcript assignment. Use personal=/path and/or work=/path.");
+    throw new Error("Missing transcript assignment. Use personal=/path, work=/path, and/or codex=/path.");
   }
 
   const result = {};
   for (const part of parts) {
     const eq = part.indexOf("=");
     if (eq === -1) {
-      throw new Error(`Invalid transcript assignment "${part}". Use personal= or work=.`);
+      throw new Error(`Invalid transcript assignment "${part}". Use personal=, work=, or codex=.`);
     }
     const key = part.slice(0, eq).trim();
     const value = part.slice(eq + 1).trim();
-    if (key !== "personal" && key !== "work") {
-      throw new Error(`Invalid transcript key "${key}". Use personal= or work=.`);
+    if (key !== "personal" && key !== "work" && key !== "codex") {
+      throw new Error(`Invalid transcript key "${key}". Use personal=, work=, or codex=.`);
     }
     if (!value) {
       throw new Error(`${key} transcript path cannot be empty.`);
@@ -385,7 +385,7 @@ Usage:
   mizan --init-config           Create ~/.mizan/config.json template and exit
   mizan --set-budget daily=20 monthly=250
   mizan --add-work-marker /Clients/
-  mizan --set-transcripts personal=~/.claude/projects work=~/.claude-work/projects
+  mizan --set-transcripts personal=~/.claude/projects work=~/.claude-work/projects codex=~/.codex/sessions
   mizan --support-bundle        Print a redacted Markdown support bundle
   mizan --feedback              Print safe feedback and issue-reporting steps
   mizan --share                 Print safe public launch copy
@@ -412,8 +412,8 @@ Options:
   --set-budget daily=N monthly=N
                                 Save persistent USD budgets; use off/unset to clear
   --add-work-marker <fragment>  Append a path fragment that should count as work
-  --set-transcripts personal=PATH work=PATH
-                                Save persistent transcript project directories
+  --set-transcripts personal=PATH work=PATH codex=PATH
+                                Save persistent Claude/Codex transcript directories
   --support-bundle              Print redacted setup diagnostics for issues
   --feedback                    Print safe feedback steps and GitHub issue link
   --share                       Print safe public launch copy and install commands
@@ -437,6 +437,7 @@ Environment:
   MIZAN_HOST                    Bind host; defaults to 127.0.0.1 for local-only access
   MIZAN_PERSONAL_DIR            Personal transcript projects directory
   MIZAN_WORK_DIR                Work transcript projects directory
+  MIZAN_CODEX_DIR               Codex sessions directory
   MIZAN_CONFIG                  Config file path (default: ~/.mizan/config.json)
   MIZAN_WORK_MARKERS            Comma-separated path fragments that count as work projects
 `;

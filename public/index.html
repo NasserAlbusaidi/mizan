@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Mizan · Claude Code spend</title>
+    <title>Mizan · AI coding usage</title>
     <link rel="stylesheet" href="/styles.css" />
     <link
       rel="icon"
@@ -17,7 +17,7 @@
           <span class="brand-mark">⚖</span>
           <div class="brand-text">
             <h1>Mizan<span class="brand-ar">ميزان</span></h1>
-            <p>Claude Code spend &amp; usage · dual-account</p>
+            <p>AI coding spend &amp; usage · local-only</p>
           </div>
         </div>
         <div class="controls">
@@ -42,7 +42,7 @@
           <section class="briefing" id="briefing">
             <div class="brief-main">
               <p class="eyebrow">Local budget guard</p>
-              <h2 id="brief-title">Scanning your Claude Code transcripts</h2>
+              <h2 id="brief-title">Scanning your local AI coding transcripts</h2>
               <p id="brief-copy"></p>
             </div>
             <div class="trust-grid" id="trust-grid"></div>
@@ -79,6 +79,11 @@
               <div id="account-split"></div>
             </section>
 
+            <section class="panel" id="panel-providers">
+              <div class="panel-head"><h2>Provider mix</h2></div>
+              <div id="providers"></div>
+            </section>
+
             <section class="panel" id="panel-models">
               <div class="panel-head"><h2>Model mix</h2></div>
               <div class="donut-wrap">
@@ -93,7 +98,7 @@
             </section>
 
             <section class="panel span-2" id="panel-projects">
-              <div class="panel-head"><h2>Top projects</h2></div>
+              <div class="panel-head"><h2>Top projects</h2><span class="hint">in window</span></div>
               <div id="projects"></div>
             </section>
 
@@ -109,7 +114,7 @@
           <footer class="foot">
             <span id="foot-stats"></span>
             <span class="foot-note" id="pricing-note"
-              >Estimated from local transcripts · authoritative billing: console.anthropic.com</span
+              >Estimated from local transcripts · authoritative billing stays with provider consoles</span
             >
           </footer>
         </div>

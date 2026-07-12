@@ -17,15 +17,15 @@
 //   cache write 5m  = 1.25x input
 //   cache write 1h  = 2.00x input
 //
-// `<synthetic>` and any unmatched model price at $0. Summaries/reports warn on
-// unmatched non-synthetic model usage so estimates are not trusted silently.
+// `<synthetic>`, Codex, and any unmatched model price at $0. Summaries/reports
+// warn on unmatched Claude model usage so estimates are not trusted silently.
 
 export const PRICING_METADATA = Object.freeze({
   checkedAt: "2026-06-25",
   sourceName: "Anthropic Claude API pricing",
   sourceUrl: "https://docs.anthropic.com/en/docs/about-claude/pricing",
   claudeCodeCostsUrl: "https://docs.anthropic.com/en/docs/claude-code/costs",
-  note: "Claude Code charges by API token consumption. Mizan estimates from local transcript usage records using standard global Claude API rates; authoritative billing remains Anthropic. It does not apply fast mode, batch, partner cloud, or data residency multipliers. Unmatched non-synthetic models are flagged as unpriced warnings.",
+  note: "Claude Code charges by API token consumption. Mizan estimates Claude spend from local transcript usage records using standard global Claude API rates; authoritative billing remains Anthropic. It does not apply fast mode, batch, partner cloud, or data residency multipliers. Codex sessions are currently token-only because local Codex logs do not expose an authoritative per-session dollar charge. Unmatched Claude models are flagged as unpriced warnings.",
 });
 
 const PER_MTOK = [
@@ -37,6 +37,7 @@ const PER_MTOK = [
   ["sonnet", /sonnet/, 3, 15],
   ["haiku-3.5", /haiku-3-5|3-5-haiku|haiku-2024|haiku-3\.5/, 0.8, 4],
   ["haiku", /haiku/, 1, 5],
+  ["codex-token-only", /^codex$/, 0, 0],
 ];
 
 const CACHE_READ_MULT = 0.1;
