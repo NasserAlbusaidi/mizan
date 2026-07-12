@@ -62,6 +62,9 @@ Prefer the terminal? `npx @nasseralbusaidi/mizan --try` prints a demo summary
 and exits — the fastest way to decide if it's worth installing. Install for
 good with `npm install -g @nasseralbusaidi/mizan`.
 
+> The npm listing is pending; until it appears, the release-tarball installs
+> below work today and are identical bits.
+
 If the dashboard starts with zero records, preview the product with
 `mizan --demo`, diagnose folders with `mizan --setup`, or save custom transcript
 folders with `mizan --set-transcripts personal=/path work=/path codex=/path`.
@@ -72,25 +75,25 @@ folders with `mizan --set-transcripts personal=/path work=/path codex=/path`.
 Run the demo straight from a GitHub release tarball:
 
 ```bash
-npm exec --yes --package https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.68/nasseralbusaidi-mizan-0.1.68.tgz -- mizan --try
+npm exec --yes --package https://github.com/NasserAlbusaidi/mizan/releases/download/v0.2.0/nasseralbusaidi-mizan-0.2.0.tgz -- mizan --try
 ```
 
 Install the current GitHub release from its versioned tarball:
 
 ```bash
-MIZAN_INSTALL_VERSION=0.1.68 bash -c "$(curl -fsSL https://raw.githubusercontent.com/NasserAlbusaidi/mizan/v0.1.68/scripts/install.sh)"
+MIZAN_INSTALL_VERSION=0.2.0 bash -c "$(curl -fsSL https://raw.githubusercontent.com/NasserAlbusaidi/mizan/v0.2.0/scripts/install.sh)"
 ```
 
 Or with npm directly:
 
 ```bash
-npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/v0.1.68/nasseralbusaidi-mizan-0.1.68.tgz
+npm install -g https://github.com/NasserAlbusaidi/mizan/releases/download/v0.2.0/nasseralbusaidi-mizan-0.2.0.tgz
 ```
 
 GitHub tag fallback:
 
 ```bash
-npm install -g github:NasserAlbusaidi/mizan#v0.1.68
+npm install -g github:NasserAlbusaidi/mizan#v0.2.0
 ```
 
 From source:
